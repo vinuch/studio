@@ -1,0 +1,32 @@
+@font-face {
+  font-family: untitled-sans-light;
+  src: url("../assets/fonts/UntitledSans/UntitledSans-Light.woff");
+}
+@font-face {
+  font-family: untitled-sans-medium;
+  src: url("../assets/fonts/UntitledSans/UntitledSans-Medium.woff");
+}
+@font-face {
+  font-family: untitled-sans-regular;
+  src: url("../assets/fonts/UntitledSans/UntitledSans-Regular.woff");
+}
+@font-face {
+  font-family: untitled-sans-bold;
+  src: url("../assets/fonts/UntitledSans/UntitledSans-Bold.woff");
+}
+
+.utl {
+  font-family: untitled-sans-light;
+}
+
+.utm {
+  font-family: untitled-sans-medium;
+}
+
+.utr {
+  font-family: untitled-sans-regular;
+}
+
+.utb {
+  font-family: untitled-sans-bold;
+}
