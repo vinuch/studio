@@ -6,7 +6,7 @@
       </span>
 
       <a-button
-        @click="visible = true"
+        @click="openAdd()"
         class="main-btn"
         style="float: right; height: 40px"
       >
@@ -27,6 +27,7 @@
           :lg="6"
           v-for="(item, i) in inventory"
           :key="'order' + i"
+          @click="viewProduct(item)"
         >
           <OrderItem :product="item" />
         </a-col>
@@ -52,7 +53,7 @@
         />
       </div>
 
-      <AddProduct />
+      <AddProduct :currentItem="currentItem" />
     </a-drawer>
   </div>
 </template>
@@ -66,6 +67,7 @@ export default {
   data() {
     return {
       visible: false,
+      currentItem: null,
     };
   },
   computed: {
@@ -84,6 +86,16 @@ export default {
   mounted() {
     fethcStoreInventory(this.store.slug);
     EventBus.$on("close_drawer", () => (this.visible = false));
+  },
+  methods: {
+    viewProduct(item) {
+      this.currentItem = item;
+      this.visible = true;
+    },
+    openAdd() {
+      this.currentItem = null;
+      this.visible = true;
+    },
   },
 };
 </script>

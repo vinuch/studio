@@ -20,6 +20,14 @@ export const createStore = (data) => {
   });
 };
 
+export const joinWaitlist = (data) => {
+  return axios({
+    method: "post",
+    url: urls.joinWaitListUrl,
+    data,
+  });
+};
+
 export const updateStore = (data) => {
   return axios({
     method: "patch",
@@ -57,4 +65,34 @@ export const fethcStoreInventory = (slug, n) => {
     .catch((err) => {
       console.log(err);
     });
+};
+
+export const fetchOrders = () => {
+  axios({
+    method: "get",
+    url: urls.ordersUrl,
+  })
+    .then((res) => {
+      store.commit(mutationTypes.SAVE_ORDERS, res.data);
+    })
+    .catch((err) => {
+      console.log({ err });
+    });
+};
+
+export const fetchOrderItems = (id) => {
+  return axios({
+    method: "get",
+    url: `${urls.orderItemUrl}${id}/`,
+  });
+};
+
+export const updateOrderStatus = (id) => {
+  return axios({
+    method: "patch",
+    url: `${urls.updateOrderStatus}${id}/`,
+    data: {
+      status: 1,
+    },
+  });
 };

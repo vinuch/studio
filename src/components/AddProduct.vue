@@ -118,7 +118,11 @@
           </div>
         </div>
 
-        <div class="add-another-variant utm" @click="addVariant()">
+        <div
+          class="add-another-variant utm"
+          v-if="variants.length < 2"
+          @click="addVariant()"
+        >
           Add another variant
         </div>
       </div>
@@ -209,8 +213,18 @@
                 ...floatingConfig,
               }"
             >
-              <input v-model="discount" name="Enter amount" />
+              <input
+                v-model="discount"
+                name="Enter amount"
+                :disabled="!discount_type"
+              />
             </FloatingLabel>
+            <p
+              style="color: red; font-size: 12px; margin-top: -15px;"
+              v-if="hasDiscountError"
+            >
+              Discount must be less than the item price
+            </p>
           </a-col>
         </a-row>
       </div>
@@ -224,13 +238,13 @@
     </div>
 
     <a-button
-      :disabled="product_image === ''"
+      :disabled="product_image === '' || hasDiscountError"
       class="main-btn"
       style="height: 56px; width: 180px"
       @click="finishCreation()"
       :loading="loading"
     >
-      Add product
+      {{ currentItem ? "Update Product" : "Add product" }}
     </a-button>
   </div>
 </template>
@@ -244,6 +258,7 @@ import {
 } from "../services/apiServices";
 import { EventBus } from "../services/eventBus";
 export default {
+  props: ["currentItem"],
   data() {
     return {
       uploadingImage: false,
@@ -300,6 +315,20 @@ export default {
     ...mapGetters({
       store: "getStore",
     }),
+    hasDiscountError() {
+      if (this.discount_type === "1" && this.discount >= 100) {
+        return true;
+      } else if (this.discount_type === "2" && !this.price) {
+        return true;
+      } else if (
+        this.discount_type === "2" &&
+        parseFloat(this.discount) >= parseFloat(this.price)
+      ) {
+        return true;
+      } else {
+        return false;
+      }
+    },
     drawerWidth() {
       return window.innerWidth > 640 ? 590 : window.innerWidth - 50;
     },
@@ -317,8 +346,6 @@ export default {
         return cumm;
       }, {});
       delete variantObj[""];
-
-      console.log({ variantObj });
 
       let values = Object.values(variantObj).filter((v) => v[0] !== "null");
 
@@ -348,16 +375,27 @@ export default {
         pairs_ = pairFor3;
       }
 
-      return pairs_.map((p) => {
-        {
-          return { text: p, qty: null };
-        }
+      let quantities = [];
+      if (this.currentItem) {
+        pairs_.forEach((p) => {
+          if (this.currentItem.variant_options) {
+            let pairVal = this.currentItem.variant_options.split(p)[1];
+            if (pairVal) {
+              let qty = pairVal.split(",")[1];
+              quantities.push(qty);
+            }
+          }
+        });
+      }
+
+      return pairs_.map((p, i) => {
+        return { text: p, qty: quantities.length ? quantities[i] : null };
       });
     },
   },
   methods: {
     logg() {
-      console.log(this.generatePairs);
+      console.log(this.currentItem);
     },
     deleteVariant(i) {
       this.variants = this.variants.filter((variant, j) => j !== i);
@@ -414,7 +452,7 @@ export default {
         total_stock: this.total_stock,
         discount_type: this.discount_type,
         discount: this.discount,
-        // display: this.display,
+        display: this.display,
         // variant_options: JSON.stringify(this.generatePairs),
 
         first_variant_name: this.variants[0] ? this.variants[0].key : "",
@@ -436,6 +474,9 @@ export default {
     },
     finishCreation() {
       let data = this.composePayload();
+      if (this.hasDiscountError) {
+        return;
+      }
       this.loading = true;
       updateProduct(data, this.product_id)
         .then((res) => {
@@ -454,6 +495,63 @@ export default {
         .finally(() => {
           this.loading = false;
         });
+    },
+  },
+  watch: {
+    currentItem() {
+      if (this.currentItem) {
+        this.product_image = this.currentItem.product_image;
+        this.product_name = this.currentItem.product_name;
+        this.description = this.currentItem.description;
+        this.has_variant = this.currentItem.has_variant;
+        this.discount_type = this.currentItem.discount_type;
+        this.discount = this.currentItem.discount;
+        this.product_id = this.currentItem.id;
+        this.price = this.currentItem.price;
+        this.total_stock = this.currentItem.total_stock;
+        this.display = this.currentItem.display;
+        let variants = [];
+        if (this.currentItem.first_variant_name) {
+          let obj = {
+            key: this.currentItem.first_variant_name,
+            values: this.currentItem.first_variant.split(",").map((val) => {
+              return {
+                value: val,
+              };
+            }),
+          };
+          variants.push(obj);
+        }
+        if (this.currentItem.first_variant_name) {
+          let obj = {
+            key: this.currentItem.second_variant_name,
+            values: this.currentItem.second_variant.split(",").map((val) => {
+              return {
+                value: val,
+              };
+            }),
+          };
+          variants.push(obj);
+        }
+        this.variants = variants;
+      } else {
+        this.product_image = "";
+        this.product_name = "";
+        this.description = "";
+        this.has_variant = "";
+        this.discount_type = "";
+        this.discount = "";
+        this.product_id = "";
+        this.price = "";
+        this.total_stock = "";
+        this.display = false;
+        this.variants = [
+          {
+            key: "",
+            values: [{ value: "" }],
+          },
+        ];
+      }
     },
   },
 };

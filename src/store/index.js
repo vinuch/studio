@@ -15,6 +15,7 @@ export default new Vuex.Store({
     store: {},
     account_id: null,
     inventory: [],
+    orders: [],
     visitor_inventory: {},
     visitor_cart: [],
     visited_store_name: "",
@@ -32,6 +33,9 @@ export default new Vuex.Store({
     [mutationTypes.SAVE_INVENTORY](state, data) {
       state.inventory = data;
     },
+    [mutationTypes.SAVE_ORDERS](state, data) {
+      state.orders = data;
+    },
     [mutationTypes.SAVE_VISITOR_CART](state, data) {
       state.visitor_cart = data;
     },
@@ -42,6 +46,7 @@ export default new Vuex.Store({
   getters: {
     getStore: (state) => state.store,
     getInventory: (state) => state.inventory,
+    getOrders: (state) => state.orders,
 
     getVisitorStore: (state) => state.visitor_inventory,
     getVisitorCart: (state) => state.visitor_cart,

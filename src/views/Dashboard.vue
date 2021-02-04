@@ -40,7 +40,7 @@
             </svg>
           </div>
           <a-menu slot="overlay" class="my-menu">
-            <a-menu-item class="menu-item-wrap">
+            <!-- <a-menu-item class="menu-item-wrap">
               <div class="menu-item no-b">
                 <img
                   src="../assets/user.svg"
@@ -56,8 +56,8 @@
                   Account</span
                 >
               </div>
-            </a-menu-item>
-            <a-menu-item class="menu-item-wrap">
+            </a-menu-item> -->
+            <!-- <a-menu-item class="menu-item-wrap">
               <div class="menu-item">
                 <img
                   src="../assets/annotation.svg"
@@ -73,8 +73,8 @@
                   Support</span
                 >
               </div>
-            </a-menu-item>
-            <a-menu-item class="menu-item-wrap">
+            </a-menu-item> -->
+            <!-- <a-menu-item class="menu-item-wrap">
               <div class="menu-item">
                 <img
                   src="../assets/grad.svg"
@@ -90,9 +90,9 @@
                   Help center</span
                 >
               </div>
-            </a-menu-item>
+            </a-menu-item> -->
             <a-menu-item class="menu-item-wrap">
-              <div class="menu-item">
+              <div class="menu-item" @click="logout()">
                 <img
                   src="../assets/logout.svg"
                   style="margin-right: 10px"
@@ -133,6 +133,7 @@
   </div>
 </template>
 <script>
+import { fetchOrders } from "../services/apiServices";
 export default {
   data() {
     return {
@@ -223,9 +224,14 @@ export default {
       }
       return img;
     },
+    logout() {
+      sessionStorage.clear();
+      localStorage.clear();
+      this.$router.push("/signin");
+    },
   },
   mounted() {
-    console.log(this.$route.path);
+    fetchOrders();
   },
 };
 </script>

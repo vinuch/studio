@@ -25,13 +25,13 @@
           easily online.
         </p>
 
-        <div class="images">
+        <!-- <div class="images">
           <img src="../../assets/whatsapp.svg" alt="" />
           <img src="../../assets/facebook.svg" alt="" />
           <img src="../../assets/twitter.svg" alt="" />
           <img src="../../assets/sms.svg" alt="" />
           <img src="../../assets/blackmail.svg" alt="" />
-        </div>
+        </div> -->
       </div>
 
       <div class="fields">

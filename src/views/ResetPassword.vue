@@ -26,7 +26,11 @@
           Get code
         </a-button>
 
-        <p class="footer-text blue__text">
+        <p
+          class="footer-text blue__text"
+          style="cursor: pointer"
+          @click="toLogin()"
+        >
           Remember password?
           <span class="blue__text">Log in</span>
         </p>
@@ -57,6 +61,11 @@ export default {
   },
   components: {
     FloatingLabel,
+  },
+  methods: {
+    toLogin() {
+      this.$router.push("/signin");
+    },
   },
 };
 </script>

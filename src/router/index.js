@@ -38,11 +38,6 @@ const routes = [
     component: () => import("../views/CreatePassword.vue"),
   },
   {
-    path: "/store/:store_name",
-    name: "Store",
-    component: () => import("../views/StoreView.vue"),
-  },
-  {
     path: "/store-cart",
     name: "StoreCart",
     component: () => import("../views/StoreCart.vue"),
@@ -83,6 +78,11 @@ const routes = [
         component: () => import("../views/Dashboard/Manage.vue"),
       },
     ],
+  },
+  {
+    path: "/:store_name",
+    name: "Store",
+    component: () => import("../views/StoreView.vue"),
   },
 ];
 

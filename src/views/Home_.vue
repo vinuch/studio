@@ -5,8 +5,21 @@
         <img src="../assets/white-logo.svg" alt="" />
 
         <div class="links" :class="navOpen ? 'open' : ''">
-          <button class="main-btn" @click="toLogin()">
+          <span class="close">
+            <img @click="navOpen = false" src="../assets/cancel.svg" alt="" />
+          </span>
+          <span>
+            Why Leyyow?
+          </span>
+          <span>
+            View a merchant
+          </span>
+          <span @click="toLogin()">
             Log in
+          </span>
+
+          <button class="main-btn" @click="toRegister()">
+            Join waitlist
           </button>
         </div>
         <img
@@ -20,21 +33,72 @@
       <div class="hero-data">
         <div class="hero-text">
           <p class="big utb">
-            Grow your business
+            Start selling online in minutes.
           </p>
           <p class="sm">
-            Much more than a store front.
+            Give your business permission to grow! With Leyyow, you can create
+            your online store as quickly as you can create an Instagram post.
           </p>
-          <p class="sm">
-            Our mission is to be the backbone of small and medium-sized
-            businesses by providing software, support, training, and access they
-            need to thrive.
-          </p>
+
+          <button class="main-btn" @click="toRegister()">
+            Join waitlist
+          </button>
+          <button class="line-btn" @click="toLogin()">
+            Log in
+          </button>
+        </div>
+        <div class="hero-img">
+          <img src="../assets/Image.png" alt="" />
         </div>
       </div>
     </div>
 
     <section class="why">
+      <p class="why-title utb">
+        Why Leyyow?
+      </p>
+      <a-row :gutter="30">
+        <a-col :sm="24" :md="8">
+          <div class="why-col">
+            <p class="bg utb">
+              Scale up your business.
+            </p>
+            <p class="sm">
+              Make sales while you sleep! No back and forth in DMs and no time
+              wasters. Leyyow helps you automate sales and manage your orders,
+              allowing your business to grow.
+            </p>
+            <img src="../assets/grow.svg" alt="" />
+          </div>
+        </a-col>
+        <a-col :sm="24" :md="8">
+          <div class="why-col">
+            <p class="bg utb">
+              Enjoy integrated shipping.
+            </p>
+            <p class="sm">
+              Our integrated courier services take the headache out of
+              deliveries. You can say goodbye to sleepless nights wondering if
+              customers will get their orders delivered.
+            </p>
+            <img src="../assets/discount2.svg" alt="" />
+          </div>
+        </a-col>
+        <a-col :sm="24" :md="8">
+          <div class="why-col">
+            <p class="bg utb">
+              Experience peace of mind.
+            </p>
+            <p class="sm">
+              Staying on top of orders and after-sales issues such as returns
+              and exchanges helps you maintain sanity and create trust with your
+              customers.
+            </p>
+            <img src="../assets/save.svg" alt="" />
+          </div>
+        </a-col>
+      </a-row>
+
       <div class="unlock">
         <p class="unlock-title utb">
           Unlock growth
@@ -44,10 +108,10 @@
           among the first to experience our platform.
         </p>
 
-        <input v-model="email" type="text" placeholder="your email address" />
-        <a-button :loading="loading" class="main-btn" @click="toRegister()">
+        <input type="text" />
+        <button class="main-btn" @click="toRegister()">
           Join waitlist
-        </a-button>
+        </button>
       </div>
     </section>
     <footer>
@@ -63,27 +127,16 @@
 </template>
 
 <script>
-import { joinWaitlist } from "../services/apiServices";
 export default {
   data() {
-    return { navOpen: false, email: "", loading: false };
+    return { navOpen: false };
   },
   methods: {
     toLogin() {
       this.$router.push("/signin");
     },
     toRegister() {
-      this.loading = true;
-      joinWaitlist({ email: this.email })
-        .then((res) => {
-          console.log(res);
-        })
-        .catch((err) => {
-          console.log(err);
-        })
-        .finally(() => {
-          this.loading = false;
-        });
+      this.$router.push("/signup");
     },
   },
 };
@@ -92,7 +145,7 @@ export default {
 <style lang="scss" scoped>
 .home {
   .hero {
-    height: 480px;
+    height: 680px;
     width: 100%;
     background: #10102c;
     .nav {
@@ -127,22 +180,18 @@ export default {
       flex-direction: row;
       .hero-text {
         padding: 120px 60px 50px 130px;
-        width: 100%;
-        text-align: center;
+        width: 50%;
+        text-align: left;
         .big {
           font-size: 48px;
           line-height: 120%;
           color: #ffffff;
           margin-bottom: 12px;
-          margin-bottom: 30px;
         }
         .sm {
           font-size: 18px;
           line-height: 160%;
           color: rgba(255, 255, 255, 0.8);
-          width: 50%;
-          margin-left: 25%;
-          margin-bottom: 0;
         }
         .line-btn {
           background: rgba(248, 232, 182, 0.1);
@@ -203,10 +252,10 @@ export default {
     .unlock {
       background: #f8e8b6;
       border-radius: 25px;
-      width: 50%;
+      width: 100%;
       height: 300px;
       padding: 40px;
-      margin: 70px 25% 0;
+      margin-top: 70px;
       .unlock-title {
         font-size: 40px;
         line-height: 120%;
@@ -230,10 +279,6 @@ export default {
         border-radius: 4px;
         background-color: transparent;
         margin-right: 10px;
-        padding-left: 15px;
-        &:focus {
-          outline: none;
-        }
       }
       .main-btn {
         height: 45px;

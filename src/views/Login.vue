@@ -40,7 +40,11 @@
           Log in to your account
         </a-button>
 
-        <p class="footer-text blue__text">
+        <p
+          class="footer-text blue__text"
+          style="cursor: pointer"
+          @click="toForgot()"
+        >
           Forgot your password
           <span class="blue__text">Reset it</span>
         </p>
@@ -56,7 +60,11 @@
 </template>
 <script>
 import FloatingLabel from "vue-simple-floating-labels";
-import { apiLogin, fethcStoreInventory } from "../services/apiServices";
+import {
+  apiLogin,
+  fethcStoreInventory,
+  fetchOrders,
+} from "../services/apiServices";
 import * as mutationTypes from "../store/mutationTypes";
 import axios from "axios";
 export default {
@@ -86,6 +94,9 @@ export default {
     FloatingLabel,
   },
   methods: {
+    toForgot() {
+      this.$router.push("/reset-password");
+    },
     login() {
       let data = {
         username: this.username,
@@ -104,6 +115,7 @@ export default {
 
           // fetch inventory
           fethcStoreInventory(store.slug);
+          fetchOrders();
 
           this.$store.commit(mutationTypes.SAVE_STORE, store);
           this.$store.commit(mutationTypes.SAVE_ACCOUNT_ID, acct_id);
@@ -117,7 +129,7 @@ export default {
           console.log({ err });
         })
         .finally(() => {
-          this.loading = true;
+          this.loading = false;
         });
     },
   },

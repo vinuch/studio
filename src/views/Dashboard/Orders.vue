@@ -10,120 +10,97 @@
       <img src="../../assets/hand.svg" alt="" />
     </div>
     <div class="orders-list" v-else>
-      <a-tabs default-active-key="1">
-        <a-tab-pane key="1" tab="Pending">
-          <div class="order-item" v-for="order in orders" :key="order">
-            <div class="order-header">
-              <span class="date">
-                01 Nov 2020
-              </span>
-              <span class="blue utm">
-                Mark as fulfilled
+      <div
+        class="collapse"
+        v-for="(order, i) in orders"
+        :key="'order' + i"
+        :class="i === activeKey ? 'bordered' : ''"
+      >
+        <div class="top" @click="openCollapse(i)">
+          <div class="left">
+            <p class="date">15 Sep 2020, Order #{{ order.order_ref }}</p>
+            <div class="name">
+              {{ order.full_name }} — N{{ order.products_total }}
+            </div>
+            <p class="date" v-if="i === activeKey">
+              {{ order.address }}, {{ order.city }}, {{ order.phone }},
+              {{ order.email }}
+            </p>
+          </div>
+          <div class="right">
+            <a-icon
+              type="loading"
+              v-if="i === loadingIndex && loading"
+              style="color: #3a50d5"
+            />
+            <span v-else>
+              {{ order.fulfilled }}/{{ order.items_count }}
+              <img
+                src="../../assets/caret.svg"
+                alt=""
+                style="margin-left: 5px"
+              />
+            </span>
+          </div>
+        </div>
+        <div class="btm" :class="i === activeKey ? 'open' : ''">
+          <p class="title">
+            ITEMS — mark available items
+            <span class="blue" @click="markAll(orderItems, i)">
+              Mark all
+            </span>
+          </p>
+          <div
+            class="roww"
+            v-for="(orderItem, j) in orderItems"
+            :class="j === orderItems.length - 1 ? 'last' : ''"
+            :key="orderItem.order"
+            @click="markAsCompleted(orderItem.id, i)"
+          >
+            <div class="left">
+              <!-- <img src="../../assets/img.svg" alt="" /> -->
+              <span class="item-name">
+                {{ orderItem.product_name }} (Qty: {{ orderItem.qty }})
               </span>
             </div>
-            <div class="order-body">
-              <a-row style="width: 100%" type="flex">
-                <a-col :sm="24" :md="14" :order="pageWidth ? 0 : 2">
-                  <div class="items">
-                    <p class="items-header utm">
-                      ITEMS (16)
-                    </p>
-                    <div class="good">
-                      <div class="good-name">
-                        <img
-                          src="https://images.unsplash.com/photo-1593642531955-b62e17bdaa9c?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=800&q=60"
-                          alt=""
-                        />
-                        <span>
-                          Name of item (4)
-                        </span>
-                      </div>
-                      <div class="price">
-                        N9,760.42
-                      </div>
-                    </div>
-                    <div class="good">
-                      <div class="good-name">
-                        <img
-                          src="https://images.unsplash.com/photo-1593642531955-b62e17bdaa9c?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=800&q=60"
-                          alt=""
-                        />
-                        <span>
-                          Name of item (4)
-                        </span>
-                      </div>
-                      <div class="price">
-                        N9,760.42
-                      </div>
-                    </div>
-                    <br />
-                    <div class="total">
-                      <div class="total-label">
-                        Subtotal
-                      </div>
-                      <div class="total-amt">
-                        N20,260.42
-                      </div>
-                    </div>
-                    <div class="total">
-                      <div class="total-label">
-                        Delivery fee
-                      </div>
-                      <div class="total-amt">
-                        N1,560.00
-                      </div>
-                    </div>
-                    <div class="total">
-                      <div class="total-label utb">
-                        Total
-                      </div>
-                      <div class="total-amt utb">
-                        N21,760.42
-                      </div>
-                    </div>
-                  </div>
-                </a-col>
-                <a-col :sm="24" :md="10">
-                  <div class="customer" :order="pageWidth ? 0 : 1">
-                    <p class="items-header utm">
-                      CUSTOMER
-                    </p>
-                    <p class="customer-name utm">
-                      Bunmi Adekunle
-                    </p>
-                    <p class="detail">
-                      15, Ajayi Street, Gbagada
-                    </p>
-                    <p class="detail">
-                      0812 678 0928
-                      <img src="../../assets/phone.svg" alt="" />
-                    </p>
-                    <p class="detail">
-                      bunmi@gmail.com
-                      <img src="../../assets/mail.svg" alt="" />
-                    </p>
-                  </div>
-                </a-col>
-              </a-row>
+            <div class="right">
+              <img
+                v-if="orderItem.status"
+                src="../../assets/check.svg"
+                alt=""
+              />
+              <img v-else src="../../assets/circle.svg" alt="" />
             </div>
           </div>
-        </a-tab-pane>
-        <a-tab-pane key="2" tab="Fullfilled">
-          <p>nothing here</p>
-        </a-tab-pane>
-      </a-tabs>
+        </div>
+      </div>
     </div>
   </div>
 </template>
 <script>
+import { mapGetters } from "vuex";
+import {
+  fetchOrderItems,
+  updateOrderStatus,
+  fetchOrders,
+} from "../../services/apiServices";
 export default {
   data() {
     return {
-      orders: [1, 2, 3],
       pageWidth: true,
+      activeKey: null,
+      orderItems: [],
+      expandIconPosition: "right",
+      loading: false,
+      loadingIndex: null,
+      text:
+        "loren iuagut fduvuys vuya hvuysfvsyhdvyuysv duyv ayu veuyvdfuyj ouiab davdiua viu",
     };
   },
   computed: {
+    ...mapGetters({
+      orders: "getOrders",
+    }),
     pageWidth_() {
       return window.innerWidth;
     },
@@ -135,7 +112,45 @@ export default {
         : (this.pageWidth_ = false);
     },
   },
+  methods: {
+    openCollapse(i) {
+      if (this.activeKey === i) {
+        this.activeKey = null;
+        return;
+      }
+      this.activeKey = null;
+      this.loading = true;
+      this.loadingIndex = i;
+      this.orderItems = [];
+      fetchOrderItems(this.orders[i].order_ref)
+        .then((res) => {
+          this.orderItems = res.data;
+          this.activeKey = i;
+        })
+        .catch((err) => {
+          console.log({ err });
+          this.orderItems = [];
+        })
+        .finally(() => (this.loading = false));
+    },
+    markAsCompleted(id, i) {
+      updateOrderStatus(id)
+        .then(() => {
+          fetchOrders();
+          this.openCollapse(i);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+    markAll(items, i) {
+      items.forEach((item) => {
+        this.markAsCompleted(item.id, i);
+      });
+    },
+  },
   mounted() {
+    console.log(this.orders);
     this.pageWidth = window.innerWidth > 767;
   },
 };
@@ -251,6 +266,83 @@ export default {
               float: right;
             }
           }
+        }
+      }
+    }
+  }
+  .collapse {
+    margin-bottom: 20px !important;
+    border-radius: 3px !important;
+    transition: linear all 0.3s;
+    border: 1px solid #f8f9fa !important;
+    &.bordered {
+      border: 1px solid #e6e9ef !important;
+    }
+    .top {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px;
+      background: #f8f9fa;
+      border-radius: 3px 3px 0px 0px;
+      cursor: pointer;
+      .date {
+        font-size: 14px;
+        line-height: 17px;
+        color: #66768a;
+        margin-bottom: 3px;
+      }
+      .name {
+        font-size: 16px;
+        line-height: 20px;
+        color: #10102c;
+        margin-bottom: 10px;
+        font-family: untitled-sans-medium !important;
+      }
+    }
+    .btm {
+      transition: linear all 0.3s;
+      overflow: hidden;
+      padding: 0 15px;
+      height: 0;
+      &.open {
+        height: auto;
+        padding: 15px 15px 0;
+      }
+      .title {
+        margin-bottom: -10px;
+        font-size: 12px;
+        line-height: 15px;
+        letter-spacing: 0.05em;
+        color: #66768a;
+        font-family: untitled-sans-medium !important;
+        span {
+          float: right;
+          font-size: 12px;
+          line-height: 15px;
+          text-align: right;
+          color: #3a50d5;
+          cursor: pointer;
+        }
+      }
+      .roww {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 1px solid #e6e9ef;
+        padding: 12px 0;
+        width: 100%;
+        cursor: pointer;
+        &:hover {
+          background-color: #fafafa;
+        }
+        &.last {
+          border: 0;
+        }
+        .item-name {
+          padding-left: 0px;
         }
       }
     }
