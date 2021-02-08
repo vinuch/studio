@@ -349,10 +349,13 @@ export default {
   @media (max-width: 767px) {
     .hero {
       height: auto;
-      min-height: 300px;
-      .hero-data .hero-text .sm {
-        width: 100%;
-        margin: 0;
+      min-height: 375px;
+      .hero-data .hero-text {
+        .sm {
+          padding: 30px 50px 0;
+          width: 100%;
+          margin: 0 0 -20px;
+        }
       }
     }
     .why {

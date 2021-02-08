@@ -284,5 +284,34 @@ export default {
       font-weight: 600;
     }
   }
+  @media (max-width: 767px) {
+    .hero {
+      height: auto;
+      min-height: 300px;
+      .nav {
+        padding: 0 20px;
+      }
+      .hero-data .hero-text {
+        padding: 30px 100px;
+        .sm {
+          width: 100%;
+          margin: 0;
+        }
+      }
+    }
+    .privacy-body {
+      padding: 30px 20px;
+      .title {
+        line-height: 50px;
+      }
+      .text {
+        font-size: 16px;
+        line-height: 26px;
+      }
+      .sub-title {
+        margin-top: 35px;
+      }
+    }
+  }
 }
 </style>
