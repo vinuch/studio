@@ -80,6 +80,11 @@ const routes = [
     ],
   },
   {
+    path: "/privacy",
+    name: "Store",
+    component: () => import("../views/Privacy.vue"),
+  },
+  {
     path: "/:store_name",
     name: "Store",
     component: () => import("../views/StoreView.vue"),
