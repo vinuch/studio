@@ -346,5 +346,22 @@ export default {
       padding: 0 30px;
     }
   }
+  @media (max-width: 767px) {
+    .hero {
+      height: auto;
+      min-height: 300px;
+      .hero-data .hero-text .sm {
+        width: 100%;
+        margin: 0;
+      }
+    }
+    .why {
+      margin-top: 20px;
+      .unlock {
+        width: 100%;
+        margin: 0;
+      }
+    }
+  }
 }
 </style>
