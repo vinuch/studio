@@ -182,7 +182,7 @@ export default {
     },
   },
   mounted() {
-    console.log(this.cart);
+    // console.log(this.cart);
   },
 };
 </script>

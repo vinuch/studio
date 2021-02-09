@@ -3,6 +3,8 @@ export const SAVE_STORE = "SAVE_STORE";
 export const SAVE_ACCOUNT_ID = "SAVE_ACCOUNT_ID";
 export const SAVE_INVENTORY = "SAVE_INVENTORY";
 export const SAVE_ORDERS = "SAVE_ORDERS";
+export const SAVE_PRODUCT_TO_BE_EDITTED = "SAVE_PRODUCT_TO_BE_EDITTED";
+export const FORM_TOUCHED = "FORM_TOUCHED";
 
 // visitor mutations
 export const SAVE_VISITOR_INVENTORY = "SAVE_VISITOR_INVENTORY";

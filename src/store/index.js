@@ -16,9 +16,11 @@ export default new Vuex.Store({
     account_id: null,
     inventory: [],
     orders: [],
+    to_de_editted: null,
     visitor_inventory: {},
     visitor_cart: [],
     visited_store_name: "",
+    form_touched: false,
   },
   mutations: {
     [mutationTypes.SAVE_STORE](state, data) {
@@ -39,14 +41,22 @@ export default new Vuex.Store({
     [mutationTypes.SAVE_VISITOR_CART](state, data) {
       state.visitor_cart = data;
     },
+    [mutationTypes.SAVE_PRODUCT_TO_BE_EDITTED](state, data) {
+      state.to_de_editted = data;
+    },
     [mutationTypes.SAVE_VISITED_STORE_NAME](state, data) {
       state.visited_store_name = data;
+    },
+    [mutationTypes.FORM_TOUCHED](state, data) {
+      state.form_touched = data;
     },
   },
   getters: {
     getStore: (state) => state.store,
     getInventory: (state) => state.inventory,
     getOrders: (state) => state.orders,
+    getItemToBeEditted: (state) => state.to_de_editted,
+    getFormTouched: (state) => state.form_touched,
 
     getVisitorStore: (state) => state.visitor_inventory,
     getVisitorCart: (state) => state.visitor_cart,

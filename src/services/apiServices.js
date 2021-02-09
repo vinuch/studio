@@ -62,8 +62,8 @@ export const fethcStoreInventory = (slug, n) => {
         ? store.commit(mutationTypes.SAVE_VISITOR_INVENTORY, res.data)
         : store.commit(mutationTypes.SAVE_INVENTORY, res.data);
     })
-    .catch((err) => {
-      console.log(err);
+    .catch(() => {
+      // console.log(err);
     });
 };
 
@@ -75,8 +75,8 @@ export const fetchOrders = () => {
     .then((res) => {
       store.commit(mutationTypes.SAVE_ORDERS, res.data);
     })
-    .catch((err) => {
-      console.log({ err });
+    .catch(() => {
+      // console.log({ err });
     });
 };
 

@@ -1,7 +1,7 @@
 <template>
   <div class="setup">
     <div class="body">
-      <p class="utb title" @click="alat()">
+      <p class="utb title">
         Setup your store
       </p>
       <p class="sub-title">
@@ -128,14 +128,14 @@ export default {
         plan_status: "0",
       };
       this.loading = true;
-      console.log(data);
+      // console.log(data);
       updateStore(data)
-        .then((res) => {
-          console.log(res);
+        .then(() => {
+          // console.log(res);
           // this.$router.push("/dashboard/report");
         })
-        .catch((err) => {
-          console.log(err);
+        .catch(() => {
+          // console.log(err);
         })
         .finally(() => {
           this.loading = false;

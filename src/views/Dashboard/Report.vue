@@ -11,15 +11,9 @@
       <span>
         Reports
       </span>
-      <a-select default-value="lucy" class="pick">
-        <a-select-option value="jack">
-          Jack
-        </a-select-option>
-        <a-select-option value="lucy">
-          Lucy
-        </a-select-option>
-        <a-select-option value="Yiminghe">
-          yiminghe
+      <a-select :default-value="store.store_name" class="pick">
+        <a-select-option :value="store.store_name">
+          {{ store.store_name }}
         </a-select-option>
       </a-select>
     </p>
@@ -45,36 +39,42 @@
   </div>
 </template>
 <script>
+import { mapGetters } from "vuex";
 export default {
   data() {
     return {
       metrics: [
         {
           title: "Total sales",
-          count: "NGN 234,000.00",
+          count: "NGN 0.00",
           percent: "0%",
           up: true,
         },
         {
           title: "Number of transactions",
-          count: "23,432",
-          percent: "20%",
-          up: false,
+          count: "0",
+          percent: "0%",
+          up: true,
         },
         {
           title: "Average checkout size",
-          count: "NGN 100,250.00",
-          percent: "12.4%",
+          count: "NGN 0.00",
+          percent: "0%",
           up: true,
         },
         {
           title: "Number of store visits",
-          count: "500",
-          percent: "15%",
+          count: "0",
+          percent: "0%",
           up: true,
         },
       ],
     };
+  },
+  computed: {
+    ...mapGetters({
+      store: "getStore",
+    }),
   },
 };
 </script>
@@ -112,6 +112,8 @@ export default {
       color: #2b2b2b;
       margin-top: 40px;
       margin-bottom: 5px;
+      white-space: nowrap;
+      overflow: hidden;
     }
     .box-metrics {
       font-size: 12px;

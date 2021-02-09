@@ -21,10 +21,8 @@
     <div class="inventory-items">
       <a-row :gutter="20">
         <a-col
-          :xs="12"
           :sm="12"
-          :md="8"
-          :lg="6"
+          :md="6"
           v-for="(item, i) in inventory"
           :key="'order' + i"
           @click="viewProduct(item)"
@@ -44,16 +42,18 @@
       }"
     >
       <div class="drawer-title" slot="title">
-        <span class="utb">Add product</span>
+        <span class="utb">
+          {{ currentItem ? "Update Product" : "Upload new product" }}
+        </span>
         <img
-          @click="visible = false"
+          @click="closeDrawer"
           src="../../assets/close.svg"
           alt=""
           style="cursor: pointer"
         />
       </div>
 
-      <AddProduct :currentItem="currentItem" />
+      <AddProduct />
     </a-drawer>
   </div>
 </template>
@@ -61,19 +61,21 @@
 import { mapGetters } from "vuex";
 import AddProduct from "../../components/AddProduct";
 import OrderItem from "../../components/OrderItem";
+import * as mutationTypes from "../../store/mutationTypes";
 import { fethcStoreInventory } from "../../services/apiServices";
 import { EventBus } from "../../services/eventBus";
 export default {
   data() {
     return {
       visible: false,
-      currentItem: null,
     };
   },
   computed: {
     ...mapGetters({
       inventory: "getInventory",
       store: "getStore",
+      currentItem: "getItemToBeEditted",
+      formTouched: "getFormTouched",
     }),
     drawerWidth() {
       return window.innerWidth > 640 ? 640 : window.innerWidth;
@@ -88,13 +90,37 @@ export default {
     EventBus.$on("close_drawer", () => (this.visible = false));
   },
   methods: {
+    showConfirm() {
+      this.$confirm({
+        title: "Save progress?",
+        content:
+          "You have unsaved changes. Proceeding will mean losing these changes",
+        onOk: () => {
+          this.visible = false;
+        },
+        onCancel() {},
+      });
+    },
+    closeDrawer() {
+      if (this.currentItem && this.formTouched) {
+        this.showConfirm();
+      } else {
+        this.visible = false;
+      }
+    },
     viewProduct(item) {
-      this.currentItem = item;
+      this.$store.commit(mutationTypes.FORM_TOUCHED, false);
+      this.$store.commit(mutationTypes.SAVE_PRODUCT_TO_BE_EDITTED, item);
       this.visible = true;
+      this.emitOpen();
     },
     openAdd() {
-      this.currentItem = null;
+      this.$store.commit(mutationTypes.SAVE_PRODUCT_TO_BE_EDITTED, null);
       this.visible = true;
+      this.emitOpen();
+    },
+    emitOpen() {
+      EventBus.$emit("openDrawer");
     },
   },
 };

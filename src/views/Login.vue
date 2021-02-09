@@ -2,7 +2,7 @@
   <div class="register">
     <div class="nav">
       <img src="../assets/logo.svg" alt="" />
-      <a-icon type="close" :style="{ fontSize: '16px', color: '#8093AD' }" />
+      <!-- <a-icon type="close" :style="{ fontSize: '16px', color: '#8093AD' }" /> -->
     </div>
     <div class="body">
       <p class="utb title">
@@ -105,7 +105,7 @@ export default {
       this.loading = true;
       apiLogin(data)
         .then((res) => {
-          console.log(res);
+          // console.log(res);
           window.sessionStorage.setItem("iam_cart_token", res.data.token);
           axios.defaults.headers.common[
             "Authorization"
@@ -125,8 +125,8 @@ export default {
             this.$router.push("/dashboard/setup");
           }
         })
-        .catch((err) => {
-          console.log({ err });
+        .catch(() => {
+          // console.log({ err });
         })
         .finally(() => {
           this.loading = false;

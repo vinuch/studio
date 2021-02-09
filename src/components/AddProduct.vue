@@ -30,25 +30,33 @@
     </div>
 
     <FloatingLabel
+      :class="currentItem ? 'input__container--content' : ''"
       :config="{
         label: 'Name of product',
         ...floatingConfig,
+        hasContent: true,
       }"
     >
-      <input v-model="product_name" name="Name of product" />
+      <input @keyup="changeInp" v-model="product_name" name="Name of product" />
     </FloatingLabel>
 
     <FloatingLabel
+      :class="currentItem ? 'input__container--content' : ''"
       :config="{
         label: 'Product description',
         ...floatingConfig,
+        hasContent: true,
       }"
     >
-      <input v-model="description" name="Product description" />
+      <input
+        @keyup="changeInp"
+        v-model="description"
+        name="Product description"
+      />
     </FloatingLabel>
 
     <div class="patch">
-      <div class="top" @click="logg()">
+      <div class="top">
         <span>Include multiple variants</span>
 
         <a-switch v-model="has_variant" size="small" />
@@ -58,23 +66,15 @@
         size, color & more.
       </div>
       <div class="bottom_" v-if="has_variant">
-        <p class="desc">
-          You can add as many variants of this product as you have available
-          like size, color & more
-        </p>
-
         <div v-for="(variant, i) in variants" :key="'variant' + i">
           <div class="variant-row">
-            <input type="text" placeholder="Variant" v-model="variant.key" />
+            <input
+              @keyup="changeInp"
+              type="text"
+              placeholder="Variant eg. color"
+              v-model="variant.key"
+            />
             <div class="options-input">
-              <input
-                v-model="newVariantOption"
-                @keyup="checkForComma($event, i)"
-                @focus="setCurrentInput(i)"
-                type="text"
-                placeholder="Value"
-                :style="{ color: currentInput === i ? '#000' : 'transparent' }"
-              />
               <div class="options" v-if="variant.values.length">
                 <div
                   class="option"
@@ -87,11 +87,26 @@
                       {{ `delete ${option.value}` }}
                     </template>
                     {{ option.value }}
+                    <a-icon
+                      type="close"
+                      :style="{
+                        fontSize: '12px',
+                        marginLeft: 12,
+                      }"
+                    />
                   </a-tooltip>
                 </div>
               </div>
+              <input
+                v-model="newVariantOption"
+                @keyup="checkForComma($event, i)"
+                @focus="setCurrentInput(i)"
+                type="text"
+                placeholder="Option eg. red "
+                :style="{ color: currentInput === i ? '#000' : 'transparent' }"
+              />
             </div>
-            <img
+            <!-- <img
               @click="deleteVariant(i)"
               title="delete variant"
               src="../assets/trash.svg"
@@ -103,7 +118,7 @@
               src="../assets/dash.svg"
               alt=""
               v-else
-            />
+            /> -->
           </div>
         </div>
 
@@ -132,7 +147,12 @@
           </span>
         </a-col>
         <a-col :span="8">
-          <input v-model="row.qty" placeholder="Quantity" type="text" />
+          <input
+            @keyup="changeInp"
+            v-model="row.qty"
+            placeholder="Quantity"
+            type="text"
+          />
         </a-col>
       </a-row>
     </div>
@@ -140,23 +160,26 @@
     <a-row :gutter="20">
       <a-col :sm="24" :md="12">
         <FloatingLabel
+          :class="currentItem ? 'input__container--content' : ''"
           :config="{
             label: 'Price',
             ...floatingConfig,
           }"
         >
-          <input v-model="price" name="Price" />
+          <input @keyup="changeInp" v-model="price" name="Price" />
           <span class="show utb">NGN</span>
         </FloatingLabel>
       </a-col>
       <a-col :sm="24" :md="12">
         <FloatingLabel
+          :class="currentItem ? 'input__container--content' : ''"
           :config="{
             label: 'Quantity',
             ...floatingConfig,
+            hasContent: true,
           }"
         >
-          <input v-model="total_stock" name="Quantity" />
+          <input @keyup="changeInp" v-model="total_stock" name="Quantity" />
         </FloatingLabel>
       </a-col>
     </a-row>
@@ -170,9 +193,11 @@
         <a-row :gutter="20">
           <a-col :sm="24" :md="12">
             <FloatingLabel
+              :class="currentItem ? 'input__container--content' : ''"
               :config="{
                 label: 'Type of discount',
                 ...floatingConfig,
+                hasContent: true,
               }"
             >
               <select
@@ -200,9 +225,11 @@
               :config="{
                 label: 'Enter amount',
                 ...floatingConfig,
+                hasContent: true,
               }"
             >
               <input
+                @keyup="changeInp"
                 v-model="discount"
                 name="Enter amount"
                 :disabled="!discount_type"
@@ -227,7 +254,7 @@
     </div>
 
     <a-button
-      :disabled="product_image === '' || hasDiscountError"
+      :disabled="product_image === '' || hasDiscountError || disableEdittingBtn"
       class="main-btn"
       style="height: 56px; width: 180px"
       @click="finishCreation()"
@@ -246,8 +273,9 @@ import {
   updateProduct,
 } from "../services/apiServices";
 import { EventBus } from "../services/eventBus";
+import * as mutationTypes from "../store/mutationTypes";
+
 export default {
-  props: ["currentItem"],
   data() {
     return {
       uploadingImage: false,
@@ -304,6 +332,8 @@ export default {
   computed: {
     ...mapGetters({
       store: "getStore",
+      currentItem: "getItemToBeEditted",
+      formTouched: "getFormTouched",
     }),
     hasDiscountError() {
       if (this.discount_type === "1" && this.discount >= 100) {
@@ -382,16 +412,25 @@ export default {
         return { text: p, qty: quantities.length ? quantities[i] : null };
       });
     },
+    disableEdittingBtn() {
+      if (this.currentItem && this.formTouched) {
+        return false;
+      } else {
+        return true;
+      }
+    },
   },
   methods: {
-    logg() {
-      console.log(this.currentItem);
+    changeInp() {
+      this.formTouched = true;
+      this.$store.commit(mutationTypes.FORM_TOUCHED, true);
     },
     setCurrentInput(i) {
       this.currentInput = i;
       this.newVariantOption = "";
     },
     checkForComma(e, i) {
+      this.changeInp(e);
       if (
         e.code === "Comma" ||
         e.keyCode === 188 ||
@@ -452,8 +491,8 @@ export default {
           this.product_image = res.data.product_image;
           this.product_id = res.data.id;
         })
-        .catch((err) => {
-          console.log(err);
+        .catch(() => {
+          // console.log(err);
         })
         .finally(() => {
           this.uploadingImage = false;
@@ -495,8 +534,8 @@ export default {
       }
       this.loading = true;
       updateProduct(data, this.product_id)
-        .then((res) => {
-          console.log(res);
+        .then(() => {
+          // console.log(res);
           EventBus.$emit(
             "open_alert",
             "success",
@@ -505,8 +544,8 @@ export default {
           EventBus.$emit("close_drawer");
           fethcStoreInventory(this.store.slug);
         })
-        .catch((err) => {
-          console.log(err);
+        .catch(() => {
+          // console.log(err);
         })
         .finally(() => {
           this.loading = false;
@@ -514,23 +553,23 @@ export default {
     },
   },
   watch: {
-    currentItem() {
-      if (this.currentItem) {
-        this.product_image = this.currentItem.product_image;
-        this.product_name = this.currentItem.product_name;
-        this.description = this.currentItem.description;
-        this.has_variant = this.currentItem.has_variant;
-        this.discount_type = this.currentItem.discount_type;
-        this.discount = this.currentItem.discount;
-        this.product_id = this.currentItem.id;
-        this.price = this.currentItem.price;
-        this.total_stock = this.currentItem.total_stock;
-        this.display = this.currentItem.display;
+    currentItem(newValue) {
+      if (newValue) {
+        this.product_image = newValue.product_image;
+        this.product_name = newValue.product_name;
+        this.description = newValue.description;
+        this.has_variant = newValue.has_variant;
+        this.discount_type = newValue.discount_type;
+        this.discount = newValue.discount;
+        this.product_id = newValue.id;
+        this.price = newValue.price;
+        this.total_stock = newValue.total_stock;
+        this.display = newValue.display;
         let variants = [];
-        if (this.currentItem.first_variant_name) {
+        if (newValue.first_variant_name) {
           let obj = {
-            key: this.currentItem.first_variant_name,
-            values: this.currentItem.first_variant.split(",").map((val) => {
+            key: newValue.first_variant_name,
+            values: newValue.first_variant.split(",").map((val) => {
               return {
                 value: val,
               };
@@ -538,10 +577,10 @@ export default {
           };
           variants.push(obj);
         }
-        if (this.currentItem.first_variant_name) {
+        if (newValue.first_variant_name) {
           let obj = {
-            key: this.currentItem.second_variant_name,
-            values: this.currentItem.second_variant.split(",").map((val) => {
+            key: newValue.second_variant_name,
+            values: newValue.second_variant.split(",").map((val) => {
               return {
                 value: val,
               };
@@ -554,7 +593,7 @@ export default {
         this.product_image = "";
         this.product_name = "";
         this.description = "";
-        this.has_variant = "";
+        this.has_variant = false;
         this.discount_type = "";
         this.discount = "";
         this.product_id = "";
@@ -569,6 +608,62 @@ export default {
         ];
       }
     },
+  },
+
+  created() {
+    if (this.currentItem) {
+      this.product_image = this.currentItem.product_image;
+      this.product_name = this.currentItem.product_name;
+      this.description = this.currentItem.description;
+      this.has_variant = this.currentItem.has_variant;
+      this.discount_type = this.currentItem.discount_type;
+      this.discount = this.currentItem.discount;
+      this.product_id = this.currentItem.id;
+      this.price = this.currentItem.price;
+      this.total_stock = this.currentItem.total_stock;
+      this.display = this.currentItem.display;
+      let variants = [];
+      if (this.currentItem.first_variant_name) {
+        let obj = {
+          key: this.currentItem.first_variant_name,
+          values: this.currentItem.first_variant.split(",").map((val) => {
+            return {
+              value: val,
+            };
+          }),
+        };
+        variants.push(obj);
+      }
+      if (this.currentItem.first_variant_name) {
+        let obj = {
+          key: this.currentItem.second_variant_name,
+          values: this.currentItem.second_variant.split(",").map((val) => {
+            return {
+              value: val,
+            };
+          }),
+        };
+        variants.push(obj);
+      }
+      this.variants = variants;
+    } else {
+      this.product_image = "";
+      this.product_name = "";
+      this.description = "";
+      this.has_variant = "";
+      this.discount_type = "";
+      this.discount = "";
+      this.product_id = "";
+      this.price = "";
+      this.total_stock = "";
+      this.display = false;
+      this.variants = [
+        {
+          key: "",
+          values: [{ value: "" }],
+        },
+      ];
+    }
   },
 };
 </script>
@@ -704,8 +799,10 @@ export default {
         flex-direction: row;
         justify-content: space-between;
         margin-bottom: 12px;
+        padding-bottom: 12px;
+        border-bottom: 1px solid #e6e9ef;
         input {
-          width: 45%;
+          width: 48%;
           border: 1px solid #e6e9ef;
           background-color: transparent;
           border-radius: 4px;
@@ -717,7 +814,7 @@ export default {
           }
         }
         .options-input {
-          width: 45%;
+          width: 48%;
           border: 1px solid #e6e9ef;
           background-color: transparent;
           border-radius: 4px;
@@ -734,10 +831,10 @@ export default {
             flex-direction: row;
             flex-wrap: wrap;
             .option {
-              background-color: #ebebeb;
               color: #2b2b2b;
               padding: 5px 12px;
-              border-radius: 30px;
+              background: rgba(43, 43, 43, 0.05);
+              border-radius: 4px;
               margin: 0 5px 3px 0;
               transition: linear all 0.3s;
               cursor: pointer;

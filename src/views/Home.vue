@@ -2,7 +2,9 @@
   <div class="home">
     <div class="hero">
       <div class="nav">
-        <img src="../assets/white-logo.svg" alt="" />
+        <router-link :to="isLoggedIn ? '/dashbaord/orders' : '/'">
+          <img src="../assets/white-logo.svg" alt="" />
+        </router-link>
 
         <div class="links" :class="navOpen ? 'open' : ''">
           <button class="main-btn" @click="toLogin()">
@@ -68,6 +70,12 @@ export default {
   data() {
     return { navOpen: false, email: "", loading: false };
   },
+  computed: {
+    isLoggedIn() {
+      let token = window.sessionStorage.getItem("iam_cart_token");
+      return token ? true : false;
+    },
+  },
   methods: {
     toLogin() {
       this.$router.push("/signin");
@@ -75,11 +83,11 @@ export default {
     toRegister() {
       this.loading = true;
       joinWaitlist({ email: this.email })
-        .then((res) => {
-          console.log(res);
+        .then(() => {
+          // console.log(res);
         })
-        .catch((err) => {
-          console.log(err);
+        .catch(() => {
+          // console.log(err);
         })
         .finally(() => {
           this.loading = false;
@@ -363,6 +371,11 @@ export default {
       .unlock {
         width: 100%;
         margin: 0;
+      }
+    }
+    .unlock {
+      .unlock-title {
+        font-size: 30px;
       }
     }
   }

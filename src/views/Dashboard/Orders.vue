@@ -22,7 +22,7 @@
             <div class="name">
               {{ order.full_name }} — N{{ order.products_total }}
             </div>
-            <p class="date" v-if="i === activeKey">
+            <p class="date">
               {{ order.address }}, {{ order.city }}, {{ order.phone }},
               {{ order.email }}
             </p>
@@ -127,8 +127,8 @@ export default {
           this.orderItems = res.data;
           this.activeKey = i;
         })
-        .catch((err) => {
-          console.log({ err });
+        .catch(() => {
+          // console.log({ err });
           this.orderItems = [];
         })
         .finally(() => (this.loading = false));
@@ -139,8 +139,8 @@ export default {
           fetchOrders();
           this.openCollapse(i);
         })
-        .catch((err) => {
-          console.log(err);
+        .catch(() => {
+          // console.log(err);
         });
     },
     markAll(items, i) {
@@ -150,7 +150,7 @@ export default {
     },
   },
   mounted() {
-    console.log(this.orders);
+    // console.log(this.orders);
     this.pageWidth = window.innerWidth > 767;
   },
 };
@@ -300,6 +300,12 @@ export default {
         margin-bottom: 10px;
         font-family: untitled-sans-medium !important;
       }
+      .right {
+        span {
+          display: flex;
+          flex-direction: row;
+        }
+      }
     }
     .btm {
       transition: linear all 0.3s;
@@ -346,6 +352,9 @@ export default {
         }
       }
     }
+  }
+  @media (max-width: 1000px) {
+    padding: 0px 20px 100px;
   }
   @media (max-width: 767px) {
     padding: 0px 20px 100px;

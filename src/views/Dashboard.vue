@@ -2,9 +2,9 @@
   <div class="dashboard">
     <div class="nav">
       <div class="left">
-        <div class="inside" v-if="currentRoute !== '/dashboard/setup'">
+        <div class="inside">
           <div class="storename">
-            Mylo Couture
+            {{ store.store_name }}
           </div>
           <div
             @click="jumpTo(i)"
@@ -133,6 +133,7 @@
   </div>
 </template>
 <script>
+import { mapGetters } from "vuex";
 import { fetchOrders } from "../services/apiServices";
 export default {
   data() {
@@ -181,6 +182,9 @@ export default {
     };
   },
   computed: {
+    ...mapGetters({
+      store: "getStore",
+    }),
     currentRoute() {
       return this.$route.path;
     },

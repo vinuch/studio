@@ -3,7 +3,7 @@
     <div class="logo-wrap">
       <div class="circle"></div>
       <div class="info">
-        <p class="name utm">Mylo Couture</p>
+        <p class="name utm">{{ store_name }}</p>
         <p class="view utm" @click="visible = true">
           View store info
           <svg
@@ -66,7 +66,7 @@
 
       <div class="circle_"></div>
       <p class="store-name utb">
-        Mylo Couture
+        {{ store_name }}
       </p>
 
       <div class="contact utm">
@@ -86,25 +86,27 @@
           0812 678 0928
         </span>
 
-        <span>
-          <svg
-            width="20"
-            height="20"
-            viewBox="0 0 20 20"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="M2.00333 5.88355L9.99995 9.88186L17.9967 5.8835C17.9363 4.83315 17.0655 4 16 4H4C2.93452 4 2.06363 4.83318 2.00333 5.88355Z"
-              fill="#3A50D5"
-            />
-            <path
-              d="M18 8.11816L9.99995 12.1182L2 8.11822V14.0003C2 15.1049 2.89543 16.0003 4 16.0003H16C17.1046 16.0003 18 15.1049 18 14.0003V8.11816Z"
-              fill="#3A50D5"
-            />
-          </svg>
-          bunmi@gmail.com
-        </span>
+        <a href="mailto:">
+          <span>
+            <svg
+              width="20"
+              height="20"
+              viewBox="0 0 20 20"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M2.00333 5.88355L9.99995 9.88186L17.9967 5.8835C17.9363 4.83315 17.0655 4 16 4H4C2.93452 4 2.06363 4.83318 2.00333 5.88355Z"
+                fill="#3A50D5"
+              />
+              <path
+                d="M18 8.11816L9.99995 12.1182L2 8.11822V14.0003C2 15.1049 2.89543 16.0003 4 16.0003H16C17.1046 16.0003 18 15.1049 18 14.0003V8.11816Z"
+                fill="#3A50D5"
+              />
+            </svg>
+            bunmi@gmail.com
+          </span>
+        </a>
       </div>
     </a-drawer>
   </div>
@@ -336,6 +338,9 @@ export default {
   line-height: 150%;
   color: #3a50d5;
   text-align: center;
+  a {
+    color: #3a50d5;
+  }
   span {
     padding: 0 16px;
     display: inline-flex;

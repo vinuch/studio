@@ -44,7 +44,7 @@ export default {
   },
   mounted() {
     EventBus.$on("open_alert", (type, message) => {
-      console.log({ type, message });
+      // console.log({ type, message });
       this.showAlert = true;
       this.alertType = type;
       this.message = message;

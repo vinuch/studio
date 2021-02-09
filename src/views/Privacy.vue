@@ -2,7 +2,7 @@
   <div class="privacy">
     <div class="hero">
       <div class="nav">
-        <router-link to="/">
+        <router-link :to="isLoggedIn ? '/dashbaord/orders' : '/'">
           <img src="../assets/white-logo.svg" alt=""
         /></router-link>
 

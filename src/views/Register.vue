@@ -8,7 +8,7 @@
         v-else
         :style="{ fontSize: '16px', color: '#8093AD' }"
       />
-      <a-icon type="close" :style="{ fontSize: '16px', color: '#8093AD' }" />
+      <!-- <a-icon type="close" :style="{ fontSize: '16px', color: '#8093AD' }" /> -->
     </div>
     <div class="body">
       <p class="utb title">
