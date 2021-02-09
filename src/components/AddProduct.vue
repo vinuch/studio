@@ -422,7 +422,6 @@ export default {
   },
   methods: {
     changeInp() {
-      this.formTouched = true;
       this.$store.commit(mutationTypes.FORM_TOUCHED, true);
     },
     setCurrentInput(i) {
@@ -558,7 +557,7 @@ export default {
         this.product_image = newValue.product_image;
         this.product_name = newValue.product_name;
         this.description = newValue.description;
-        this.has_variant = newValue.has_variant;
+        this.has_variant = newValue ? newValue.has_variant : false;
         this.discount_type = newValue.discount_type;
         this.discount = newValue.discount;
         this.product_id = newValue.id;
@@ -603,7 +602,7 @@ export default {
         this.variants = [
           {
             key: "",
-            values: [{ value: "" }],
+            values: [],
           },
         ];
       }
@@ -615,7 +614,9 @@ export default {
       this.product_image = this.currentItem.product_image;
       this.product_name = this.currentItem.product_name;
       this.description = this.currentItem.description;
-      this.has_variant = this.currentItem.has_variant;
+      this.has_variant = this.currentItem
+        ? this.currentItem.has_variant
+        : false;
       this.discount_type = this.currentItem.discount_type;
       this.discount = this.currentItem.discount;
       this.product_id = this.currentItem.id;
@@ -650,7 +651,7 @@ export default {
       this.product_image = "";
       this.product_name = "";
       this.description = "";
-      this.has_variant = "";
+      this.has_variant = false;
       this.discount_type = "";
       this.discount = "";
       this.product_id = "";
@@ -660,7 +661,7 @@ export default {
       this.variants = [
         {
           key: "",
-          values: [{ value: "" }],
+          values: [],
         },
       ];
     }
