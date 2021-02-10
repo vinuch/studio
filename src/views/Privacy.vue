@@ -23,7 +23,7 @@
       <div class="hero-data">
         <div class="hero-text">
           <p class="big utb">
-            Privacy Ploicy
+            Privacy Policy
           </p>
         </div>
       </div>
