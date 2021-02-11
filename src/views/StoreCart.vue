@@ -315,9 +315,6 @@ export default {
       this.$store.commit(mutationTypes.SAVE_VISITOR_CART, cart_);
     },
   },
-  mounted() {
-    // this.$store.commit(mutationTypes.SAVE_VISITOR_CART, []);
-  },
 };
 </script>
 <style lang="scss" scoped>
