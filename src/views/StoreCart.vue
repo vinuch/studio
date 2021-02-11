@@ -282,7 +282,7 @@ export default {
   },
   methods: {
     // selectedShipping(zoneIndex) {
-    //   let zone_price = this.shippingPrices[zoneIndex];
+    //   let zone_price = this.shippingPrices[zoneIndex]
     //   this.city = this.shippingZones[zoneIndex];
     // },
     closeDrawer() {
