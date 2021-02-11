@@ -4,10 +4,15 @@
       class="image"
       @click="goToProduct()"
       :style="{ backgroundImage: `url('${product.product_image}')` }"
+      title="click for more details"
     ></div>
     <div class="item-body">
       <div class="details">
-        <p class="name utm" @click="goToProduct()">
+        <p
+          class="name utm"
+          @click="goToProduct()"
+          title="click for more details"
+        >
           {{ product.product_name }}
         </p>
         <p class="price">N{{ product.price }}</p>
@@ -29,6 +34,7 @@ export default {
   computed: {
     ...mapGetters({
       cart: "getVisitorCart",
+      inventory: "getVisitorStore",
     }),
     addedToCart() {
       return this.cart.find((c) => c.id === this.product.id);
@@ -36,17 +42,20 @@ export default {
   },
   methods: {
     goToProduct() {
-      this.$router.push("/view-product");
+      this.$router.push(`${this.$route.params.store_name}/${this.product.id}`);
     },
     pushToCart() {
+      if (this.product.has_variant) {
+        this.goToProduct();
+        return;
+      }
       let cart;
-      this.cart.find((c) => c.id === this.product.id)
-        ? (cart = this.cart.filter((itm) => itm.id !== this.product.id))
-        : (cart = [...this.cart, { id: this.product.id, qty: 1 }]);
-      this.$store.commit(mutationTypes.SAVE_VISITOR_CART, cart);
+      if (!this.cart.find((c) => c.id === this.product.id)) {
+        cart = [...this.cart, { ...this.product, qty_requested: 1 }];
+        this.$store.commit(mutationTypes.SAVE_VISITOR_CART, cart);
+      }
     },
   },
-  mounted() {},
 };
 </script>
 <style lang="scss" scoped>

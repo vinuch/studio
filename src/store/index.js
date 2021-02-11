@@ -17,8 +17,10 @@ export default new Vuex.Store({
     inventory: [],
     orders: [],
     to_de_editted: null,
+
     visitor_inventory: {},
     visitor_cart: [],
+    visited_store_info: {},
     visited_store_name: "",
     form_touched: false,
   },
@@ -47,6 +49,9 @@ export default new Vuex.Store({
     [mutationTypes.SAVE_VISITED_STORE_NAME](state, data) {
       state.visited_store_name = data;
     },
+    [mutationTypes.SAVE_VISITED_STORE_INFO](state, data) {
+      state.visited_store_info = data;
+    },
     [mutationTypes.FORM_TOUCHED](state, data) {
       state.form_touched = data;
     },
@@ -59,6 +64,7 @@ export default new Vuex.Store({
     getFormTouched: (state) => state.form_touched,
 
     getVisitorStore: (state) => state.visitor_inventory,
+    getVisitedStoreInfo: (state) => state.visited_store_info,
     getVisitorCart: (state) => state.visitor_cart,
     getVisitedStoreName: (state) => state.visited_store_name,
   },

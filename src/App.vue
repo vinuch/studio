@@ -59,6 +59,9 @@ export default {
 </script>
 
 <style lang="scss">
+body {
+  font-family: untitled-sans-regular !important;
+}
 #app {
   font-family: untitled-sans-regular;
   -webkit-font-smoothing: antialiased;
@@ -147,6 +150,50 @@ button {
     float: right !important;
   }
 }
+
+.grey-fields {
+  background: #f8f9fa;
+  border-radius: 4px;
+  padding: 24px;
+  p {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    border-bottom: 1px solid #e6e9ef;
+    padding-bottom: 12px;
+    .info {
+      font-size: 16px;
+      line-height: 20px;
+      color: #4d5868;
+    }
+    .price {
+      font-size: 16px;
+      line-height: 20px;
+      text-align: right;
+      color: #4d5868;
+    }
+  }
+  .main-btn {
+    height: 50px;
+    width: 100%;
+  }
+}
+
+.drawer-title {
+  height: 72px;
+  border-bottom: 1px solid #e6e9ef;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 30px;
+  span {
+    font-size: 18px;
+    line-height: 22px;
+    color: #2b2b2b;
+  }
+}
+
 .ant-tabs-nav .ant-tabs-tab {
   color: #8093ad !important;
   padding-left: 0 !important;

@@ -83,7 +83,7 @@
               fill="#3A50D5"
             />
           </svg>
-          0812 678 0928
+          {{ storeInfo.phone1 }}
         </span>
 
         <a href="mailto:">
@@ -104,7 +104,7 @@
                 fill="#3A50D5"
               />
             </svg>
-            bunmi@gmail.com
+            {{ storeInfo.email }}
           </span>
         </a>
       </div>
@@ -123,6 +123,7 @@ export default {
     ...mapGetters({
       cart: "getVisitorCart",
       store_name: "getVisitedStoreName",
+      storeInfo: "getVisitedStoreInfo",
     }),
     drawerWidth() {
       return window.innerWidth > 640 ? 640 : window.innerWidth;
@@ -135,12 +136,12 @@ export default {
         {
           icon: "tag",
           text: "Store",
-          to: `/store/${this.store_name}`,
+          to: `/${this.store_name}`,
         },
         {
           icon: "cart",
           text: "Cart",
-          to: "/store-cart",
+          to: `/${this.store_name}/cart`,
         },
       ];
     },
@@ -200,8 +201,9 @@ export default {
     }
     .info {
       display: flex;
-      align-items: center;
+      // align-items: center;
       flex-direction: column;
+      text-align: left;
       .name {
         font-size: 16px;
         line-height: 20px;
@@ -283,7 +285,7 @@ export default {
         display: flex;
         justify-content: center;
         align-items: center;
-        height: 60px;
+        height: 72px;
         cursor: pointer;
         font-weight: 500;
         font-size: 12px;
@@ -292,9 +294,14 @@ export default {
         width: 50%;
         display: flex;
         flex-direction: column;
+        border-top: 4px solid #10102c;
         &.blur {
           opacity: 0.5;
           border-bottom: 4px solid #10102c;
+        }
+        .badge {
+          top: 8px;
+          left: 105px;
         }
         .txt {
           display: block;

@@ -52,6 +52,15 @@ export const updateProduct = (data, id) => {
   });
 };
 
+export const fetchStoreInfo = (slug) => {
+  axios({
+    method: "get",
+    url: `${urls.storeInfoUrl}${slug}`,
+  }).then((res) => {
+    store.commit(mutationTypes.SAVE_VISITED_STORE_INFO, res.data);
+  });
+};
+
 export const fethcStoreInventory = (slug, n) => {
   axios({
     method: "get",
@@ -59,7 +68,15 @@ export const fethcStoreInventory = (slug, n) => {
   })
     .then((res) => {
       n
-        ? store.commit(mutationTypes.SAVE_VISITOR_INVENTORY, res.data)
+        ? store.commit(
+            mutationTypes.SAVE_VISITOR_INVENTORY,
+            res.data.map((itm) => {
+              return {
+                ...itm,
+                picked_variant_value: [],
+              };
+            })
+          )
         : store.commit(mutationTypes.SAVE_INVENTORY, res.data);
     })
     .catch(() => {

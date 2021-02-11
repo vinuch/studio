@@ -26,7 +26,7 @@
 import { mapGetters } from "vuex";
 import StoreItem from "../components/StoreItem";
 import StoreNav from "../components/StoreNav";
-import { fethcStoreInventory } from "../services/apiServices";
+import { fethcStoreInventory, fetchStoreInfo } from "../services/apiServices";
 import * as mutationTypes from "../store/mutationTypes";
 export default {
   data() {
@@ -59,6 +59,7 @@ export default {
   methods: {},
   mounted() {
     fethcStoreInventory(this.$route.params.store_name, 1);
+    fetchStoreInfo(this.$route.params.store_name);
     this.$store.commit(
       mutationTypes.SAVE_VISITED_STORE_NAME,
       this.$route.params.store_name
@@ -85,6 +86,12 @@ export default {
 
   .order-items {
     padding: 60px 100px;
+  }
+
+  @media (max-width: 767px) {
+    .order-items {
+      padding: 30px 20px;
+    }
   }
 }
 </style>

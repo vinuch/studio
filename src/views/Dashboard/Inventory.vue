@@ -22,7 +22,8 @@
       <a-row :gutter="20">
         <a-col
           :sm="12"
-          :md="6"
+          :md="8"
+          :lg="6"
           v-for="(item, i) in inventory"
           :key="'order' + i"
           @click="viewProduct(item)"
@@ -154,19 +155,5 @@ export default {
 .ant-drawer-header {
   padding: 0 !important;
   border: 0 !important;
-}
-.drawer-title {
-  height: 72px;
-  border-bottom: 1px solid #e6e9ef;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 30px;
-  span {
-    font-size: 18px;
-    line-height: 22px;
-    color: #2b2b2b;
-  }
 }
 </style>

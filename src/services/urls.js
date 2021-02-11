@@ -1,5 +1,6 @@
-export const baseUrl = process.env.VUE_APP_API_BASE_URL;
-// export const baseUrl = "https://cors-anywhere.herokuapp.com/https://api.iamcart.io/";
+// export const baseUrl = process.env.VUE_APP_API_BASE_URL;
+export const baseUrl =
+  "https://cors-anywhere.herokuapp.com/https://api.iamcart.io/";
 export const loginUrl = `${baseUrl}user/api_login/`;
 export const createStoreUrl = `${baseUrl}api/account/store/create/`;
 export const updateStoreUrl = `${baseUrl}api/account/store/update/`;
@@ -10,3 +11,4 @@ export const ordersUrl = `${baseUrl}api/inventory/order/`;
 export const orderItemUrl = `${baseUrl}api/inventory/order_items/`;
 export const joinWaitListUrl = `${baseUrl}api/account/waitlist/join/`;
 export const updateOrderStatus = `${baseUrl}api/inventory/order_item/update/`;
+export const storeInfoUrl = `${baseUrl}api/account/store/`;

@@ -635,7 +635,7 @@ export default {
         };
         variants.push(obj);
       }
-      if (this.currentItem.first_variant_name) {
+      if (this.currentItem.second_variant_name) {
         let obj = {
           key: this.currentItem.second_variant_name,
           values: this.currentItem.second_variant.split(",").map((val) => {

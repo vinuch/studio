@@ -38,16 +38,6 @@ const routes = [
     component: () => import("../views/CreatePassword.vue"),
   },
   {
-    path: "/store-cart",
-    name: "StoreCart",
-    component: () => import("../views/StoreCart.vue"),
-  },
-  {
-    path: "/view-product",
-    name: "ViewProduct",
-    component: () => import("../views/ViewProduct.vue"),
-  },
-  {
     path: "/dashboard/",
     // name: "Dashboard",
     component: () => import("../views/Dashboard.vue"),
@@ -81,13 +71,23 @@ const routes = [
   },
   {
     path: "/privacy",
-    name: "Store",
+    name: "Privacy",
     component: () => import("../views/Privacy.vue"),
+  },
+  {
+    path: "/:store_name/cart",
+    name: "StoreCart",
+    component: () => import("../views/StoreCart.vue"),
   },
   {
     path: "/:store_name",
     name: "Store",
     component: () => import("../views/StoreView.vue"),
+  },
+  {
+    path: "/:store_name/:item_id",
+    name: "ViewProduct",
+    component: () => import("../views/ViewProduct.vue"),
   },
 ];
 
