@@ -13,9 +13,9 @@
           @click="goToProduct()"
           title="click for more details"
         >
-          {{ product.product_name }}
+          {{ product.product_name || "---" }}
         </p>
-        <p class="price">N{{ product.price }}</p>
+        <p class="price">₦{{ numeral(product.price).format("0,0") }}</p>
         <button
           @click="pushToCart()"
           :class="addedToCart ? 'main-btn' : 'main-btn-bd'"
@@ -29,6 +29,7 @@
 <script>
 import { mapGetters } from "vuex";
 import * as mutationTypes from "../store/mutationTypes";
+import numeral from "numeral";
 export default {
   props: ["product"],
   computed: {
@@ -41,6 +42,7 @@ export default {
     },
   },
   methods: {
+    numeral,
     goToProduct() {
       this.$router.push(`${this.$route.params.store_name}/${this.product.id}`);
     },

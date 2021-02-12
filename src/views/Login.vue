@@ -5,9 +5,11 @@
       <!-- <a-icon type="close" :style="{ fontSize: '16px', color: '#8093AD' }" /> -->
     </div>
     <div class="body">
-      <p class="utb title">
-        Welcome back
-      </p>
+      <router-link to="/olawalle">
+        <p class="utb title">
+          Welcome back
+        </p>
+      </router-link>
       <p class="sub-title">
         Enter your email and password to log in
       </p>

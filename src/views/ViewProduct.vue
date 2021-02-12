@@ -35,7 +35,9 @@
             <p class="name utb">
               {{ currentItem.product_name }}
             </p>
-            <p class="price utm">N{{ currentItem.price }}</p>
+            <p class="price utm">
+              ₦{{ numeral(currentItem.price).format("0,0") }}
+            </p>
             <p class="desc">
               {{ currentItem.description }}
             </p>
@@ -107,7 +109,9 @@
                   <p class="name utb">
                     {{ otherItem.product_name }}
                   </p>
-                  <p class="price utm">N{{ otherItems[0].price }}</p>
+                  <p class="price utm">
+                    ₦{{ numeral(otherItems[0].price).format("0,0") }}
+                  </p>
                   <p class="desc_">
                     {{ otherItem.description }}
                   </p>
@@ -169,6 +173,7 @@ import { mapGetters } from "vuex";
 import StoreNav from "../components/StoreNav";
 import { EventBus } from "../services/eventBus";
 import * as mutationTypes from "../store/mutationTypes";
+import numeral from "numeral";
 export default {
   // props: ["addedToCart"],
   data() {
@@ -209,6 +214,7 @@ export default {
     },
   },
   methods: {
+    numeral,
     addedToCart(id) {
       let itm = this.cart.find((itm) => itm.id === id);
       return itm ? true : false;

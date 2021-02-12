@@ -9,7 +9,7 @@
         <p class="name utm">
           {{ product.product_name || "---" }}
         </p>
-        <p class="price">N{{ product.price }}</p>
+        <p class="price">₦{{ numeral(product.price).format("0,0") }}</p>
         <p class="qty utm">{{ product.total_stock }} available</p>
       </div>
       <img src="../assets/caret.svg" alt="" />
@@ -17,8 +17,12 @@
   </div>
 </template>
 <script>
+import numeral from "numeral";
 export default {
   props: ["product"],
+  methods: {
+    numeral,
+  },
 };
 </script>
 <style lang="scss" scoped>

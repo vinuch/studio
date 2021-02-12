@@ -100,7 +100,7 @@
         <div class="grey-fields">
           <p>
             <span class="info"> Sub total ({{ this.cart.length }} items) </span>
-            <span class="price utm"> N{{ total }} </span>
+            <span class="price utm"> N{{ numeral(total).format("0,0") }} </span>
           </p>
           <a-button class="main-btn" @click="submit">
             Enter delivery address
@@ -129,141 +129,34 @@
           style="cursor: pointer"
         />
       </div>
-
-      <div class="address-form">
-        <FloatingLabel
-          :config="{
-            label: 'Name',
-            ...floatingConfig,
-            hasContent: true,
-          }"
-        >
-          <input v-model="delivery_details.full_name" name="Name" />
-        </FloatingLabel>
-        <FloatingLabel
-          :config="{
-            label: 'Email address',
-            ...floatingConfig,
-            hasContent: true,
-          }"
-        >
-          <input v-model="delivery_details.email" name="email" />
-        </FloatingLabel>
-        <FloatingLabel
-          :config="{
-            label: 'Phone no.',
-            ...floatingConfig,
-            hasContent: true,
-          }"
-        >
-          <input v-model="delivery_details.phone" name="phone" />
-        </FloatingLabel>
-        <FloatingLabel
-          :config="{
-            label: 'Delivery address',
-            ...floatingConfig,
-            hasContent: true,
-          }"
-        >
-          <input v-model="delivery_details.address" name="address" />
-        </FloatingLabel>
-        <FloatingLabel
-          :config="{
-            label: 'Select shipping area',
-            ...floatingConfig,
-            hasContent: true,
-          }"
-        >
-          <select
-            style="width: 100%;
-                height: 100%;
-                border: 0;
-                background: transparent;
-                padding-top: 10px;"
-            v-model="city"
-            name="shipping"
-          >
-            <option value="Ikoyi">Ikoyi</option>
-          </select>
-        </FloatingLabel>
-        <div class="grey-fields">
-          <p>
-            <span class="info"> Sub total ({{ this.cart.length }} items) </span>
-            <span class="price utm"> N{{ total }} </span>
-          </p>
-          <p>
-            <span class="info">
-              Delivery fee ({{ this.cart.length }} items)
-            </span>
-            <span class="price utm"> N0.00 </span>
-          </p>
-          <p
-            style="border: 0;
-              padding: 0;
-              margin: 0;"
-          >
-            <span class="info utm" style="color: #10102C;">
-              Total ({{ this.cart.length }} items)
-            </span>
-            <span class="price utm" style="color: #10102C;">
-              N{{ total }}
-            </span>
-          </p>
-        </div>
-        <a-button
-          class="main-btn"
-          style="margin-top: 20px; width: 100%; height: 50px"
-          @click="submit"
-        >
-          Place order
-        </a-button>
-      </div>
+      <AddressForm />
     </a-drawer>
   </div>
 </template>
 <script>
 import StoreNav from "../components/StoreNav";
+import AddressForm from "../components/AddressForm";
 import { mapGetters } from "vuex";
 import * as mutationTypes from "../store/mutationTypes";
-import FloatingLabel from "vue-simple-floating-labels";
+import numeral from "numeral";
 export default {
   data() {
     return {
       visible: false,
-      delivery_details: {
-        full_name: "",
-        email: "",
-        phone: "",
-        address: "",
-      },
-      floatingConfig: {
-        hasClearButton: false,
-        line: false,
-        labelOffset: {
-          left: 20,
-          top: 10,
-        },
-        colors: {
-          focusColor: "#3A50D5",
-          errorColor: "#ff0000",
-          lineColor: "#128CED",
-          blurredColor: "#66768A",
-        },
-      },
-      city: "",
     };
   },
-  components: { StoreNav, FloatingLabel },
+  components: { StoreNav, AddressForm },
   computed: {
     ...mapGetters({
       cart: "getVisitorCart",
-      store: "getVisitorStore",
+      storeItems: "getVisitorStore",
+      storeInfo: "getVisitedStoreInfo",
     }),
     drawerWidth() {
       return window.innerWidth > 640 ? 640 : window.innerWidth;
     },
     cartItems() {
-      return this.store
+      return this.storeItems
         .filter((item) => this.cart.find((cart) => cart.id === item.id))
         .map((c) => {
           return {
@@ -285,6 +178,7 @@ export default {
     //   let zone_price = this.shippingPrices[zoneIndex]
     //   this.city = this.shippingZones[zoneIndex];
     // },
+    numeral,
     closeDrawer() {
       this.visible = false;
     },
@@ -315,6 +209,7 @@ export default {
       this.$store.commit(mutationTypes.SAVE_VISITOR_CART, cart_);
     },
   },
+  mounted() {},
 };
 </script>
 <style lang="scss" scoped>
@@ -447,15 +342,6 @@ export default {
       margin-top: 40px;
       padding: 0 0 100px;
     }
-  }
-}
-</style>
-<style lang="scss">
-.address-form {
-  padding: 15px 80px;
-
-  @media (max-width: 767px) {
-    padding: 15px;
   }
 }
 </style>

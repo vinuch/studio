@@ -34,6 +34,7 @@
 
 <script>
 import { EventBus } from "./services/eventBus";
+import * as mutationTypes from "./store/mutationTypes";
 export default {
   data() {
     return {
@@ -43,6 +44,7 @@ export default {
     };
   },
   mounted() {
+    this.$store.commit(mutationTypes.SAVE_VISITOR_CART, []);
     EventBus.$on("open_alert", (type, message) => {
       // console.log({ type, message });
       this.showAlert = true;
