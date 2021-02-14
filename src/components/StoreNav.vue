@@ -1,10 +1,12 @@
 <template>
   <div class="nav">
     <div class="logo-wrap">
-      <div class="circle"></div>
+      <div class="circle">
+        <img :src="storeInfo.logo" alt="" />
+      </div>
       <div class="info">
         <p class="name utm">{{ store_name }}</p>
-        <p class="view utm" @click="visible = true">
+        <p class="view utm" @click="openDrawer()">
           View store info
           <svg
             width="6"
@@ -64,7 +66,9 @@
         />
       </div>
 
-      <div class="circle_"></div>
+      <div class="circle_">
+        <img :src="storeInfo.logo" alt="" />
+      </div>
       <p class="store-name utb">
         {{ store_name }}
       </p>
@@ -113,6 +117,7 @@
 </template>
 <script>
 import { mapGetters } from "vuex";
+import { EventBus } from "../services/eventBus";
 export default {
   data() {
     return {
@@ -147,6 +152,17 @@ export default {
     },
   },
   methods: {
+    openDrawer() {
+      if (this.storeInfo.id) {
+        this.visible = true;
+      } else {
+        EventBus.$emit(
+          "open_alert",
+          "error",
+          "This store does not exist. please confirm the store url and try again"
+        );
+      }
+    },
     jumpTo(i) {
       this.currentLink = i;
       this.$router.push(`${this.links[i].to}`);
@@ -196,8 +212,17 @@ export default {
       height: 48px;
       border-radius: 48px;
       margin-right: 6px;
-      background: rgba(255, 255, 255, 0.05);
+      background-color: rgba(255, 255, 255, 0.05);
       border: 2px solid rgba(255, 255, 255, 0.02);
+      background-size: cover;
+      background-position: center;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      img {
+        width: 105%;
+      }
     }
     .info {
       display: flex;
@@ -332,6 +357,13 @@ export default {
   background: rgba(16, 16, 44, 0.05);
   border: 2px solid rgba(16, 16, 44, 0.02);
   margin: 10px auto;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  img {
+    width: 105%;
+  }
 }
 .store-name {
   font-weight: bold;

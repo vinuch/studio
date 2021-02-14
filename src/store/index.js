@@ -23,6 +23,7 @@ export default new Vuex.Store({
     visited_store_info: {},
     visited_store_name: "",
     form_touched: false,
+    completed_order_info: {},
   },
   mutations: {
     [mutationTypes.SAVE_STORE](state, data) {
@@ -55,6 +56,9 @@ export default new Vuex.Store({
     [mutationTypes.FORM_TOUCHED](state, data) {
       state.form_touched = data;
     },
+    [mutationTypes.COMPLETED_ORDER_INFO](state, data) {
+      state.completed_order_info = data;
+    },
   },
   getters: {
     getStore: (state) => state.store,
@@ -67,6 +71,7 @@ export default new Vuex.Store({
     getVisitedStoreInfo: (state) => state.visited_store_info,
     getVisitorCart: (state) => state.visitor_cart,
     getVisitedStoreName: (state) => state.visited_store_name,
+    getCompletedOrderInfo: (state) => state.completed_order_info,
   },
   actions: {},
   modules: {},

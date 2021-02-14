@@ -75,6 +75,11 @@ const routes = [
     component: () => import("../views/Privacy.vue"),
   },
   {
+    path: "/confirmation",
+    name: "Confirmation",
+    component: () => import("../views/Confirmation.vue"),
+  },
+  {
     path: "/:store_name/cart",
     name: "StoreCart",
     component: () => import("../views/StoreCart.vue"),

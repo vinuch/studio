@@ -139,6 +139,7 @@ import AddressForm from "../components/AddressForm";
 import { mapGetters } from "vuex";
 import * as mutationTypes from "../store/mutationTypes";
 import numeral from "numeral";
+import { EventBus } from "../services/eventBus";
 export default {
   data() {
     return {
@@ -174,10 +175,6 @@ export default {
     },
   },
   methods: {
-    // selectedShipping(zoneIndex) {
-    //   let zone_price = this.shippingPrices[zoneIndex]
-    //   this.city = this.shippingZones[zoneIndex];
-    // },
     numeral,
     closeDrawer() {
       this.visible = false;
@@ -209,7 +206,9 @@ export default {
       this.$store.commit(mutationTypes.SAVE_VISITOR_CART, cart_);
     },
   },
-  mounted() {},
+  mounted() {
+    EventBus.$on("closeDrawer", () => this.closeDrawer());
+  },
 };
 </script>
 <style lang="scss" scoped>

@@ -3,7 +3,10 @@
     <StoreNav />
     <div class="empty" v-if="!inventory.length">
       <img src="../assets/discount.svg" alt="" />
-      <p>No products yet, check back later</p>
+      <p v-if="visitedStoreInfo.id">No products yet, check back later</p>
+      <p v-else>
+        This store does not exist. Kindly confirm the url and try again
+      </p>
     </div>
 
     <div class="order-items">
@@ -27,6 +30,7 @@ import { mapGetters } from "vuex";
 import StoreItem from "../components/StoreItem";
 import StoreNav from "../components/StoreNav";
 import { fethcStoreInventory, fetchStoreInfo } from "../services/apiServices";
+import { EventBus } from "../services/eventBus";
 import * as mutationTypes from "../store/mutationTypes";
 export default {
   data() {
@@ -54,12 +58,22 @@ export default {
   computed: {
     ...mapGetters({
       inventory: "getVisitorStore",
+      visitedStoreInfo: "getVisitedStoreInfo",
     }),
   },
   methods: {},
   mounted() {
     fethcStoreInventory(this.$route.params.store_name, 1);
-    fetchStoreInfo(this.$route.params.store_name);
+    fetchStoreInfo(this.$route.params.store_name)
+      .then(() => {})
+      .catch((err) => {
+        EventBus.$emit(
+          "open_alert",
+          "error",
+          "An error occured. Please confirm the store url and try again"
+        );
+        console.log(err);
+      });
     this.$store.commit(
       mutationTypes.SAVE_VISITED_STORE_NAME,
       this.$route.params.store_name

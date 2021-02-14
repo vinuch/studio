@@ -45,6 +45,7 @@ export default {
   },
   mounted() {
     this.$store.commit(mutationTypes.SAVE_VISITOR_CART, []);
+    // available alert types: success, info, warning and error
     EventBus.$on("open_alert", (type, message) => {
       // console.log({ type, message });
       this.showAlert = true;

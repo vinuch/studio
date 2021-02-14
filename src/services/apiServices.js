@@ -52,36 +52,51 @@ export const updateProduct = (data, id) => {
   });
 };
 
-export const fetchStoreInfo = (slug) => {
-  axios({
-    method: "get",
-    url: `${urls.storeInfoUrl}${slug}`,
-  }).then((res) => {
+export const fetchStoreInfo = async (slug) => {
+  try {
+    let res = await axios({
+      method: "get",
+      url: `${urls.storeInfoUrl}${slug}`,
+    });
     store.commit(mutationTypes.SAVE_VISITED_STORE_INFO, res.data);
+  } catch (error) {
+    store.commit(mutationTypes.SAVE_VISITED_STORE_INFO, {});
+  }
+};
+
+export const fethcStoreInventory = async (slug, n) => {
+  let res = await axios({
+    method: "get",
+    url: `${urls.inventoryUrl}${slug}/`,
+  });
+  n
+    ? store.commit(
+        mutationTypes.SAVE_VISITOR_INVENTORY,
+        res.data.map((itm) => {
+          return {
+            ...itm,
+            picked_variant_value: [],
+          };
+        })
+      )
+    : store.commit(mutationTypes.SAVE_INVENTORY, res.data);
+  return res;
+};
+
+export const saveOrder = (data) => {
+  return axios({
+    method: "post",
+    url: urls.saveOrderUrl,
+    data,
   });
 };
 
-export const fethcStoreInventory = (slug, n) => {
-  axios({
-    method: "get",
-    url: `${urls.inventoryUrl}${slug}/`,
-  })
-    .then((res) => {
-      n
-        ? store.commit(
-            mutationTypes.SAVE_VISITOR_INVENTORY,
-            res.data.map((itm) => {
-              return {
-                ...itm,
-                picked_variant_value: [],
-              };
-            })
-          )
-        : store.commit(mutationTypes.SAVE_INVENTORY, res.data);
-    })
-    .catch(() => {
-      // console.log(err);
-    });
+export const createOrder = (data) => {
+  return axios({
+    method: "post",
+    url: urls.createOrderUrl,
+    data,
+  });
 };
 
 export const fetchOrders = () => {

@@ -88,7 +88,8 @@
     <a-button
       class="main-btn"
       style="margin-top: 20px; width: 100%; height: 50px"
-      @click="submit"
+      @click="saveOrderHandler()"
+      :loading="loading"
     >
       Place order
     </a-button>
@@ -97,17 +98,21 @@
 <script>
 import FloatingLabel from "vue-simple-floating-labels";
 import numeral from "numeral";
-import axios from "axios";
 import { mapGetters } from "vuex";
+import { saveOrder, createOrder } from "../services/apiServices";
+import * as mutationTypes from "../store/mutationTypes";
+import { EventBus } from "../services/eventBus";
 export default {
   data() {
     return {
+      loading: false,
       delivery_details: {
         full_name: "",
         email: "",
         phone: "",
         address: "",
       },
+      orderID: "",
       floatingConfig: {
         hasClearButton: false,
         line: false,
@@ -156,15 +161,7 @@ export default {
       return zones_;
     },
     cartItems() {
-      return this.storeItems
-        .filter((item) => this.cart.find((cart) => cart.id === item.id))
-        .map((c) => {
-          return {
-            ...c,
-            qty_requested: this.cart.find((cart) => cart.id === c.id)
-              .qty_requested,
-          };
-        });
+      return this.cart;
     },
     total() {
       return this.cartItems.reduce((agg, curr) => {
@@ -172,10 +169,25 @@ export default {
         return agg;
       }, 0);
     },
+    order() {
+      return this.cartItems.map((item, i) => {
+        var order_item = {};
+        order_item.index = i + 1;
+        order_item.order = this.orderID;
+        order_item.product = item.id;
+        order_item.selected_option1 = item.picked_variant_value[0];
+        order_item.selected_option2 = item.picked_variant_value[1];
+        order_item.qty = item.qty_requested;
+        order_item.productid = item.id;
+        order_item.sub_total = this.numeral(
+          parseFloat(item.price) * parseFloat(item.qty_requested)
+        ).format("0,0");
+        return order_item;
+      });
+    },
   },
   methods: {
     numeral,
-    submit() {},
     createOrderID() {
       var ref_type = "1"; // '1' for purchase by merchnat's customer
       var rand_int = Math.floor(Math.random() * 9999) + 1000;
@@ -184,11 +196,11 @@ export default {
         .getFullYear()
         .toString()
         .slice(-2);
-      var store_id = this.store_id.toString(); // this allows for up to 9999 stores merchants
+      var store_id = this.storeInfo.id.toString(); // this allows for up to 9999 stores merchants
       // var customer_id = '0000' // 0 for anonymous
       var month = (today.getMonth() + 1).toString(); // cause month is 0 indexed
       var day = today.getDate().toString();
-      var cart_count = this.cartCount.toString();
+      var cart_count = this.cartItems.length.toString();
       var hour = today.getHours().toString();
       var minute = today.getMinutes().toString();
       var second = today.getSeconds().toString();
@@ -223,106 +235,79 @@ export default {
       this.orderID =
         ref_type + store_id + month + day + cart_count + year + rand_int;
     },
-    createOrder() {
-      for (let i = 0; i < this.cart.length; i++) {
-        var order_item = {
-          order: "",
-          index: 0,
-          product: "",
-          selected_option1: "",
-          selected_option2: "",
-          qty: 0,
-          productid: 0,
-          sub_total: 0,
-        };
-        order_item.index = i + 1;
-        order_item.order = this.orderID;
-        order_item.product = this.cart[i].id;
-        order_item.selected_option1 = this.cart[i].selected_option;
-        order_item.selected_option2 = this.cart[i].selected_option2;
-        order_item.qty = this.cart[i].count;
-        order_item.productid = this.cart[i].id;
-        order_item.sub_total = this.cart[i].subTotalView;
-        this.order.push(order_item);
-        // product returns the name of the product on the server and is not unique. productid is thus required for uniqueness
-        // Figure out what's happening with product and productid
-      }
-    },
-    saveOrder() {
-      var self = this;
-      axios({
-        method: "post",
-        url: this.api_base_url + "api/inventory/order/create/",
-        // headers: {
-        //   'X-CSRFTOKEN': getCookie('csrftoken')
-        // },
-        data: {
-          store: this.store_id,
-          order_ref: this.orderID,
-          unique_items: this.cart.length,
-          items_count: this.cartCount,
-          total_amount: this.grand_total,
-          full_name: this.delivery_details.full_name,
-          email: this.delivery_details.email,
-          phone: this.delivery_details.phone,
-          address: this.delivery_details.address,
-          city: this.city,
-          state: this.delivery_details.state,
-          shipping: this.shippingCost,
-          products_total: this.preShippingAccFormat,
-        },
-      })
+    // createOrder() {},
+    saveOrderHandler() {
+      this.createOrderID();
+      this.loading = true;
+      let data = {
+        address: this.delivery_details.address,
+        email: this.delivery_details.email,
+        full_name: this.delivery_details.full_name,
+        items_count: this.cartItems.reduce((agg, curr) => {
+          agg += curr.qty_requested;
+          return agg;
+        }, 0),
+        total_amount: parseFloat(this.total) * 100,
+        unique_items: this.cartItems.length,
+        order_ref: this.orderID,
+        phone: this.delivery_details.phone,
+
+        city: this.city.zone,
+        products_total: this.numeral(this.total).format("0,0"),
+        shipping: this.numeral(this.city.price).format("0,0"),
+        store: this.storeInfo.id,
+      };
+      saveOrder(data)
         .then(() => {
-          self.createOrderItems();
+          this.createOrderItems();
         })
-        .then(() => {
-          self.payWithPaystack();
-        })
-        // then(response => (console.log(response.data))).
-        .catch(function(error) {
-          console.log(error);
+        .catch(() => {
+          this.loading = false;
+          EventBus.$emit(
+            "open_alert",
+            "error",
+            "An error occured. Please try again"
+          );
         });
     },
     createOrderItems() {
-      axios({
-        method: "post",
-        url: this.api_base_url + "api/inventory/order_item/create/",
-        // headers: {
-        //   'X-CSRFTOKEN': getCookie('csrftoken')
-        // },
-        data: this.order,
-      })
-        // then(response => (console.log(response.data))).
-        .catch(function(error) {
-          console.log(error);
-        });
+      createOrder(this.order)
+        .then(() => {
+          this.payWithPaystack();
+        })
+        .catch(() => {
+          EventBus.$emit(
+            "open_alert",
+            "error",
+            "An error occured. Please try again"
+          );
+        })
+        .finally(() => (this.loading = false));
     },
     /* eslint-disable */
     payWithPaystack() {
-      var self = this;
       var handler = PaystackPop.setup({
-        key: this.public_key,
+        key: this.storeInfo.paystack_public_key,
         email: this.delivery_details.email,
-        amount: this.grand_total,
+        amount: (parseFloat(this.total) + parseFloat(this.city.price)) * 100,
         currency: "NGN",
         ref: this.orderID,
         metadata: {
           custom_fields: [
             {
-              store: this.store_id, // This is important for payment verification
+              store: this.storeInfo.id, // This is important for payment verification
             },
           ],
         },
-        callback: function(response) {
-          // console.log(response)
-          self.$store.dispatch("clearPurchaseData");
-          self.$store.commit("saveOrderIDAndEmail", {
-            email: self.delivery_details.email,
-            orderID: self.orderID,
+        callback: (response) => {
+          this.$store.commit(mutationTypes.SAVE_VISITOR_CART, []);
+          this.$store.commit(mutationTypes.COMPLETED_ORDER_INFO, {
+            email: this.delivery_details.email,
+            orderID: this.orderID,
           });
-          self.order = [];
-          self.orderID = "";
-          self.changeRoute("inCart", "OrderConfirmation");
+          this.orderID = "";
+          EventBus.$emit("closeDrawer");
+          this.$router.push("/confirmation");
         },
         onClose: function() {
           console.log("window closed");
