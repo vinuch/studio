@@ -240,7 +240,6 @@ export default {
     // createOrder() {},
     saveOrderHandler() {
       this.createOrderID();
-      this.loading = true;
       let data = {
         address: this.delivery_details.address,
         email: this.delivery_details.email,
@@ -259,6 +258,11 @@ export default {
         shipping: this.numeral(this.city.price).format("0,0"),
         store: this.storeInfo.id,
       };
+      if (Object.values(data).includes("")) {
+        EventBus.$emit("open_alert", "error", "Please fill in all fields");
+        return;
+      }
+      this.loading = true;
       saveOrder(data)
         .then(() => {
           this.createOrderItems();
