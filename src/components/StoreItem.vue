@@ -44,7 +44,7 @@ export default {
   methods: {
     numeral,
     goToProduct() {
-      this.$router.push(`${this.$route.params.store_name}/${this.product.id}`);
+      this.$router.push(`/store-item/${this.product.id}`);
     },
     pushToCart() {
       if (this.product.has_variant) {

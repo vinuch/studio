@@ -141,12 +141,12 @@ export default {
         {
           icon: "tag",
           text: "Store",
-          to: `/${this.store_name}`,
+          to: `/`,
         },
         {
           icon: "cart",
           text: "Cart",
-          to: `/${this.store_name}/cart`,
+          to: `/cart`,
         },
       ];
     },

@@ -143,7 +143,9 @@ export default {
       storeInfo: "getVisitedStoreInfo",
     }),
     zones() {
-      let zones = this.storeInfo.default_shipping.split(",");
+      let zones = this.storeInfo.default_shipping
+        ? this.storeInfo.default_shipping.split(",")
+        : [];
       let zones_ = zones
         .map((zone, i) => {
           let obj = {};

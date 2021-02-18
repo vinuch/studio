@@ -57,6 +57,22 @@ export default {
         this.message = "";
       }, 6000);
     });
+
+    var full = window.location.host;
+    var parts = full.split(".");
+    var sub = parts[0];
+    // let sub_ = sub.includes("localhost") ? "olawalle" : sub;
+    // console.log(sub_);
+    this.$store.commit(
+      mutationTypes.SAVE_VISITED_STORE_NAME,
+      parts.length > 2 ? sub : ""
+    );
+  },
+  beforeDestroy() {
+    this.$store.commit(mutationTypes.SAVE_VISITED_STORE_NAME, "");
+  },
+  created() {
+    this.$store.commit(mutationTypes.SAVE_VISITED_STORE_NAME, "");
   },
 };
 </script>

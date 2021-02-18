@@ -3,7 +3,9 @@
     <StoreNav />
     <div class="empty" v-if="!inventory.length">
       <img src="../assets/discount.svg" alt="" />
-      <p v-if="visitedStoreInfo.id">No products yet, check back later</p>
+      <p v-if="visitedStoreInfo.id">
+        No products yet, check back later
+      </p>
       <p v-else>
         This store does not exist. Kindly confirm the url and try again
       </p>
@@ -59,25 +61,36 @@ export default {
     ...mapGetters({
       inventory: "getVisitorStore",
       visitedStoreInfo: "getVisitedStoreInfo",
+      visitedStoreName: "getVisitedStoreName",
     }),
   },
   methods: {},
   mounted() {
-    fethcStoreInventory(this.$route.params.store_name, 1);
-    fetchStoreInfo(this.$route.params.store_name)
-      .then(() => {})
-      .catch((err) => {
-        EventBus.$emit(
-          "open_alert",
-          "error",
-          "An error occured. Please confirm the store url and try again"
-        );
-        console.log(err);
-      });
-    this.$store.commit(
-      mutationTypes.SAVE_VISITED_STORE_NAME,
-      this.$route.params.store_name
-    );
+    var full = window.location.host;
+    var parts = full.split(".");
+    var sub = parts[0];
+    if (this.visitedStoreName === sub) {
+      console.log("has been visited");
+    } else {
+      // call api to update storevisit count
+      console.log("first visit");
+    }
+
+    if (this.visitedStoreName) {
+      fethcStoreInventory(this.visitedStoreName, 1);
+      fetchStoreInfo(this.visitedStoreName)
+        .then(() => {})
+        .catch(() => {
+          EventBus.$emit(
+            "open_alert",
+            "error",
+            "An error occured. Please confirm the store url and try again"
+          );
+        });
+    } else {
+      this.$store.commit(mutationTypes.SAVE_VISITED_STORE_INFO, {});
+      this.$store.commit(mutationTypes.SAVE_VISITOR_INVENTORY, []);
+    }
   },
 };
 </script>

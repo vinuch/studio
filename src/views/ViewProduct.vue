@@ -2,7 +2,7 @@
   <div class="view-product">
     <StoreNav />
     <div class="page-content">
-      <router-link :to="`/${$route.params.store_name}`">
+      <router-link :to="`/`">
         <p class="back">
           <svg
             width="6"
@@ -203,6 +203,7 @@ export default {
     ...mapGetters({
       inventory: "getVisitorStore",
       cart: "getVisitorCart",
+      storeName: "getVisitedStoreName",
     }),
     currentItem() {
       return this.inventory.find((itm) => itm.id == this.$route.params.item_id);
@@ -270,7 +271,7 @@ export default {
   },
   mounted() {
     if (!this.inventory.length) {
-      this.$router.push(`/${this.$route.params.store_name}`);
+      this.$router.push(`/`);
     }
   },
 };
