@@ -12,6 +12,7 @@
     "ant-design-vue": "^1.7.2",
     "axios": "^0.21.0",
     "core-js": "^3.6.5",
+    "moment": "^2.29.1",
     "numeral": "^2.0.6",
     "register-service-worker": "^1.7.1",
     "vue": "^2.6.11",
@@ -34,6 +35,7 @@
     "eslint-plugin-vue": "^6.2.2",
     "node-sass": "^4.12.0",
     "sass-loader": "^8.0.2",
-    "vue-template-compiler": "^2.6.11"
+    "vue-template-compiler": "^2.6.11",
+    "webpack-bundle-analyzer": "^4.4.0"
   }
 }

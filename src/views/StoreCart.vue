@@ -7,7 +7,7 @@
       <p class="utm">
         You’ve not added any product to cart
       </p>
-      <router-link :to="`/${$route.params.store_name}`">
+      <router-link :to="`/`">
         <button class="main-btn">
           Start shopping
         </button>
