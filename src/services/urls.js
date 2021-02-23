@@ -1,6 +1,6 @@
 export const baseUrl =
   process.env.NODE_ENV === "production"
-    ? process.env.process.VUE_APP_API_BASE_URL
+    ? process.env.VUE_APP_API_BASE_URL
     : "http://localhost:5050/https://api.iamcart.io/";
 export const loginUrl = `${baseUrl}user/api_login/`;
 export const createStoreUrl = `${baseUrl}api/account/store/create/`;
