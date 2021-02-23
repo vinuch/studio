@@ -316,7 +316,6 @@ export default {
           this.$router.push("/confirmation");
         },
         onClose: function() {
-          console.log("window closed");
           // The items in your store are saved for when you come back. Please refresh to ensure they are still available.
           // Check just before payment that items are available so people don't pay for out-of-stock things.
           // push update to any store that something becomes out of stock

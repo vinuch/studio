@@ -84,7 +84,7 @@
         </a-col>
       </a-row>
 
-      <div v-if="otherItems.length">
+      <!-- <div v-if="otherItems.length">
         <p class="back" style="margin-top: 100px">
           MORE PRODUCTS
         </p>
@@ -163,7 +163,7 @@
             </a-row>
           </a-col>
         </a-row>
-      </div>
+      </div> -->
     </div>
   </div>
 </template>

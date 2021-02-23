@@ -61,12 +61,15 @@ export default {
     var full = window.location.host;
     var parts = full.split(".");
     var sub = parts[0];
-    // let sub_ = sub.includes("localhost") ? "olawalle" : sub;
-    // console.log(sub_);
-    this.$store.commit(
-      mutationTypes.SAVE_VISITED_STORE_NAME,
-      parts.length > 2 ? sub : ""
-    );
+
+    // this is something to help me work in development without swithing the subdomain logic
+    let stName =
+      process.env.NODE_ENV === "development"
+        ? "olawalle"
+        : parts.length > 2
+        ? sub
+        : "";
+    this.$store.commit(mutationTypes.SAVE_VISITED_STORE_NAME, stName);
   },
   beforeDestroy() {
     this.$store.commit(mutationTypes.SAVE_VISITED_STORE_NAME, "");

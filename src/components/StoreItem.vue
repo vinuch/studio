@@ -66,6 +66,7 @@ export default {
   border-radius: 4px;
   margin-bottom: 40px;
   cursor: pointer;
+  height: 300px;
   .image {
     width: 100%;
     height: 160px;
@@ -88,6 +89,8 @@ export default {
         line-height: 20px;
         color: #2b2b2b;
         margin-bottom: 5px;
+        height: 25px;
+        overflow: hidden;
       }
       .price {
         line-height: 150%;
