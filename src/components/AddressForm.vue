@@ -167,7 +167,7 @@ export default {
     },
     total() {
       return this.cartItems.reduce((agg, curr) => {
-        agg += curr.qty_requested * (curr.price - curr.discount);
+        agg += curr.qty_requested * (curr.price - curr.discountAmt);
         return agg;
       }, 0);
     },

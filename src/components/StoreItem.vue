@@ -21,7 +21,7 @@
           </div>
           <span
             >₦{{
-              numeral(product.price - product.discount).format("0,0")
+              numeral(product.price - product.discountAmt).format("0,0")
             }}</span
           >
         </div>

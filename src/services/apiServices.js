@@ -75,6 +75,12 @@ export const fethcStoreInventory = async (slug, n) => {
         res.data.map((itm) => {
           return {
             ...itm,
+            discountAmt:
+              itm.discount_type === "2"
+                ? (itm.discount * itm.price) / 100
+                : itm.discount_type === "1"
+                ? itm.discount
+                : 0,
             picked_variant_value: [],
           };
         })
