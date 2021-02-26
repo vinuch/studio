@@ -100,7 +100,7 @@
         <div class="grey-fields">
           <p>
             <span class="info"> Sub total ({{ this.cart.length }} items) </span>
-            <span class="price utm"> N{{ numeral(total).format("0,0") }} </span>
+            <span class="price utm"> ₦{{ numeral(total).format("0,0") }} </span>
           </p>
           <a-button class="main-btn" @click="submit">
             Enter delivery address
@@ -169,7 +169,7 @@ export default {
     },
     total() {
       return this.cartItems.reduce((agg, curr) => {
-        agg += curr.qty_requested * curr.price;
+        agg += curr.qty_requested * (curr.price - curr.discount);
         return agg;
       }, 0);
     },

@@ -35,9 +35,19 @@
             <p class="name utb">
               {{ currentItem.product_name }}
             </p>
-            <p class="price utm">
-              ₦{{ numeral(currentItem.price).format("0,0") }}
-            </p>
+
+            <div class="price">
+              <div class="crossed" v-if="currentItem.has_discount">
+                ₦{{ numeral(currentItem.price).format("0,0") }}
+              </div>
+              <span
+                >₦{{
+                  numeral(currentItem.price - currentItem.discount).format(
+                    "0,0"
+                  )
+                }}</span
+              >
+            </div>
             <p class="desc">
               {{ currentItem.description }}
             </p>

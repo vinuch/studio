@@ -15,7 +15,16 @@
         >
           {{ product.product_name || "---" }}
         </p>
-        <p class="price">₦{{ numeral(product.price).format("0,0") }}</p>
+        <div class="price">
+          <div class="crossed" v-if="product.has_discount">
+            ₦{{ numeral(product.price).format("0,0") }}
+          </div>
+          <span
+            >₦{{
+              numeral(product.price - product.discount).format("0,0")
+            }}</span
+          >
+        </div>
         <button
           @click="pushToCart()"
           :class="addedToCart ? 'main-btn' : 'main-btn-bd'"

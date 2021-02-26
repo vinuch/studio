@@ -130,6 +130,38 @@ button {
 .blue__text {
   color: #3a50d5;
 }
+.crossed {
+  display: inline-block;
+  position: relative;
+  left: 0;
+  z-index: 4;
+  color: #a8a8a8;
+  margin-right: 12px;
+  &::after {
+    content: "";
+    background-color: #696969;
+    transform: rotate(10deg);
+    width: 100%;
+    height: 1px;
+    position: absolute;
+    top: 12px;
+    left: 0;
+    display: inline-block;
+    z-index: 5;
+  }
+  &::before {
+    content: "";
+    background-color: #696969;
+    transform: rotate(-10deg);
+    width: 100%;
+    height: 1px;
+    position: absolute;
+    top: 12px;
+    left: 0;
+    display: inline-block;
+    z-index: 5;
+  }
+}
 
 .ant-drawer-header {
   padding: 0 !important;
