@@ -64,6 +64,18 @@ export const fetchStoreInfo = async (slug) => {
   }
 };
 
+export const fetchStoreSettlement = async (slug) => {
+  try {
+    let res = await axios({
+      method: "get",
+      url: `${urls.storeSettlementUrl}${slug}`,
+    });
+    store.commit(mutationTypes.SAVE_SETTLEMENT, res.data);
+  } catch (error) {
+    store.commit(mutationTypes.SAVE_SETTLEMENT, {});
+  }
+};
+
 export const fethcStoreInventory = async (slug, n) => {
   let res = await axios({
     method: "get",

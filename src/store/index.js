@@ -14,6 +14,7 @@ export default new Vuex.Store({
   state: {
     store: {},
     account_id: null,
+    settlement: {},
     inventory: [],
     orders: [],
     to_de_editted: null,
@@ -28,6 +29,9 @@ export default new Vuex.Store({
   mutations: {
     [mutationTypes.SAVE_STORE](state, data) {
       state.store = data;
+    },
+    [mutationTypes.SAVE_SETTLEMENT](state, data) {
+      state.settlement = data;
     },
     [mutationTypes.SAVE_VISITOR_INVENTORY](state, data) {
       state.visitor_inventory = data;
@@ -62,6 +66,7 @@ export default new Vuex.Store({
   },
   getters: {
     getStore: (state) => state.store,
+    getStoreSettlement: (state) => state.settlement,
     getInventory: (state) => state.inventory,
     getOrders: (state) => state.orders,
     getItemToBeEditted: (state) => state.to_de_editted,

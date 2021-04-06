@@ -99,9 +99,9 @@
 import FloatingLabel from "vue-simple-floating-labels";
 import numeral from "numeral";
 import { mapGetters } from "vuex";
-import { saveOrder, createOrder } from "../services/apiServices";
-import * as mutationTypes from "../store/mutationTypes";
-import { EventBus } from "../services/eventBus";
+import { saveOrder, createOrder } from "@/services/apiServices";
+import * as mutationTypes from "@/store/mutationTypes";
+import { EventBus } from "@/services/eventBus";
 export default {
   data() {
     return {
@@ -141,6 +141,7 @@ export default {
       cart: "getVisitorCart",
       storeItems: "getVisitorStore",
       storeInfo: "getVisitedStoreInfo",
+      settlement: "getStoreSettlement",
     }),
     zones() {
       let zones = this.storeInfo.default_shipping
@@ -305,6 +306,7 @@ export default {
             },
           ],
         },
+        subaccount: this.settlement[0].subaccount,
         callback: (response) => {
           this.$store.commit(mutationTypes.SAVE_VISITOR_CART, []);
           this.$store.commit(mutationTypes.COMPLETED_ORDER_INFO, {

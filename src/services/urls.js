@@ -12,3 +12,4 @@ export const orderItemUrl = `${baseUrl}api/inventory/order_items/`;
 export const joinWaitListUrl = `${baseUrl}api/account/waitlist/join/`;
 export const updateOrderStatus = `${baseUrl}api/inventory/order_item/update/`;
 export const storeInfoUrl = `${baseUrl}api/account/store/`;
+export const storeSettlementUrl = `${baseUrl}api/settlement/bank/`;

@@ -38,11 +38,15 @@
 </template>
 <script>
 import { mapGetters } from "vuex";
-import StoreItem from "../components/StoreItem";
-import StoreNav from "../components/StoreNav";
-import { fethcStoreInventory, fetchStoreInfo } from "../services/apiServices";
-import { EventBus } from "../services/eventBus";
-import * as mutationTypes from "../store/mutationTypes";
+import StoreItem from "@/components/StoreItem";
+import StoreNav from "@/components/StoreNav";
+import {
+  fethcStoreInventory,
+  fetchStoreInfo,
+  fetchStoreSettlement
+} from "@/services/apiServices";
+import { EventBus } from "@/services/eventBus";
+import * as mutationTypes from "@/store/mutationTypes";
 export default {
   data() {
     return {
@@ -97,7 +101,8 @@ export default {
 
     if (this.visitedStoreName) {
       fethcStoreInventory(this.visitedStoreName, 1);
-      fetchStoreInfo(this.visitedStoreName)
+      fetchStoreInfo(this.visitedStoreName);
+      fetchStoreSettlement(this.visitedStoreName)
         .then(() => {})
         .catch(() => {
           EventBus.$emit(
@@ -109,6 +114,7 @@ export default {
         .finally(() => (this.loadingStore = false));
     } else {
       this.$store.commit(mutationTypes.SAVE_VISITED_STORE_INFO, {});
+      this.$store.commit(mutationTypes.SAVE_SETTLEMENT, {});
       this.$store.commit(mutationTypes.SAVE_VISITOR_INVENTORY, []);
     }
   },
