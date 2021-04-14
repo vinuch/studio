@@ -1,14 +1,14 @@
 <template>
-  <div class="nav">
-    <div class="logo-wrap">
-      <div class="circle">
-        <img :src="storeInfo.logo" alt="" />
+  <div class="nav" :class="{homenav: isAbout}">
+    <div class="logo-wrap" :class="{aboutus: isAbout}">
+      <div class="">
+        <img :src="storeInfo.logo" height="40px" alt="" />
       </div>
       <div class="info">
-        <p class="name utm">{{ store_name }}</p>
-        <p class="view utm" @click="openDrawer()">
-          View store info
-          <svg
+        <p class="name utm" :class="{darktxt: isAbout}">{{ store_name }}</p>
+        <p class="view utm" v-if="!isAbout" @click="aboutUs()">
+          About Us
+          <!-- <svg
             width="6"
             height="8"
             viewBox="0 0 6 8"
@@ -21,12 +21,18 @@
               d="M0.834318 7.76569C0.521902 7.45326 0.521902 6.94674 0.834318 6.63431L3.46865 4L0.834318 1.36568C0.521902 1.05328 0.521902 0.546721 0.834318 0.234321C1.14674 -0.0780792 1.65327 -0.0780792 1.96569 0.234321L5.16569 3.43432C5.47809 3.74672 5.47809 4.25326 5.16569 4.56569L1.96569 7.76569C1.65327 8.0781 1.14674 8.0781 0.834318 7.76569Z"
               fill="#F8E8B6"
             />
-          </svg>
+          </svg> -->
         </p>
       </div>
     </div>
 
-    <div class="links">
+    <button
+      v-if="isAbout"
+      class="shopnow"
+      @click="enterShop">Shop Now
+    </button>
+
+    <div class="links" v-if="!isAbout">
       <div
         @click="jumpTo(i)"
         class="link"
@@ -121,6 +127,9 @@
 import { mapGetters } from "vuex";
 import { EventBus } from "../services/eventBus";
 export default {
+  props: [
+    'isAbout'
+  ],
   data() {
     return {
       visible: false,
@@ -164,6 +173,13 @@ export default {
           "This store does not exist. please confirm the store url and try again"
         );
       }
+    },
+    aboutUs() {
+      this.$router.push({name: 'Home'})
+    },
+    enterShop() {
+      this.$router.push({name: 'Gallery'});
+      this.$emit("setIsAbout", false)
     },
     jumpTo(i) {
       this.currentLink = i;
@@ -235,16 +251,27 @@ export default {
         font-size: 16px;
         line-height: 20px;
         color: #ffffff;
-        margin-bottom: 3px;
-        margin-top: 15px;
+        margin: 15px 0 3px 10px;
+      }
+      .darktxt {
+        color: #000;
+        font-size: 24px;
+        margin-top: 0;
+        margin-left: 5px;
       }
       .view {
         font-size: 14px;
         line-height: 17px;
         color: #f8e8b6;
+        margin-left: 10px;
         cursor: pointer;
       }
     }
+  }
+  .aboutus {
+    margin: 0 auto;
+    color: #000;
+    // font-size: 20px;
   }
   .links {
     display: flex;
@@ -337,6 +364,28 @@ export default {
       }
     }
   }
+}
+.homenav {
+  background: #FFF;
+}
+.shopnow {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 80vh;
+  margin-left: auto;
+  margin-right: auto;
+  width: 150px;
+
+  border: none;
+  border-radius: 3px;
+  background: #000;
+  color: #DDD;
+  font-size: 16px;
+  font-weight: bold;
+  text-transform: uppercase;
+  padding: 10px;
+  cursor: pointer;
 }
 .drawer-title {
   height: 72px;
