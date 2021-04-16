@@ -44,7 +44,6 @@ export default {
   computed: {
     ...mapGetters({
       cart: "getVisitorCart",
-      inventory: "getVisitorStore",
     }),
     addedToCart() {
       return this.cart.find((c) => c.id === this.product.id);
