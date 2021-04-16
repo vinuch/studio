@@ -56,25 +56,6 @@
                 />
                 <div class="grey">
                   <svg
-                    width="14"
-                    height="2"
-                    viewBox="0 0 14 2"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                    @click="changeCount('down', item.id)"
-                    style="cursor: pointer"
-                  >
-                    <path
-                      fill-rule="evenodd"
-                      clip-rule="evenodd"
-                      d="M0 1C0 0.44772 0.44772 0 1 0H13C13.5523 0 14 0.44772 14 1C14 1.5523 13.5523 2 13 2H1C0.44772 2 0 1.5523 0 1Z"
-                      fill="#8093AD"
-                    />
-                  </svg>
-
-                  <span class="utb">{{ item.qty_requested }}</span>
-
-                  <svg
                     width="10"
                     height="10"
                     viewBox="0 0 10 10"
@@ -87,6 +68,25 @@
                       fill-rule="evenodd"
                       clip-rule="evenodd"
                       d="M5 0C5.5523 0 6 0.44772 6 1V4H9C9.5523 4 10 4.44772 10 5C10 5.5523 9.5523 6 9 6H6V9C6 9.5523 5.5523 10 5 10C4.44771 10 4 9.5523 4 9V6H1C0.44772 6 0 5.5523 0 5C0 4.44771 0.44772 4 1 4H4V1C4 0.44772 4.44771 0 5 0Z"
+                      fill="#8093AD"
+                    />
+                  </svg>
+
+                  <span class="utb">{{ item.qty_requested }}</span>
+
+                  <svg
+                    width="14"
+                    height="2"
+                    viewBox="0 0 14 2"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                    @click="changeCount('down', item.id)"
+                    style="cursor: pointer"
+                  >
+                    <path
+                      fill-rule="evenodd"
+                      clip-rule="evenodd"
+                      d="M0 1C0 0.44772 0.44772 0 1 0H13C13.5523 0 14 0.44772 14 1C14 1.5523 13.5523 2 13 2H1C0.44772 2 0 1.5523 0 1Z"
                       fill="#8093AD"
                     />
                   </svg>
@@ -245,6 +245,7 @@ export default {
     text-align: left;
     padding-right: 100px;
     .cart-item {
+      position: relative;
       display: flex;
       flex-direction: row;
       align-items: center;
@@ -278,13 +279,19 @@ export default {
           }
           .count {
             .grey {
+              position: absolute;
+              height: 60%;
+              width: 20px;
+              top: 50%;
+              right: 0;
+              transform: translate(0,-50%);
               background: #f8f9fa;
               border-radius: 4px;
               padding: 7px 12px;
               display: inline-flex;
+              flex-direction: column;
               justify-content: space-between;
               align-items: center;
-              width: 120px;
               margin-left: 5px;
               span {
                 font-size: 16px;
@@ -331,11 +338,14 @@ export default {
   }
   @media (max-width: 767px) {
     .inner {
-      padding: 30px !important;
+      padding: 15px !important;
     }
     .carts {
       padding-right: 0;
       border: 0;
+    }
+    .cart-item {
+      padding: 15px 0;
     }
     .form {
       margin-top: 40px;

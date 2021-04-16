@@ -148,7 +148,7 @@ export default {
     }
 
     if (window.innerWidth > 600) {
-      this.$router.push({name: 'Gallery'});
+      this.$router.push({name: 'DeskGallery'}); // No front page yet for desktop
     }
   },
 };

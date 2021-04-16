@@ -1,6 +1,8 @@
 <template>
-  <div class="store-view">
+  <div>
     <StoreNav />
+    <!-- <Header :store="visitedStoreInfo" :display="galleryView" @showGrid="showThumbnail()" @showZoom="zoomGallery()"/> -->
+
     <div v-if="loadingStore" style="padding-top: 20%">
       <a-icon type="loading" style="font-size: 40px; margin: 20px" />
       <p>
@@ -8,8 +10,8 @@
       </p>
     </div>
 
-    <div v-else>
-      <div class="empty" v-if="!inventory.length">
+    <div v-else :class="display == 'thumbnail' ? 'prod_img' : 'prod_detail'">
+      <div class="empty" v-if="!filteredInventory.length">
         <img src="../assets/discount.svg" alt="" />
         <p v-if="visitedStoreInfo.id">
           No products yet, check back later
@@ -19,37 +21,47 @@
         </p>
       </div>
 
-      <div class="order-items">
-        <a-row :gutter="20">
-          <a-col
-            :xs="12"
-            :sm="12"
-            :md="8"
-            :lg="6"
-            v-for="(item, i) in inventory"
-            :key="'item' + i"
-          >
-            <StoreItem :product="item" />
-          </a-col>
-        </a-row>
+      <div
+        v-for="(product, i) in filteredInventory"
+        :key="'item' + i"
+        :class="display == 'thumbnail' ? 'thumbnail' : ''"
+        :style="display == 'thumbnail' ? thumbStyle(i) : ''"
+        @click="showDetail('section_' + i, i )"
+        > <!-- should be direct child of prod_img/prod_detail because flex -->
+          <Product
+          v-if="product.total_stock > 0 && display != 'thumbnail'"
+          :product="product"
+          :i=i
+          :logo="visitedStoreInfo.logo"
+          />
       </div>
     </div>
+    <!-- <BottomMenu :cartLength="cart.length"/> -->
   </div>
 </template>
+
 <script>
 import { mapGetters } from "vuex";
-import StoreItem from "@/components/StoreItem";
+// import StoreItem from "@/components/StoreItem";
+import Product from "@/components/Product";
 import StoreNav from "@/components/StoreNav";
-import {
-  // fethcStoreInventory,
-  // fetchStoreInfo,
-  // fetchStoreSettlement
-} from "@/services/apiServices";
+// import Header from "@/components/Header";
+
 // import { EventBus } from "@/services/eventBus";
 // import * as mutationTypes from "@/store/mutationTypes";
 export default {
+  components: {
+    StoreNav,
+    // Header,
+    // StoreItem,
+    Product,
+  },
   data() {
     return {
+      search: "", // product search/filtering
+      display: 'thumbnail', // or detail
+      // window_width: window.innerWidth,
+
       loadingStore: false,
       floatingConfig: {
         hasClearButton: false,
@@ -67,93 +79,87 @@ export default {
       },
     };
   },
-  components: {
-    StoreItem,
-    StoreNav,
-  },
   computed: {
     ...mapGetters({
       inventory: "getVisitorStore",
       visitedStoreInfo: "getVisitedStoreInfo",
       visitedStoreName: "getVisitedStoreName",
     }),
-  },
-  methods: {
-    onResize(){
-      // if (window.innerWidth > 504) {
-      //   this.display = "not_mobile"
-      // } else  {
-      //   this.display = "mobile"
-      // }
-      // this.whichZoom()
+    filteredInventory() {
+      return this.inventory.filter((product) => {
+        return product.product_name
+          .toLowerCase()
+          .match(this.search.toLowerCase());
+      });
+    },
+    productImages() {
+      let images = []
+      for (let i=0; i<this.filteredInventory.length; i++) {
+        images.push(this.filteredInventory[i].product_image)
+      }
+      return images
     },
   },
-  mounted() {
-    // var full = window.location.host;
-    // var parts = full.split(".");
-    // var sub = parts[0];
-    //
-    // let stName =
-    //   process.env.NODE_ENV === "development"
-    //     ? "olawalle"
-    //     : parts.length > 2
-    //     ? sub
-    //     : "";
-    //
-    // if (this.visitedStoreName === stName) {
-    //   // console.log("has been visited");
-    // } else {
-    //   // call api to update storevisit count
-    //   // console.log("first visit");
-    //   this.loadingStore = true;
-    // }
-    //
-    // if (this.visitedStoreName) {
-    //   fethcStoreInventory(this.visitedStoreName, 1);
-    //   fetchStoreInfo(this.visitedStoreName);
-    //   fetchStoreSettlement(this.visitedStoreName) // fetch this nearer to checkout
-    //     // .then(() => {})
-    //     .catch(() => {
-    //       EventBus.$emit(
-    //         "open_alert",
-    //         "error",
-    //         "An error occured. Please confirm the store url and try again"
-    //       );
-    //     })
-    //     .finally(() => (this.loadingStore = false));
-    // } else {
-    //   this.$store.commit(mutationTypes.SAVE_VISITED_STORE_INFO, {});
-    //   this.$store.commit(mutationTypes.SAVE_SETTLEMENT, {}); // do this nearer to checkout
-    //   this.$store.commit(mutationTypes.SAVE_VISITOR_INVENTORY, []);
-    // }
+  methods: {
+    showDetail(section) {
+      this.display = 'detail'
+      this.whichZoom(section)
+    },
+    thumbStyle(i) {
+      let style = {
+        'background-size': 'cover',
+        'background-position': '50% 50%',
+        'background-image': 'url(' + this.productImages[i] + ')'
+      }
+      return style
+    },
+    whichZoom(section) {
+      setTimeout(() => {
+        // document.getElementById(section).scrollIntoView()
+
+        let element = document.getElementById(section);
+        let headerOffset = 0;
+        // let elementPosition = element.getBoundingClientRect().top
+        let elementPosition = element.offsetTop;
+        let offsetPosition = elementPosition - headerOffset;
+        // document.body.scrollTop = offsetPosition # for Safari
+
+        window.scrollTo({
+          top: offsetPosition,
+          behavior: "smooth"
+        });
+      });
+    },
+  },
+  watch: {
+    window_width() {
+      // if (window.innerWidth > 600) {
+      //   console.log("larger")
+      //   this.$router.push({name: 'DeskGallery'})
+      // }
+      // console.log(window.innerWidth)
+    }
   },
 };
 </script>
 <style lang="scss" scoped>
-.store-view {
-  .empty {
-    width: 100%;
-    padding-top: 200px;
+  .prod_img {
     display: flex;
-    justify-content: center;
-    align-items: center;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+  }
+  .prod_img::after {
+    content: "";
+    flex: auto;
+  }
+  .thumbnail {
+    position: relative;
+    width: 32%;
+    padding-bottom: 32%;
+    margin-top: 1%;
+  }
+  .prod_detail {
+    display: flex;
     flex-direction: column;
-    p {
-      font-size: 16px;
-      line-height: 20px;
-      text-align: center;
-      color: #8093ad;
-    }
   }
-
-  .order-items {
-    padding: 60px 100px;
-  }
-
-  @media (max-width: 767px) {
-    .order-items {
-      padding: 30px 20px;
-    }
-  }
-}
 </style>
