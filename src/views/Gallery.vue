@@ -60,7 +60,6 @@ export default {
     return {
       search: "", // product search/filtering
       display: 'thumbnail', // or detail
-      // window_width: window.innerWidth,
 
       loadingStore: false,
       floatingConfig: {
@@ -102,8 +101,10 @@ export default {
   },
   methods: {
     showDetail(section) {
-      this.display = 'detail'
-      this.whichZoom(section)
+      if (this.display == 'thumbnail') {
+        this.display = 'detail'
+        this.zoomTo(section)
+      }
     },
     thumbStyle(i) {
       let style = {
@@ -113,16 +114,12 @@ export default {
       }
       return style
     },
-    whichZoom(section) {
+    zoomTo(section) {
       setTimeout(() => {
-        // document.getElementById(section).scrollIntoView()
-
         let element = document.getElementById(section);
         let headerOffset = 0;
-        // let elementPosition = element.getBoundingClientRect().top
         let elementPosition = element.offsetTop;
         let offsetPosition = elementPosition - headerOffset;
-        // document.body.scrollTop = offsetPosition # for Safari
 
         window.scrollTo({
           top: offsetPosition,
