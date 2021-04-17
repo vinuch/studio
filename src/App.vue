@@ -44,7 +44,7 @@ export default {
     };
   },
   mounted() {
-    this.$store.commit(mutationTypes.SAVE_VISITOR_CART, []);
+    this.$store.commit(mutationTypes.SAVE_CART, []);
     // available alert types: success, info, warning and error
     EventBus.$on("open_alert", (type, message) => {
       // console.log({ type, message });
@@ -65,17 +65,17 @@ export default {
     // this is something to help me work in development without swithing the subdomain logic
     let stName =
       process.env.NODE_ENV === "development"
-        ? "nestle"
+        ? "handm"
         : parts.length > 2
         ? sub
         : "";
-    this.$store.commit(mutationTypes.SAVE_VISITED_STORE_NAME, stName);
+    this.$store.commit(mutationTypes.SAVE_STORE_NAME, stName);
   },
   beforeDestroy() {
-    this.$store.commit(mutationTypes.SAVE_VISITED_STORE_NAME, "");
+    this.$store.commit(mutationTypes.SAVE_STORE_NAME, "");
   },
   created() {
-    this.$store.commit(mutationTypes.SAVE_VISITED_STORE_NAME, "");
+    this.$store.commit(mutationTypes.SAVE_STORE_NAME, "");
   },
 };
 </script>

@@ -308,7 +308,7 @@ export default {
         },
         subaccount: this.settlement[0].subaccount,
         callback: (response) => {
-          this.$store.commit(mutationTypes.SAVE_VISITOR_CART, []);
+          this.$store.commit(mutationTypes.SAVE_CART, []);
           this.$store.commit(mutationTypes.COMPLETED_ORDER_INFO, {
             email: this.delivery_details.email,
             orderID: this.orderID,

@@ -58,9 +58,9 @@ export const fetchStoreInfo = async (slug) => {
       method: "get",
       url: `${urls.storeInfoUrl}${slug}`,
     });
-    store.commit(mutationTypes.SAVE_VISITED_STORE_INFO, res.data);
+    store.commit(mutationTypes.SAVE_STORE_INFO, res.data);
   } catch (error) {
-    store.commit(mutationTypes.SAVE_VISITED_STORE_INFO, {});
+    store.commit(mutationTypes.SAVE_STORE_INFO, {});
   }
 };
 
@@ -83,7 +83,7 @@ export const fethcStoreInventory = async (slug, n) => {
   });
   n
     ? store.commit(
-        mutationTypes.SAVE_VISITOR_INVENTORY,
+        mutationTypes.SAVE_INVENTORY,
         res.data.map((itm) => {
           return {
             ...itm,

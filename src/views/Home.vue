@@ -142,9 +142,9 @@ export default {
         })
         .finally(() => (this.loadingStore = false));
     } else {
-      this.$store.commit(mutationTypes.SAVE_VISITED_STORE_INFO, {});
+      this.$store.commit(mutationTypes.SAVE_STORE_INFO, {});
       this.$store.commit(mutationTypes.SAVE_SETTLEMENT, {}); // do this nearer to checkout
-      this.$store.commit(mutationTypes.SAVE_VISITOR_INVENTORY, []);
+      this.$store.commit(mutationTypes.SAVE_INVENTORY, []);
     }
 
     if (window.innerWidth > 600) {

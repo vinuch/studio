@@ -123,6 +123,7 @@ export default {
   computed: {
     ...mapGetters({
       cart: "getVisitorCart",
+      cart_meta: "getCartMeta",
     }),
     addedToCart() {
       return this.cart.find((c) => c.id === this.product.id);
@@ -247,8 +248,12 @@ export default {
       }
     },
     countItemsInCart() {
-      //  Calculates the absolute count of items in cart
-      this.$store.commit("countItemsInCart");
+      let items_count = 0
+      for (let i = 0; i < this.cart.length; i++) {
+        items_count += Number(this.cart[i].count)
+      }
+      this.cart_meta.cartCount = items_count
+      this.$store.commit(mutationTypes.SAVE_CART_META, this.cart_meta)
       this.totalBeforeShipping();
     },
     getCountInCart(index) {
@@ -291,15 +296,15 @@ export default {
       return null;
     },
     pushToCart() {
-      if (this.product.has_variant) {
-        this.goToProduct();
-        return;
-      }
-      let cart;
-      if (!this.cart.find((c) => c.id === this.product.id)) {
-        cart = [...this.cart, { ...this.product, qty_requested: 1 }];
-        this.$store.commit(mutationTypes.SAVE_VISITOR_CART, cart);
-      }
+      // if (this.product.has_variant) {
+      //   this.goToProduct();
+      //   return;
+      // }
+      // let cart;
+      // if (!this.cart.find((c) => c.id === this.product.id)) {
+      //   cart = [...this.cart, { ...this.product, qty_requested: 1 }];
+      //   this.$store.commit(mutationTypes.SAVE_CART, cart);
+      // }
     },
     newCartObject(product, button_state) {
       product.count = 1;
@@ -308,11 +313,30 @@ export default {
       this.button_state = button_state;
     },
     subTotal(product_meta) {
-      this.$store.commit("subTotal", product_meta); // check this commit
+      // this.$store.commit("subTotal", product_meta); // check this commit
+
+      let id = product_meta.id
+      let option1 = product_meta.option1
+      let option2 = product_meta.option2
+
+      // Calculates the total price of multiple quantities of a product
+      let product = this.cart.find(x => x.id == id && x.selected_option == option1 && x.selected_option2 == option2)
+
+      product.subTotal = product.count * (product.price - product.discountAmt)
+
+      product.subTotalView  = numeral(product.price - product.discountAmt).format("0,0")
+
+      this.$store.commit(mutationTypes.SAVE_CART, this.cart);
       this.countItemsInCart();
     },
     totalBeforeShipping() {
-      this.$store.commit("totalBeforeShipping");
+      let total = 0
+      for (let i = 0; i < this.cart.length; i++) {
+        total += this.cart[i].subTotal
+      }
+      this.cart_meta.preShippingTotal = total
+      this.cart_meta.preShippingAccFormat = numeral(total).format("0,0")
+      this.$store.commit(mutationTypes.SAVE_CART_META, this.cart_meta)
     },
   },
   created() {
@@ -356,7 +380,7 @@ export default {
     cart() {
       console.log("cart changed")
     //   handler() {
-    //     this.$store.commit(mutationTypes.SAVE_VISITOR_CART, cart)
+    //     this.$store.commit(mutationTypes.SAVE_CART, cart)
     //     // this.$store.commit("saveCartInSession")
     //   },
     //   deep: true,

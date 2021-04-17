@@ -184,7 +184,7 @@ export default {
     },
     removeFromCart(id) {
       let cart = this.cartItems.filter((itm) => itm.id !== id);
-      this.$store.commit(mutationTypes.SAVE_VISITOR_CART, cart);
+      this.$store.commit(mutationTypes.SAVE_CART, cart);
     },
     changeCount(direction, id) {
       let cart_ = this.cart.map((c) => {
@@ -203,7 +203,7 @@ export default {
           return c;
         }
       });
-      this.$store.commit(mutationTypes.SAVE_VISITOR_CART, cart_);
+      this.$store.commit(mutationTypes.SAVE_CART, cart_);
     },
   },
   mounted() {

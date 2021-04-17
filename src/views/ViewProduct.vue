@@ -249,7 +249,7 @@ export default {
       let cart;
       if (!this.cart.find((c) => c.id === product.id)) {
         cart = [...this.cart, { ...product, qty_requested: 1 }];
-        this.$store.commit(mutationTypes.SAVE_VISITOR_CART, cart);
+        this.$store.commit(mutationTypes.SAVE_CART, cart);
       }
     },
     itemVariants(item) {
