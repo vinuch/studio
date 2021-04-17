@@ -4,7 +4,7 @@
     <img :src="product.product_image" alt="Image">
 
     <!-- For multiple images -->
-    <!-- <div class="product_image fade" :id="'section_' + i">
+    <div class="product_image fade" :id="'section_' + i">
       <VueAgile v-if="product.product_images" :navButtons="false" ref="carousel" :mobileFirst="true">
         <div class="slide" v-for="(item, i) in testImages" :key="i">
           <img :src="item" alt="Image"  >
@@ -49,7 +49,7 @@
           </svg>
         </button>
       </div>
-    </div> -->
+    </div>
 
     <div class="meta">
       <div class="price">
@@ -86,7 +86,7 @@
         </div>
       </div>
 
-      <div @click="checkVariants(product, i)">
+      <div @click="takeToCart(product)">
         <!-- {{cart.find(item => {item.id == product.id})}} -->
         <AddToCartButton
         :btn_index='i'
@@ -216,41 +216,28 @@ export default {
         this.subTotal(product_meta);
       }
     },
-    checkVariants(product) {
-      if (product.first_variant.length > 0) {
-        // has variant1?
-        if (!product.selected_option) {
-          // hasn't selected variant1
-          alert("please select a " + product.first_variant_name);
-        } else {
-          // check option selected and if it has variant2
-          if (product.selected_option != ("undefined" && "")) {
-            // valid variant1
-            if (product.second_variant.length > 0) {
-              // has variant2?
-              if (!product.selected_option2) {
-                // hasn't selected variant2
-                alert("please select a " + product.second_variant_name);
-              } else {
-                if (product.selected_option2 != ("undefined" && "")) {
-                  // valid variant2
-                  this.addToCart(product);
-                } else {
-                  alert("please select a " + product.second_variant_name);
-                }
-              }
-            } else {
-              // doesn't have variant2
-              this.addToCart(product);
-            }
-          } else {
-            alert("please select a " + product.first_variant_name);
-          }
-        }
-      } else {
-        // doesn't have variant
-        this.addToCart(product);
+    takeToCart(product) {
+      product.has_variant ? this.ensureVariants(product) : this.addToCart(product);
+    },
+    ensureVariants(product) {
+      let check1Variant = (product) => {
+        return product.selected_option ? this.addToCart(product) : alert("please select a " + product.first_variant_name)
       }
+
+      let check2Variants = (product) => {
+        check1of2Variants(product)
+        check2of2Variants(product)
+      }
+
+      let check1of2Variants = (product) => {
+        product.selected_option != ("undefined" && "") ? check2of2Variants(product) : alert("please select a " + product.first_variant_name)
+      }
+
+      let check2of2Variants = (product) => {
+        product.selected_option2 != ("undefined" && "") ? this.addToCart(product) : alert("please select a " + product.second_variant_name)
+      }
+
+      !product.second_variant ? check1Variant(product) : check2Variants(product)
     },
     checkMatchQty(match_count, match, product, response) {
       if (match_count > match.count) {
@@ -327,6 +314,43 @@ export default {
     totalBeforeShipping() {
       this.$store.commit("totalBeforeShipping");
     },
+  },
+  created() {
+    let product = this.product
+    var split_options = product.variant_options.split(",");
+    var localVariants = [];
+    var localCount = [];
+
+    let getCount = () => {
+      product.second_variant ? countBothVariants() : countVariant1()
+      product.variant_options = localVariants;
+    }
+
+    let countVariant1 = () => {
+      for (let j = 0; j < split_options.length; j += 2) {
+        if (split_options[j + 1] > 0) {
+          let object = {};
+          object[split_options[j]] = split_options[j + 1];
+          localVariants.push(object);
+          localCount.push(split_options[j + 1]);
+        }
+      }
+      product.multiple_variants = false;
+      product.all_stock_count = localCount;
+    }
+
+    let countBothVariants = () => {
+      for (let j = 0; j < split_options.length; j += 3) {
+        let object = {
+          variant1: split_options[j],
+          variant2: split_options[j + 1],
+          quantity: split_options[j + 2],
+        };
+        localVariants.push(object);
+      }
+      product.multiple_variants = true;
+    }
+    product.has_variant ? getCount() : ''
   },
   watch: {
     cart() {

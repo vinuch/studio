@@ -29,7 +29,7 @@
     // name: 'AddToCartButton',
     props: {
       'btn_state': Boolean,
-      'btn_index': Number,
+      // 'btn_index': Number,
       'productAmountInCart': Number,
       'logo': String,
     },
