@@ -282,15 +282,15 @@ export default {
       display: flex;
       justify-content: center;
       align-items: center;
-      height: 72px;
+      height: 50px;
       cursor: pointer;
       font-weight: 500;
       font-size: 14px;
       font-family: untitled-sans-medium;
-      border-top: 4px solid #3a50d5;
+      // border-top: 4px solid #3a50d5;
       position: relative;
       &.blur {
-        border-top: 4px solid #10102c;
+        // border-top: 4px solid #10102c;
       }
       // &:hover {
       //   background: rgba(255, 255, 255, 0.05);
@@ -332,26 +332,26 @@ export default {
       width: 100%;
       background: #10102c;
       z-index: 100;
-      height: 72px;
+      height: 50px;
       .link {
         color: #fff;
         padding: 5px 0;
         display: flex;
         justify-content: center;
         align-items: center;
-        height: 72px;
+        height: 50px;
         cursor: pointer;
         font-weight: 500;
         font-size: 12px;
         font-family: untitled-sans-medium;
-        border-bottom: 4px solid #3a50d5;
+        // border-bottom: 4px solid #3a50d5;
         width: 50%;
         display: flex;
         flex-direction: column;
-        border-top: 4px solid #10102c;
+        // border-top: 4px solid #10102c;
         &.blur {
           opacity: 0.5;
-          border-bottom: 4px solid #10102c;
+          // border-bottom: 4px solid #10102c;
         }
         .badge {
           top: 8px;
