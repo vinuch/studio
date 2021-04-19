@@ -67,7 +67,7 @@ export default {
   },
   computed: {
     ...mapGetters({
-      inventory: "getVisitorStore",
+      inventory: "getProducts",
       visitedStoreInfo: "getVisitedStoreInfo",
       visitedStoreName: "getVisitedStoreName",
     }),

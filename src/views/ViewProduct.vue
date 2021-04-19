@@ -211,8 +211,8 @@ export default {
   },
   computed: {
     ...mapGetters({
-      inventory: "getVisitorStore",
-      cart: "getVisitorCart",
+      inventory: "getProducts",
+      cart: "getCart",
       storeName: "getVisitedStoreName",
     }),
     currentItem() {

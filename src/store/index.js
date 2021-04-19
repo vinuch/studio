@@ -19,7 +19,7 @@ export default new Vuex.Store({
     // orders: [],
     // to_de_editted: null,
 
-    visitor_inventory: {},
+    products: {},
     cart: [],
     cart_meta: {},
     store_info: {},
@@ -31,11 +31,11 @@ export default new Vuex.Store({
     [mutationTypes.SAVE_STORE](state, data) {
       state.store = data;
     },
-    // [mutationTypes.SAVE_SETTLEMENT](state, data) {
-    //   state.settlement = data;
-    // },
-    [mutationTypes.SAVE_INVENTORY](state, data) {
-      state.visitor_inventory = data;
+    [mutationTypes.SAVE_SETTLEMENT](state, data) {
+      state.settlement = data;
+    },
+    [mutationTypes.SAVE_PRODUCTS](state, data) {
+      state.products = data;
     },
     // [mutationTypes.SAVE_ACCOUNT_ID](state, data) {
     //   state.account_id = data;
@@ -43,9 +43,9 @@ export default new Vuex.Store({
     // [mutationTypes.SAVE_INVENTORY](state, data) {
     //   state.inventory = data;
     // },
-    // [mutationTypes.SAVE_ORDERS](state, data) {
-    //   state.orders = data;
-    // },
+    [mutationTypes.SAVE_ORDERS](state, data) {
+      state.orders = data;
+    },
     [mutationTypes.SAVE_CART](state, data) {
       state.cart = data;
     },
@@ -76,9 +76,9 @@ export default new Vuex.Store({
     // getItemToBeEditted: (state) => state.to_de_editted,
     // getFormTouched: (state) => state.form_touched,
 
-    getVisitorStore: (state) => state.visitor_inventory,
+    getProducts: (state) => state.products,
     getVisitedStoreInfo: (state) => state.store_info,
-    getVisitorCart: (state) => state.cart,
+    getCart: (state) => state.cart,
     getCartMeta: (state) => state.cart_meta,
     getVisitedStoreName: (state) => state.store_name,
     getCompletedOrderInfo: (state) => state.completed_order_info,

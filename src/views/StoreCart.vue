@@ -149,8 +149,8 @@ export default {
   components: { StoreNav, AddressForm },
   computed: {
     ...mapGetters({
-      cart: "getVisitorCart",
-      storeItems: "getVisitorStore",
+      cart: "getCart",
+      storeItems: "getProducts",
       storeInfo: "getVisitedStoreInfo",
     }),
     drawerWidth() {

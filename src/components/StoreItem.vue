@@ -43,7 +43,7 @@ export default {
   props: ["product"],
   computed: {
     ...mapGetters({
-      cart: "getVisitorCart",
+      cart: "getCart",
     }),
     addedToCart() {
       return this.cart.find((c) => c.id === this.product.id);
