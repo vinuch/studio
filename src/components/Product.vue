@@ -91,7 +91,7 @@
         <AddToCartButton
         :btn_index='i'
         :btn_state='btn_state'
-        :productAmountInCart="getCountInCart(product.id)"
+        :productCountInCart="getCountInCart(product.id)"
         :logo="logo"
         />
       </div>
@@ -122,7 +122,7 @@ export default {
   },
   computed: {
     ...mapGetters({
-      cart: "getVisitorCart",
+      cart: "getCart",
       cart_meta: "getCartMeta",
     }),
     addedToCart() {
@@ -256,12 +256,21 @@ export default {
       this.$store.commit(mutationTypes.SAVE_CART_META, this.cart_meta)
       this.totalBeforeShipping();
     },
-    getCountInCart(index) {
-      let cartItem = this.cart.find(item => item.id === index)
-      if(cartItem) {
-        return(cartItem.count)
-      }
-      return 0
+    getCountInCart(id) {
+      console.log(id)
+      // let item_variants_in_cart = this.cart.filter(
+      //   item => item.id == id
+      // )
+      //
+      // // let item_variants_in_cart = this.cart.find(item => item.id === index)
+      // if(item_variants_in_cart) {
+      //   let count
+      //   for (let i=0; item_variants_in_cart.length; i++) {
+      //     count += item_variants_in_cart.count
+      //   }
+      //   return(count)
+      // }
+      // return 0
     },
     goToProduct() {
       this.$router.push(`/store-item/${this.product.id}`);
@@ -340,41 +349,43 @@ export default {
     },
   },
   created() {
-    let product = this.product
-    var split_options = product.variant_options.split(",");
-    var localVariants = [];
-    var localCount = [];
-
-    let getCount = () => {
-      product.second_variant ? countBothVariants() : countVariant1()
-      product.variant_options = localVariants;
-    }
-
-    let countVariant1 = () => {
-      for (let j = 0; j < split_options.length; j += 2) {
-        if (split_options[j + 1] > 0) {
-          let object = {};
-          object[split_options[j]] = split_options[j + 1];
-          localVariants.push(object);
-          localCount.push(split_options[j + 1]);
-        }
-      }
-      product.multiple_variants = false;
-      product.all_stock_count = localCount;
-    }
-
-    let countBothVariants = () => {
-      for (let j = 0; j < split_options.length; j += 3) {
-        let object = {
-          variant1: split_options[j],
-          variant2: split_options[j + 1],
-          quantity: split_options[j + 2],
-        };
-        localVariants.push(object);
-      }
-      product.multiple_variants = true;
-    }
-    product.has_variant ? getCount() : ''
+    // let product = this.product
+    // var localVariants = [];
+    // var localCount = [];
+    // var split_options = product.variant_options.split(",") ? product.variant_options.split(",") : ''
+    //
+    // let getCount = () => {
+    //   product.second_variant ? countBothVariants() : countVariant1()
+    //   product.variant_options = localVariants;
+    // }
+    //
+    // let countVariant1 = () => {
+    //   for (let j = 0; j < split_options.length; j += 2) {
+    //     if (split_options[j + 1] > 0) {
+    //       let object = {};
+    //       object[split_options[j]] = split_options[j + 1];
+    //       localVariants.push(object);
+    //       localCount.push(split_options[j + 1]);
+    //     }
+    //   }
+    //   product.multiple_variants = false;
+    //   product.all_stock_count = localCount;
+    // }
+    //
+    // let countBothVariants = () => {
+    //   for (let j = 0; j < split_options.length; j += 3) {
+    //     let object = {
+    //       variant1: split_options[j],
+    //       variant2: split_options[j + 1],
+    //       quantity: split_options[j + 2],
+    //     };
+    //     localVariants.push(object);
+    //   }
+    //   product.multiple_variants = true;
+    // }
+    //
+    // // try { product.has_variant ? getCount() : '' } catch { return }
+    // product.has_variant ? getCount() : ''
   },
   watch: {
     cart() {

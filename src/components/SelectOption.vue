@@ -95,7 +95,7 @@ export default {
   },
   computed: {
     ...mapGetters({
-      inventory: "getVisitorStore",
+      inventory: "getProducts",
     }),
     variants() {
       if (Array.isArray(this.options)) {
