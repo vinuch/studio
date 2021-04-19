@@ -86,12 +86,12 @@
         </div>
       </div>
 
-      <div @click="takeToCart(product)">
+      <div @click="takeToCart(product, i)">
         <!-- {{cart.find(item => {item.id == product.id})}} -->
         <AddToCartButton
+        :product="product"
         :btn_index='i'
         :btn_state='btn_state'
-        :productCountInCart="getCountInCart(product.id)"
         :logo="logo"
         />
       </div>
@@ -118,6 +118,7 @@ export default {
     return {
       display: 'thumbnail', // or detail
       btn_state: false,
+      btn_id: null,
     }
   },
   computed: {
@@ -217,8 +218,9 @@ export default {
         this.subTotal(product_meta);
       }
     },
-    takeToCart(product) {
-      product.has_variant ? this.ensureVariants(product) : this.addToCart(product);
+    takeToCart(product, i) {
+      this.btn_id = i
+      product.has_variant ? this.ensureVariants(product) : this.addToCart(product)
     },
     ensureVariants(product) {
       let check1Variant = (product) => {
@@ -227,15 +229,15 @@ export default {
 
       let check2Variants = (product) => {
         check1of2Variants(product)
-        check2of2Variants(product)
       }
 
       let check1of2Variants = (product) => {
-        product.selected_option != ("undefined" && "") ? check2of2Variants(product) : alert("please select a " + product.first_variant_name)
+        product.selected_option ? check2of2Variants(product) : alert("please select a " + product.first_variant_name)
+        // product.selected_option != ("undefined" && "") ? check2of2Variants(product) : alert("please select a " + product.first_variant_name)
       }
 
       let check2of2Variants = (product) => {
-        product.selected_option2 != ("undefined" && "") ? this.addToCart(product) : alert("please select a " + product.second_variant_name)
+        product.selected_option2 ? this.addToCart(product) : alert("please select a " + product.second_variant_name)
       }
 
       !product.second_variant ? check1Variant(product) : check2Variants(product)
@@ -255,22 +257,6 @@ export default {
       this.cart_meta.cartCount = items_count
       this.$store.commit(mutationTypes.SAVE_CART_META, this.cart_meta)
       this.totalBeforeShipping();
-    },
-    getCountInCart(id) {
-      console.log(id)
-      // let item_variants_in_cart = this.cart.filter(
-      //   item => item.id == id
-      // )
-      //
-      // // let item_variants_in_cart = this.cart.find(item => item.id === index)
-      // if(item_variants_in_cart) {
-      //   let count
-      //   for (let i=0; item_variants_in_cart.length; i++) {
-      //     count += item_variants_in_cart.count
-      //   }
-      //   return(count)
-      // }
-      // return 0
     },
     goToProduct() {
       this.$router.push(`/store-item/${this.product.id}`);
@@ -348,54 +334,19 @@ export default {
       this.$store.commit(mutationTypes.SAVE_CART_META, this.cart_meta)
     },
   },
-  created() {
-    // let product = this.product
-    // var localVariants = [];
-    // var localCount = [];
-    // var split_options = product.variant_options.split(",") ? product.variant_options.split(",") : ''
-    //
-    // let getCount = () => {
-    //   product.second_variant ? countBothVariants() : countVariant1()
-    //   product.variant_options = localVariants;
-    // }
-    //
-    // let countVariant1 = () => {
-    //   for (let j = 0; j < split_options.length; j += 2) {
-    //     if (split_options[j + 1] > 0) {
-    //       let object = {};
-    //       object[split_options[j]] = split_options[j + 1];
-    //       localVariants.push(object);
-    //       localCount.push(split_options[j + 1]);
-    //     }
-    //   }
-    //   product.multiple_variants = false;
-    //   product.all_stock_count = localCount;
-    // }
-    //
-    // let countBothVariants = () => {
-    //   for (let j = 0; j < split_options.length; j += 3) {
-    //     let object = {
-    //       variant1: split_options[j],
-    //       variant2: split_options[j + 1],
-    //       quantity: split_options[j + 2],
-    //     };
-    //     localVariants.push(object);
-    //   }
-    //   product.multiple_variants = true;
-    // }
-    //
-    // // try { product.has_variant ? getCount() : '' } catch { return }
-    // product.has_variant ? getCount() : ''
-  },
   watch: {
-    cart() {
-      console.log("cart changed")
+    // cart: {
+    // // //   // console.log("cart changed")
     //   handler() {
-    //     this.$store.commit(mutationTypes.SAVE_CART, cart)
-    //     // this.$store.commit("saveCartInSession")
+    // //     // document.getElementById("btn_" + this.i).innerHTML = Number(ele) + 1
+    //     let ele = document.getElementById("btn_" + this.btn_id)
+    //     ele.innerHTML = Number(ele.innerHTML) + 1
+    //
+    // // //   this.$store.commit(mutationTypes.SAVE_CART, cart)
+    // // //   // this.$store.commit("saveCartInSession")
     //   },
     //   deep: true,
-    },
+    // },
   },
 };
 </script>
