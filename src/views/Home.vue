@@ -27,7 +27,7 @@
 import { mapGetters } from "vuex";
 import StoreNav from "@/components/StoreNav";
 import {
-  fethcStoreInventory,
+  fethcProducts,
   fetchStoreInfo,
   fetchStoreSettlement
 } from "@/services/apiServices";
@@ -53,20 +53,6 @@ export default {
         '#2E151B',
         '#EAE7DC',
       ],
-      floatingConfig: {
-        hasClearButton: false,
-        line: false,
-        labelOffset: {
-          left: 20,
-          top: 10,
-        },
-        colors: {
-          focusColor: "#3A50D5",
-          errorColor: "#ff0000",
-          lineColor: "#128CED",
-          blurredColor: "#66768A",
-        },
-      },
     };
   },
   components: {
@@ -74,7 +60,7 @@ export default {
   },
   computed: {
     ...mapGetters({
-      inventory: "getVisitorStore",
+      inventory: "getProducts",
       storeInfo: "getVisitedStoreInfo",
       storeName: "getVisitedStoreName",
     }),
@@ -129,7 +115,7 @@ export default {
     }
 
     if (this.storeName) {
-      fethcStoreInventory(this.storeName, 1);
+      fethcProducts(this.storeName, 1);
       fetchStoreInfo(this.storeName);
       fetchStoreSettlement(this.storeName) // fetch this nearer to checkout
         // .then(() => {})
@@ -144,7 +130,7 @@ export default {
     } else {
       this.$store.commit(mutationTypes.SAVE_STORE_INFO, {});
       this.$store.commit(mutationTypes.SAVE_SETTLEMENT, {}); // do this nearer to checkout
-      this.$store.commit(mutationTypes.SAVE_INVENTORY, []);
+      this.$store.commit(mutationTypes.SAVE_PRODUCTS, []);
     }
 
     if (window.innerWidth > 600) {

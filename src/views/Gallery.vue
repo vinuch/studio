@@ -1,26 +1,16 @@
 <template>
   <div>
     <StoreNav />
-    <!-- <Header :store="visitedStoreInfo" :display="galleryView" @showGrid="showThumbnail()" @showZoom="zoomGallery()"/> -->
-
-    <div v-if="loadingStore" style="padding-top: 20%">
-      <a-icon type="loading" style="font-size: 40px; margin: 20px" />
-      <p>
-        Fetching store
-      </p>
-    </div>
-
-    <div v-else :class="display == 'thumbnail' ? 'prod_img' : 'prod_detail'">
+    <div :class="display == 'thumbnail' ? 'prod_img' : 'prod_detail'">
       <div class="empty" v-if="!filteredInventory.length">
         <img src="../assets/discount.svg" alt="" />
-        <p v-if="visitedStoreInfo.id">
+        <p v-if="storeInfo.id">
           No products yet, check back later
         </p>
         <p v-else>
           This store does not exist. Kindly confirm the url and try again
         </p>
       </div>
-
       <div
         v-for="(product, i) in filteredInventory"
         :key="'item' + i"
@@ -32,56 +22,32 @@
           v-if="product.total_stock > 0 && display != 'thumbnail'"
           :product="product"
           :i=i
-          :logo="visitedStoreInfo.logo"
+          :logo="storeInfo.logo"
           />
       </div>
     </div>
-    <!-- <BottomMenu :cartLength="cart.length"/> -->
   </div>
 </template>
 
 <script>
 import { mapGetters } from "vuex";
-// import StoreItem from "@/components/StoreItem";
 import Product from "@/components/Product";
 import StoreNav from "@/components/StoreNav";
-// import Header from "@/components/Header";
-
-// import { EventBus } from "@/services/eventBus";
-// import * as mutationTypes from "@/store/mutationTypes";
 export default {
   components: {
     StoreNav,
-    // Header,
-    // StoreItem,
     Product,
   },
   data() {
     return {
       search: "", // product search/filtering
       display: 'thumbnail', // or detail
-
-      loadingStore: false,
-      floatingConfig: {
-        hasClearButton: false,
-        line: false,
-        labelOffset: {
-          left: 20,
-          top: 10,
-        },
-        colors: {
-          focusColor: "#3A50D5",
-          errorColor: "#ff0000",
-          lineColor: "#128CED",
-          blurredColor: "#66768A",
-        },
-      },
     };
   },
   computed: {
     ...mapGetters({
-      inventory: "getVisitorStore",
-      visitedStoreInfo: "getVisitedStoreInfo",
+      inventory: "getProducts",
+      storeInfo: "getVisitedStoreInfo",
       visitedStoreName: "getVisitedStoreName",
     }),
     filteredInventory() {
