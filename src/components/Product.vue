@@ -108,11 +108,15 @@ import SelectOption from '@/components/SelectOption'
 import AddToCartButton from "@/components/AddToCartButton";
 import * as mutationTypes from "@/store/mutationTypes";
 import numeral from "numeral";
+// import * as mixins from "@/mixins/mixins";
 export default {
   components: {
     AddToCartButton,
     SelectOption,
   },
+  mixins: [
+    // checkStock,
+  ],
   props: {
     product: Object,
     i: Number,
@@ -144,7 +148,9 @@ export default {
       let option1 = product.selected_option;
       let option2 = product.selected_option2;
 
-      if (product.combo_stock == 0) {
+      // product.has_variant ? :
+
+      if (product.combo_qty == 0) {
         this.outOfStock(product, "combo_not_available");
       } else {
         if (this.cart.length > 0) {
@@ -169,7 +175,7 @@ export default {
                 });
                 try {
                   this.checkMatchQty(
-                    match.combo_stock,
+                    match.combo_qty,
                     match,
                     product,
                     "two_variants"
@@ -208,6 +214,13 @@ export default {
             }
           } else {
             // first product entry
+            // checkMatchQty(0, product.count, product, response) {
+            //   if (match_count > match.count) {
+            //     match.count++;
+            //   } else {
+            //     this.outOfStock(product, response);
+            //   }
+            // },
             this.newCartObject(product, false);
           }
         } else {
@@ -224,11 +237,13 @@ export default {
     },
     takeToCart(product, i) {
       this.btn_id = i
-      product.has_variant ? this.ensureVariants(product) : this.addToCart(product)
+      product.has_variant
+        ? this.ensureVariantsSelected(product)
+        : this.addToCart(product)
     },
-    ensureVariants(product) {
+    ensureVariantsSelected(product) {
       let check1Variant = (product) => {
-        return product.selected_option ? this.addToCart(product) : alert("please select a " + product.first_variant_name)
+        product.selected_option ? this.addToCart(product) : alert("please select a " + product.first_variant_name)
       }
 
       let check2Variants = (product) => {
@@ -246,11 +261,11 @@ export default {
 
       !product.second_variant ? check1Variant(product) : check2Variants(product)
     },
-    checkMatchQty(match_count, match, product, response) {
+    checkMatchQty(match_count, match, product, variant) {
       if (match_count > match.count) {
         match.count++;
       } else {
-        this.outOfStock(product, response);
+        this.outOfStock(product, variant);
       }
     },
     countItemsInCart() {
@@ -260,7 +275,7 @@ export default {
       }
       this.cart_meta.cartCount = items_count
       this.$store.commit(mutationTypes.SAVE_CART_META, this.cart_meta)
-      this.totalBeforeShipping();
+      this.preShipTotal();
     },
     goToProduct() {
       this.$router.push(`/store-item/${this.product.id}`);
@@ -321,33 +336,32 @@ export default {
       // Calculates the total price of multiple quantities of a product
       let product = this.cart.find(x => x.id == id && x.selected_option == option1 && x.selected_option2 == option2)
 
-      product.subTotal = product.count * (product.price - product.discountAmt)
-
-      product.subTotalView  = numeral(product.price - product.discountAmt).format("0,0")
+      product.subTotal = product.discountAmt
+        ? (product.count * (product.price - product.discountAmt))
+        : (product.count * product.price)
 
       this.$store.commit(mutationTypes.SAVE_CART, this.cart);
       this.countItemsInCart();
     },
-    totalBeforeShipping() {
+    preShipTotal() {
       let total = 0
       for (let i = 0; i < this.cart.length; i++) {
         total += this.cart[i].subTotal
       }
-      this.cart_meta.preShippingTotal = total
-      this.cart_meta.preShippingAccFormat = numeral(total).format("0,0")
+      this.cart_meta.preShipTotal = total
+      // this.cart_meta.preShippingAccFormat = numeral(total).format("0,0")
       this.$store.commit(mutationTypes.SAVE_CART_META, this.cart_meta)
     },
   },
   watch: {
     // cart: {
-    // // //   // console.log("cart changed")
     //   handler() {
-    // //     // document.getElementById("btn_" + this.i).innerHTML = Number(ele) + 1
+    //     document.getElementById("btn_" + this.i).innerHTML = Number(ele) + 1
     //     let ele = document.getElementById("btn_" + this.btn_id)
     //     ele.innerHTML = Number(ele.innerHTML) + 1
     //
-    // // //   this.$store.commit(mutationTypes.SAVE_CART, cart)
-    // // //   // this.$store.commit("saveCartInSession")
+    // //   this.$store.commit(mutationTypes.SAVE_CART, cart)
+    // //   // this.$store.commit("saveCartInSession")
     //   },
     //   deep: true,
     // },

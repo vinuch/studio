@@ -48,27 +48,28 @@ export default {
     }
   },
   methods: {
-    checkIfAvailable(prodIndex) {
-      let option1 = this.inventory[prodIndex].selected_option;
-      let option2 = this.inventory[prodIndex].selected_option2;
+    getQty(product) {
+      let option1 = this.inventory[product].selected_option;
+      let option2 = this.inventory[product].selected_option2;
 
-      if (this.inventory[prodIndex].multiple_variants == true) {
+      if (this.inventory[product].multiple_variants == true) {
         if (
           option1 != "" &&
           typeof option1 != "undefined" &&
           option2 != "" && typeof option2 != "undefined"
         ) {
-          let variant_options = this.inventory[prodIndex].variant_options;
+          let variant_options = this.inventory[product].variant_options;
+          // variant_options is an array of all variant combinations including qty
           for (let i = 0; i < variant_options.length; i++) {
             if (
               variant_options[i].variant1 == option1 &&
               variant_options[i].variant2 == option2
             ) {
-              // search for combination
+              // check combination qty
               if (variant_options[i].quantity == 0) {
-                this.inventory[prodIndex].combo_stock = 0;
+                this.inventory[product].combo_qty = 0;
               } else {
-                this.inventory[prodIndex].combo_stock =
+                this.inventory[product].combo_qty =
                   variant_options[i].quantity;
               }
             }
@@ -78,18 +79,18 @@ export default {
     },
     setOption(i) {
       let option = this.variants[i]
-      let prod = this.prodIndex
+      let product = this.prodIndex
       if (this.variant == "variant1") {
-        this.inventory[prod].selected_option = option;
+        this.inventory[product].selected_option = option;
         try {
-          this.inventory[prod].this_stock = this.inventory[prod].all_stock_count[i];
+          this.inventory[product].this_stock = this.inventory[product].all_stock_count[i]; // only products with one variant have all_stock_count as a property
         } catch {
           /* multiple variants */
         }
-        this.checkIfAvailable(prod);
+        // this.checkIfAvailable(product);
       } else {
-        this.inventory[prod].selected_option2 = option;
-        this.checkIfAvailable(prod);
+        this.inventory[product].selected_option2 = option;
+        this.getQty(product);
       }
     },
   },

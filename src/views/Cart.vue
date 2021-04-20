@@ -139,10 +139,10 @@
       <div class="sub_coupon">
         <div class="subtotal">
           <p>
-            Subtotal ({{ this.cart.length }}
+            Subtotal ({{ this.cart_meta.cartCount }}
             item<span v-if="this.cart.length > 1">s</span>)
           </p>
-          <p>₦{{ numeral(total).format("0,0") }}</p>
+          <p>₦{{ numeral(cart_meta.preShipTotal).format("0,0") }}</p>
         </div>
         <div class="coupon">
           <input v-model="coupon" placeholder="COUPON CODE">
@@ -158,45 +158,22 @@ import StoreNav from "../components/StoreNav";
 import AddressForm from "../components/AddressForm";
 import { mapGetters } from "vuex";
 import * as mutationTypes from "../store/mutationTypes";
+// import checkStock from "@/mixins/mixins";
 import numeral from "numeral";
 import { EventBus } from "../services/eventBus";
 export default {
+  components: {
+    StoreNav,
+    AddressForm
+  },
+  mixins: [
+    // checkStock,
+  ],
   data() {
     return {
       visible: false,
       coupon: "",
     };
-  },
-  components: {
-    StoreNav,
-    AddressForm
-  },
-  computed: {
-    ...mapGetters({
-      cart: "getCart",
-      products: "getProducts",
-      storeInfo: "getVisitedStoreInfo",
-    }),
-    drawerWidth() {
-      return window.innerWidth > 640 ? 640 : window.innerWidth;
-    },
-    cartItems() {
-      return this.products
-        .filter((item) => this.cart.find((cart) => cart.id === item.id))
-        .map((c) => {
-          return {
-            ...c,
-            qty_requested: this.cart.find((cart) => cart.id === c.id)
-              .qty_requested,
-          };
-        });
-    },
-    total() {
-      return this.cartItems.reduce((agg, curr) => {
-        agg += curr.qty_requested * (curr.price - curr.discountAmt);
-        return agg;
-      }, 0);
-    },
   },
   methods: {
     numeral,
@@ -206,17 +183,32 @@ export default {
     backToStore() {
       this.$router.push({name: 'Gallery'})
     },
-    submit() {
-      this.visible = true;
+    checkStock(product) { // use in mixin instead
+      if(product.combo_qty) {
+        if (product.combo_qty > product.count) {
+          return true
+        }
+      } else if(product.this_stock) {
+        if (product.this_stock > product.count) {
+          return true
+        }
+      } else {
+        if(product.total_stock > product.count) {
+          return true
+        }
+      }
+      alert("All available stock is already in your cart.")
+      return false
     },
     increaseInCart(index) {
     // Increases product count while viewing cart
       let product = this.cart[index]
       if (this.checkStock(product)) {
         product.count++
-        // this.cartItemTotal(index)
-        // this.$store.commit('countItemsInCart')
-        // this.totalBeforeShipping()
+        product.subTotal = product.discountAmt
+          ? (product.count * (product.price - product.discountAmt))
+          : (product.count * product.price)
+        this.$store.commit(mutationTypes.SAVE_CART, this.cart)
       }
     },
     reduceInCart(index) {
@@ -227,16 +219,47 @@ export default {
         if (product.count == 0) {
           this.cart.splice(index, 1)
         }
-        // this.cartItemTotal(index)
-        // this.$store.commit('countItemsInCart')
-        // this.totalBeforeShipping()
       }
-      },
+      product.subTotal = product.discountAmt // refactor this - used elsewhere
+        ? (product.count * (product.price - product.discountAmt))
+        : (product.count * product.price)
+      this.$store.commit(mutationTypes.SAVE_CART, this.cart)
+    },
     removeFromCart(i) {
       // Deletes all instances of a product while viewing cart
       this.cart.splice(i, 1)
       this.$store.commit(mutationTypes.SAVE_CART, this.cart);
-      // this.totalBeforeShipping()
+    },
+    submit() {
+      this.visible = true;
+    },
+  },
+  computed: {
+    ...mapGetters({
+      cart: "getCart",
+      cart_meta: "getCartMeta",
+      products: "getProducts",
+      storeInfo: "getVisitedStoreInfo",
+    }),
+    drawerWidth() {
+      return window.innerWidth > 640 ? 640 : window.innerWidth;
+    },
+  },
+  watch: {
+    cart: {
+      handler() {
+        let total = 0
+        let cart_count = 0
+        let curr = this.cart
+        for (let i = 0; i < curr.length; i++) {
+          total += curr[i].subTotal
+          cart_count += curr[i].count
+        }
+        this.cart_meta.preShipTotal = total
+        this.cart_meta.cartCount = cart_count
+        this.$store.commit(mutationTypes.SAVE_CART_META, this.cart_meta)
+      },
+      deep: true,
     },
   },
   mounted() {

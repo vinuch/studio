@@ -139,6 +139,8 @@ export default {
   computed: {
     ...mapGetters({
       cart: "getCart",
+      // cartCount: "getCartMeta.cartCount",
+      cart_meta: "getCartMeta",
       store_name: "getVisitedStoreName",
       storeInfo: "getVisitedStoreInfo",
     }),
