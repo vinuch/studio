@@ -32,7 +32,7 @@
       @click="enterShop">Shop Now
     </button>
 
-    <div class="links" v-if="!isAbout">
+    <div class="links" v-if="!isAbout && location != 'cart'">
       <div
         @click="jumpTo(i)"
         class="link"
@@ -128,7 +128,8 @@ import { mapGetters } from "vuex";
 import { EventBus } from "../services/eventBus";
 export default {
   props: [
-    'isAbout'
+    'isAbout', // from Home view
+    'location' // from Cart view
   ],
   data() {
     return {
@@ -182,7 +183,7 @@ export default {
       this.$emit("setIsAbout", false)
     },
     jumpTo(i) {
-      this.currentLink = i;
+      this.currentLink = i; // what is currentLInk?
       this.$router.push(`${this.links[i].to}`);
     },
     getImg(name) {

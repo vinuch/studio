@@ -53,8 +53,12 @@
 
     <div class="meta">
       <div class="price">
-        <span class="item_price">₦{{ numeral(product.price).format("0,0") }} </span>
-        <span v-if="product.has_discount" class="item_discount_price">₦{{ numeral(product.price - product.discountAmt).format("0,0")}}</span>
+        <span v-if="product.has_discount" class="item_price">
+          ₦{{ numeral(product.price - product.discountAmt).format("0,0")}}
+        </span>
+        <span :class="product.has_discount ? 'item_discount_price' : 'item_price'">
+          ₦{{ numeral(product.price).format("0,0")}}
+        </span>
       </div>
 
       <div v-if="product.description" class="about">

@@ -150,14 +150,14 @@ export default {
   computed: {
     ...mapGetters({
       cart: "getCart",
-      storeItems: "getProducts",
+      products: "getProducts",
       storeInfo: "getVisitedStoreInfo",
     }),
     drawerWidth() {
       return window.innerWidth > 640 ? 640 : window.innerWidth;
     },
     cartItems() {
-      return this.storeItems
+      return this.products
         .filter((item) => this.cart.find((cart) => cart.id === item.id))
         .map((c) => {
           return {
