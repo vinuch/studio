@@ -12,19 +12,12 @@ const vuexLocal = new VuexPersistence({
 
 export default new Vuex.Store({
   state: {
-    // store: {},
     account_id: null,
-    // settlement: {},
-    // inventory: [],
-    // orders: [],
-    // to_de_editted: null,
-
     products: {},
     cart: [],
     cart_meta: {},
     store_info: {},
     store_name: "",
-    // form_touched: false,
     completed_order_info: {},
   },
   mutations: {
@@ -37,44 +30,24 @@ export default new Vuex.Store({
     [mutationTypes.SAVE_PRODUCTS](state, data) {
       state.products = data;
     },
-    // [mutationTypes.SAVE_ACCOUNT_ID](state, data) {
-    //   state.account_id = data;
-    // },
-    // [mutationTypes.SAVE_INVENTORY](state, data) {
-    //   state.inventory = data;
-    // },
-    [mutationTypes.SAVE_ORDERS](state, data) {
-      state.orders = data;
-    },
     [mutationTypes.SAVE_CART](state, data) {
       state.cart = data;
     },
     [mutationTypes.SAVE_CART_META](state, data) {
       state.cart_meta = data;
     },
-    // [mutationTypes.SAVE_PRODUCT_TO_BE_EDITTED](state, data) {
-    //   state.to_de_editted = data;
-    // },
     [mutationTypes.SAVE_STORE_NAME](state, data) {
       state.store_name = data;
     },
     [mutationTypes.SAVE_STORE_INFO](state, data) {
       state.store_info = data;
     },
-    // [mutationTypes.FORM_TOUCHED](state, data) {
-    //   state.form_touched = data;
-    // },
     [mutationTypes.COMPLETED_ORDER_INFO](state, data) {
       state.completed_order_info = data;
     },
   },
   getters: {
-    // getStore: (state) => state.store,
-    // getStoreSettlement: (state) => state.settlement,
-    // getInventory: (state) => state.inventory,
-    // getOrders: (state) => state.orders,
-    // getItemToBeEditted: (state) => state.to_de_editted,
-    // getFormTouched: (state) => state.form_touched,
+    getStoreSettlement: (state) => state.settlement,
 
     getProducts: (state) => state.products,
     getStoreInfo: (state) => state.store_info,

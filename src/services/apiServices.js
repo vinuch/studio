@@ -132,19 +132,6 @@ export const createOrder = (data) => {
   });
 };
 
-export const fetchOrders = () => {
-  axios({
-    method: "get",
-    url: urls.ordersUrl,
-  })
-    .then((res) => {
-      store.commit(mutationTypes.SAVE_ORDERS, res.data);
-    })
-    .catch(() => {
-      // console.log({ err });
-    });
-};
-
 export const fetchOrderItems = (id) => {
   return axios({
     method: "get",
