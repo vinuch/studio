@@ -61,8 +61,8 @@ export default {
   computed: {
     ...mapGetters({
       inventory: "getProducts",
-      storeInfo: "getVisitedStoreInfo",
-      storeName: "getVisitedStoreName",
+      storeInfo: "getStoreInfo",
+      storeName: "getStoreName",
     }),
     // matchLogo() {
     //   return {

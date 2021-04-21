@@ -68,8 +68,8 @@ export default {
   computed: {
     ...mapGetters({
       inventory: "getProducts",
-      visitedStoreInfo: "getVisitedStoreInfo",
-      visitedStoreName: "getVisitedStoreName",
+      visitedStoreInfo: "getStoreInfo",
+      visitedStoreName: "getStoreName",
     }),
   },
   methods: {

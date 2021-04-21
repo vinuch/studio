@@ -77,10 +77,10 @@ export default new Vuex.Store({
     // getFormTouched: (state) => state.form_touched,
 
     getProducts: (state) => state.products,
-    getVisitedStoreInfo: (state) => state.store_info,
+    getStoreInfo: (state) => state.store_info,
     getCart: (state) => state.cart,
     getCartMeta: (state) => state.cart_meta,
-    getVisitedStoreName: (state) => state.store_name,
+    getStoreName: (state) => state.store_name,
     getCompletedOrderInfo: (state) => state.completed_order_info,
   },
   actions: {},

@@ -151,7 +151,7 @@ export default {
     ...mapGetters({
       cart: "getCart",
       products: "getProducts",
-      storeInfo: "getVisitedStoreInfo",
+      storeInfo: "getStoreInfo",
     }),
     drawerWidth() {
       return window.innerWidth > 640 ? 640 : window.innerWidth;

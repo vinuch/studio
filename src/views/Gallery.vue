@@ -48,8 +48,8 @@ export default {
   computed: {
     ...mapGetters({
       inventory: "getProducts",
-      storeInfo: "getVisitedStoreInfo",
-      visitedStoreName: "getVisitedStoreName",
+      storeInfo: "getStoreInfo",
+      visitedStoreName: "getStoreName",
     }),
     filteredInventory() {
       return this.inventory.filter((product) => {

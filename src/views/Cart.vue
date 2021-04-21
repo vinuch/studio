@@ -140,14 +140,14 @@
       </div>
       <AddressForm />
     </a-drawer>
-    <Coupon @submit="setVisible" />
+    <Checkout @submit="setVisible" />
     <p v-if="cart.length" class="back" @click="backToStore">Back to store</p>
   </div>
 </template>
 <script>
 import StoreNav from "@/components/StoreNav";
 import AddressForm from "@/components/AddressForm";
-import Coupon from "@/components/Coupon";
+import Checkout from "@/components/Checkout";
 import { mapGetters } from "vuex";
 import * as mutationTypes from "@/store/mutationTypes";
 // import checkStock from "@/mixins/mixins";
@@ -156,7 +156,7 @@ import { EventBus } from "@/services/eventBus";
 export default {
   components: {
     StoreNav,
-    Coupon,
+    Checkout,
     AddressForm
   },
   mixins: [
@@ -229,7 +229,7 @@ export default {
       cart: "getCart",
       cart_meta: "getCartMeta",
       products: "getProducts",
-      storeInfo: "getVisitedStoreInfo",
+      storeInfo: "getStoreInfo",
     }),
     drawerWidth() {
       return window.innerWidth > 640 ? 640 : window.innerWidth;

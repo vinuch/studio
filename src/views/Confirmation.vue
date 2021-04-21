@@ -26,7 +26,7 @@ export default {
   components: { StoreNav },
   computed: {
     ...mapGetters({
-      storeName: "getVisitedStoreName",
+      storeName: "getStoreName",
       completedOrderInfo: "getCompletedOrderInfo",
     }),
   },

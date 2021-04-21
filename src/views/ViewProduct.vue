@@ -213,7 +213,7 @@ export default {
     ...mapGetters({
       inventory: "getProducts",
       cart: "getCart",
-      storeName: "getVisitedStoreName",
+      storeName: "getStoreName",
     }),
     currentItem() {
       return this.inventory.find((itm) => itm.id == this.$route.params.item_id);

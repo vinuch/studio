@@ -141,8 +141,8 @@ export default {
       cart: "getCart",
       // cartCount: "getCartMeta.cartCount",
       cart_meta: "getCartMeta",
-      store_name: "getVisitedStoreName",
-      storeInfo: "getVisitedStoreInfo",
+      store_name: "getStoreName",
+      storeInfo: "getStoreInfo",
     }),
     drawerWidth() {
       return window.innerWidth > 640 ? 640 : window.innerWidth;
