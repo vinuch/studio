@@ -20,7 +20,7 @@
         <li
           v-for="(option, i) in variants"
           :key="i"
-          @click="selected = option; open = false; setOption(i)"
+          @click="setOption(option, i)"
         >
           {{ option }}
         </li>
@@ -77,20 +77,17 @@ export default {
         }
       }
     },
-    setOption(i) {
-      let option = this.variants[i]
-      let product = this.prodIndex
+    setOption(option, i) {
+      this.selected = option
+      this.open = false
+
+      let k = this.inventory[this.prodIndex]
       if (this.variant == "variant1") {
-        this.inventory[product].selected_option = option;
-        try {
-          this.inventory[product].this_stock = this.inventory[product].all_stock_count[i]; // only products with one variant have all_stock_count as a property
-        } catch {
-          /* multiple variants */
-        }
-        // this.checkIfAvailable(product);
+        k.selected_option = option;
+        try { k.this_stock = k.all_stock_count[i] } catch {null}
       } else {
-        this.inventory[product].selected_option2 = option;
-        this.getQty(product);
+        k.selected_option2 = option
+        this.getQty(this.prodIndex)
       }
     },
   },

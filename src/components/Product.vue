@@ -127,6 +127,7 @@ export default {
       display: 'thumbnail', // or detail
       btn_state: false,
       btn_id: null,
+      product_meta: {},
     }
   },
   computed: {
@@ -141,109 +142,94 @@ export default {
   methods: {
     numeral,
 
-    addToCart(product) {
+    addToCart(product, variant) {
       // Adds new product to cart or increases the count if it already exists from the mainGallery
 
       let id = product.id;
       let option1 = product.selected_option;
       let option2 = product.selected_option2;
 
-      // product.has_variant ? :
+      this.product_meta = {
+        id: id,
+        option1: option1,
+        option2: option2,
+      };
 
-      if (product.combo_qty == 0) {
-        this.outOfStock(product, "combo_not_available");
-      } else {
-        if (this.cart.length > 0) {
-          let has_variant = product.has_variant;
-          let multiple_variants = product.multiple_variants;
+      let already_in_cart = this.cart.filter(
+        (x) =>
+          x.id == id &&
+          x.has_variant &&
+          x.multiple_variants
+      )
 
-          let already_in_cart = this.cart.filter(
-            (x) =>
-              x.id == id &&
-              x.has_variant == has_variant &&
-              x.multiple_variants == multiple_variants
-          );
+      let no_v = this.cart.find((x) => x.id == id)
 
-          if (already_in_cart.length > 0) {
-            if (has_variant) {
-              if (multiple_variants) {
-                let match = already_in_cart.find((x) => {
-                  return (
-                    x.selected_option == option1 &&
-                    x.selected_option2 == option2
-                  );
-                });
-                try {
-                  this.checkMatchQty(
-                    match.combo_qty,
-                    match,
-                    product,
-                    "two_variants"
-                  );
-                } catch {
-                  // no match. First entry
-                  this.newCartObject(product, false);
-                }
-              } else {
-                // only one variant
-                let match = already_in_cart.find(
-                  (x) => x.selected_option == option1
-                );
-                try {
-                  this.checkMatchQty(
-                    match.this_stock,
-                    match,
-                    product,
-                    "one_variant"
-                  );
-                } catch {
-                  this.newCartObject(product, false);
-                }
-              }
-            } else {
-              // doesn't have variant
-              let match = this.cart.find((x) => x.id == id);
-              if (match) {
-                this.checkMatchQty(
-                  match.total_stock,
-                  match,
-                  product,
-                  "no_variant"
-                );
-              }
-            }
-          } else {
-            // first product entry
-            // checkMatchQty(0, product.count, product, response) {
-            //   if (match_count > match.count) {
-            //     match.count++;
-            //   } else {
-            //     this.outOfStock(product, response);
-            //   }
-            // },
-            this.newCartObject(product, false);
-          }
-        } else {
-          // empty cart: first cart entry
-          this.newCartObject(product, true);
-        }
-        var product_meta = {
-          id: id,
-          option1: option1,
-          option2: option2,
-        };
-        this.subTotal(product_meta);
+      let one_v = already_in_cart.find(
+        (x) => x.selected_option == option1
+      )
+
+      let two_v = already_in_cart.find((x) => {
+        return (
+          x.selected_option == option1 &&
+          x.selected_option2 == option2
+        )
+      })
+
+      let addProduct = () => {
+        product.count = 0
+        if (!this.checkStock(product)) {return}
+        this.newCartObject(product, false)
+        this.subTotal()
       }
+
+      let searchCart = () => {
+        variant === "no_variant"
+          ? no_v
+              ? this.checkMatchQty(no_v.total_stock, no_v, product, variant)
+              : addProduct()
+          : ''
+
+        variant === "1variant"
+          ? one_v
+              ? this.checkMatchQty(one_v.this_stock, one_v, product, variant)
+              : addProduct()
+          : ''
+
+        variant === "2variants"
+          ? two_v
+              ? this.checkMatchQty(two_v.combo_qty, two_v, product, variant)
+              : addProduct()
+          : ''
+      }
+
+      this.cart.length > 0 ? searchCart() : addProduct()
+    },
+    checkStock(product) { // refactor (use mixin?)
+      if(product.combo_qty) {
+        if (product.combo_qty > product.count) {
+          return true
+        }
+      } else if(product.this_stock) {
+        if (product.this_stock > product.count) {
+          return true
+        }
+      } else {
+        if(product.total_stock > product.count) {
+          return true
+        }
+      }
+      alert("All available stock is already in your cart or not available.")
+      return false
     },
     takeToCart(product, i) {
       this.btn_id = i
       product.has_variant
         ? this.ensureVariantsSelected(product)
-        : this.addToCart(product)
+        : this.addToCart(product, "no_variant")
     },
     ensureVariantsSelected(product) {
       let check1Variant = (product) => {
-        product.selected_option ? this.addToCart(product) : alert("please select a " + product.first_variant_name)
+        product.selected_option ? this.addToCart(product, "1variant") : alert("please select a " + product.first_variant_name)
       }
 
       let check2Variants = (product) => {
@@ -252,11 +238,10 @@ export default {
 
       let check1of2Variants = (product) => {
         product.selected_option ? check2of2Variants(product) : alert("please select a " + product.first_variant_name)
-        // product.selected_option != ("undefined" && "") ? check2of2Variants(product) : alert("please select a " + product.first_variant_name)
       }
 
       let check2of2Variants = (product) => {
-        product.selected_option2 ? this.addToCart(product) : alert("please select a " + product.second_variant_name)
+        product.selected_option2 ? this.addToCart(product, "2variants") : alert("please select a " + product.second_variant_name)
       }
 
       !product.second_variant ? check1Variant(product) : check2Variants(product)
@@ -264,6 +249,7 @@ export default {
     checkMatchQty(match_count, match, product, variant) {
       if (match_count > match.count) {
         match.count++;
+        this.subTotal();
       } else {
         this.outOfStock(product, variant);
       }
@@ -283,13 +269,13 @@ export default {
     outOfStock(product, option) {
       if (option == "no_variant") {
         alert("All available stock is already in your cart.");
-      } else if (option == "one_variant") {
+      } else if (option == "1variant") {
         alert(
           "All available stock in " +
             product.selected_option +
             " are already in your cart."
         );
-      } else if (option == "two_variants") {
+      } else if (option == "2variants") {
         alert(
           "All available stock in " +
             product.selected_option +
@@ -326,12 +312,10 @@ export default {
       this.cart.push(entry);
       this.button_state = button_state;
     },
-    subTotal(product_meta) {
-      // this.$store.commit("subTotal", product_meta); // check this commit
-
-      let id = product_meta.id
-      let option1 = product_meta.option1
-      let option2 = product_meta.option2
+    subTotal() {
+      let id = this.product_meta.id
+      let option1 = this.product_meta.option1
+      let option2 = this.product_meta.option2
 
       // Calculates the total price of multiple quantities of a product
       let product = this.cart.find(x => x.id == id && x.selected_option == option1 && x.selected_option2 == option2)
@@ -349,7 +333,6 @@ export default {
         total += this.cart[i].subTotal
       }
       this.cart_meta.preShipTotal = total
-      // this.cart_meta.preShippingAccFormat = numeral(total).format("0,0")
       this.$store.commit(mutationTypes.SAVE_CART_META, this.cart_meta)
     },
   },

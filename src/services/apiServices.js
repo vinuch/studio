@@ -56,12 +56,10 @@ export const fethcProducts = async (slug) => {
 
       let countVariant1 = () => {
         for (let j = 0; j < split_options.length; j += 2) {
-          if (split_options[j + 1] > 0) {
-            let object = {};
-            object[split_options[j]] = split_options[j + 1];
-            localVariants.push(object);
-            localCount.push(split_options[j + 1]);
-          }
+          let object = {};
+          object[split_options[j]] = split_options[j + 1];
+          localVariants.push(object);
+          localCount.push(split_options[j + 1]);
         }
         itm.multiple_variants = false;
         itm.all_stock_count = localCount;
