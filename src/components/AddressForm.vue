@@ -45,10 +45,10 @@
     >
       <select
         style="width: 100%;
-                height: 100%;
-                border: 0;
-                background: transparent;
-                padding-top: 10px !important;"
+          height: 100%;
+          border: 0;
+          background: transparent;
+          padding-top: 10px !important;"
         v-model="city"
         name="shipping"
       >
@@ -57,52 +57,17 @@
         }}</option>
       </select>
     </FloatingLabel>
-    <!-- <div class="grey-fields">
-      <p>
-        <span class="info"> Sub total ({{ this.cart.length }} items) </span>
-        <span class="price utm"> ₦{{ numeral(total).format("0,0") }} </span>
-      </p>
-      <p>
-        <span class="info">
-          Delivery fee
-        </span>
-        <span class="price utm">
-          ₦{{ numeral(city.price).format("0,0") }}
-        </span>
-      </p>
-      <p
-        style="border: 0;
-              padding: 0;
-              margin: 0;"
-      >
-        <span class="info utm" style="color: #10102C;">
-          Total
-        </span>
-        <span class="price utm" style="color: #10102C;">
-          ₦{{
-            numeral(parseFloat(total) + parseFloat(city.price)).format("0,0")
-          }}
-        </span>
-      </p>
-    </div> -->
-    <a-button
-      class="main-btn"
-      style="margin-top: 20px; width: 100%; height: 50px"
-      @click="saveOrderHandler()"
-      :loading="loading"
-    >
-      Place order
-    </a-button>
-    <Coupon
-      :address="true"
-      @submit="pay"
+    <Checkout
+    :address="true"
+    :shipping="city.price"
+    @submit="saveOrderHandler()"
     />
   </div>
 </template>
 <script>
 import FloatingLabel from "vue-simple-floating-labels";
 import numeral from "numeral";
-import Coupon from "@/components/Coupon";
+import Checkout from "@/components/Checkout";
 import { mapGetters } from "vuex";
 import { saveOrder, createOrder } from "@/services/apiServices";
 import * as mutationTypes from "@/store/mutationTypes";
@@ -110,7 +75,7 @@ import { EventBus } from "@/services/eventBus";
 export default {
   components: {
     FloatingLabel,
-    Coupon,
+    Checkout,
   },
   data() {
     return {
@@ -121,6 +86,7 @@ export default {
         phone: "",
         address: "",
       },
+      plate: "yes",
       orderID: "",
       floatingConfig: {
         hasClearButton: false,
@@ -146,7 +112,7 @@ export default {
     ...mapGetters({
       cart: "getCart",
       storeItems: "getProducts",
-      storeInfo: "getVisitedStoreInfo",
+      storeInfo: "getStoreInfo",
       settlement: "getStoreSettlement",
     }),
     zones() {
@@ -249,6 +215,7 @@ export default {
     },
     // createOrder() {},
     saveOrderHandler() {
+      console.log("happening")
       this.createOrderID();
       let data = {
         address: this.delivery_details.address,
@@ -339,10 +306,14 @@ export default {
 </script>
 <style lang="scss" scoped>
 .address-form {
-  padding: 15px 80px;
+  .cart_summary {
+    margin-bottom: 25px;
+    // width: 100%;
+    // padding: 0 15px;
+  }
 
   @media (max-width: 767px) {
-    padding: 15px;
+    // padding: 15px;
   }
 }
 </style>
