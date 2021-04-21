@@ -1,5 +1,5 @@
 <template>
-  <div v-if="cart.length > 0" class="bottom_fixed">
+  <div v-if="cart.length > 0" class="cart_summary">
     <div class="sub_coupon">
       <div class="subtotal">
         <p>
@@ -22,7 +22,6 @@
         <button @click="submit">Enter address</button>
       </div>
     </div>
-    <p v-if="!address" @click="backToStore">Back to store</p>
   </div>
 </template>
 <script>
@@ -66,18 +65,7 @@ export default {
 *:focus {
   outline: none;
 }
-.store-cart {
-  .coupon_prop {
-    height:160px;
-    width: 100%;
-  }
-  .bottom_fixed {
-    width: 100%;
-    position: fixed;
-    bottom: 0;
-    background: #FFF;
-    padding: 0 15px;
-  }
+.cart_summary {
   .sub_coupon {
     width: 100%;
     padding: 15px;

@@ -106,8 +106,7 @@
             </div>
           </div>
         </div>
-        <div class="coupon_prop">
-
+        <div class="cart_prop">
         </div>
       </a-col>
     </a-row>
@@ -135,6 +134,7 @@
       <AddressForm />
     </a-drawer>
     <Coupon @submit="setVisible" />
+    <p v-if="cart.length" class="back" @click="backToStore">Back to store</p>
   </div>
 </template>
 <script>
@@ -254,22 +254,32 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-
-// *:focus {
-//   outline: none;
-// }
 .store-cart {
-  // .coupon_prop {
-  //   height:160px;
-  //   width: 100%;
-  // }
-  // .bottom_fixed {
-  //   width: 100%;
-  //   position: fixed;
-  //   bottom: 0;
-  //   background: #FFF;
-  //   padding: 0 15px;
-  // }
+  .cart_prop { // pushes up the bottom most item in cart
+    height:160px;
+    width: 100%;
+  }
+  .cart_summary {
+    width: 100%;
+    position: fixed;
+    bottom: 40px;
+    background: #FFF;
+    padding: 0 15px;
+  }
+  .back {
+    width: 100%;
+    background: #FFF;
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    margin-bottom: 0;
+    padding: 10px;
+    padding-right: 25px;
+    text-align: right;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+  }
   // .sub_coupon {
   //   width: 100%;
   //   padding: 15px;
@@ -302,14 +312,7 @@ export default {
   //     background: #3A50D5;
   //   }
   // }
-  // .sub_coupon + p {
-  //   margin-top: 5px;
-  //   padding-right: 10px;
-  //   text-align: right;
-  //   font-size: 14px;
-  //   font-weight: bold;
-  //   cursor: pointer;
-  // }
+  //
   .inner {
     padding: 50px 100px;
   }
