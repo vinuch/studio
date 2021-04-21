@@ -21,14 +21,15 @@
           YOU’RE BUYING
         </p>
         <div class="cart-item" v-for="(item, i) in cart" :key="i">
-          <div class="info">
+
+          <div class="fascia">
             <div
               class="image"
-              :style="{ backgroundImage: `url('${item.product_image}')` }"
-            ></div>
-            <div class="details">
+              :style="{ backgroundImage: `url('${item.product_image}')` }">
+            </div>
+            <div>
               <p class="name utm">{{ item.product_name }}</p>
-              <p class="unit_price">
+              <p class="price_group">
                 <span v-if="item.has_discount" class="item_price">
                   ₦{{ numeral(item.price - item.discountAmt).format("0,0")}}
                 </span>
@@ -40,16 +41,6 @@
                   ₦{{ numeral(item.price).format("0,0") }}
                 </span>
               </p>
-              <div class="desc">
-                <div v-if="item.first_variant_name">
-                  {{ item.first_variant_name + ":" }}
-                  {{ item.selected_option }}
-                </div>
-                <div v-if="item.second_variant_name">
-                  {{ item.second_variant_name + ":" }}
-                  {{ item.selected_option2 }}
-                </div>
-              </div>
               <p class="item_subtotal">
                 <span v-if="item.has_discount">
                   ₦{{ numeral((item.price - item.discountAmt) * item.count).format("0,0")}}
@@ -58,52 +49,68 @@
                   ₦{{ numeral(item.price * item.count).format("0,0") }}
                 </span>
               </p>
-              <div class="count">
-                <img
-                  @click="removeFromCart(i)"
+            </div>
+          </div>
+          <div class="info">
+            <div v-if="item.first_variant_name" class="desc">
+              <p>Options: </p>
+              <p>
+                <span v-if="item.first_variant_name">
+                  {{ item.selected_option }}
+                </span>
+                <span v-if="item.second_variant_name">
+                  {{", " + item.selected_option2 }}
+                </span>
+              </p>
+            </div>
+            <!-- <div class="details"> -->
+            <div
+              class="count"
+              :style="!item.first_variant_name ? 'margin-top: 15px;' : '' "
+            >
+              <img
+                @click="removeFromCart(i)"
+                style="cursor: pointer"
+                src="../assets/trash.svg"
+                alt=""
+              />
+              <div class="grey">
+                <svg
+                  width="14"
+                  height="2"
+                  viewBox="0 0 14 2"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                  @click="reduceInCart(i)"
                   style="cursor: pointer"
-                  src="../assets/trash.svg"
-                  alt=""
-                />
-                <div class="grey">
-                  <svg
-                    width="10"
-                    height="10"
-                    viewBox="0 0 10 10"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                    @click="increaseInCart(i)"
-                    style="cursor: pointer"
-                  >
-                    <path
-                      fill-rule="evenodd"
-                      clip-rule="evenodd"
-                      d="M5 0C5.5523 0 6 0.44772 6 1V4H9C9.5523 4 10 4.44772 10 5C10 5.5523 9.5523 6 9 6H6V9C6 9.5523 5.5523 10 5 10C4.44771 10 4 9.5523 4 9V6H1C0.44772 6 0 5.5523 0 5C0 4.44771 0.44772 4 1 4H4V1C4 0.44772 4.44771 0 5 0Z"
-                      fill="#8093AD"
-                    />
-                  </svg>
-
-                  <span class="utb">{{ item.count }}</span>
-
-                  <svg
-                    width="14"
-                    height="2"
-                    viewBox="0 0 14 2"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                    @click="reduceInCart(i)"
-                    style="cursor: pointer"
-                  >
-                    <path
-                      fill-rule="evenodd"
-                      clip-rule="evenodd"
-                      d="M0 1C0 0.44772 0.44772 0 1 0H13C13.5523 0 14 0.44772 14 1C14 1.5523 13.5523 2 13 2H1C0.44772 2 0 1.5523 0 1Z"
-                      fill="#8093AD"
-                    />
-                  </svg>
-                </div>
+                >
+                  <path
+                    fill-rule="evenodd"
+                    clip-rule="evenodd"
+                    d="M0 1C0 0.44772 0.44772 0 1 0H13C13.5523 0 14 0.44772 14 1C14 1.5523 13.5523 2 13 2H1C0.44772 2 0 1.5523 0 1Z"
+                    fill="#8093AD"
+                  />
+                </svg>
+                <span class="utb">{{ item.count }}</span>
+                <svg
+                  width="10"
+                  height="10"
+                  viewBox="0 0 10 10"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                  @click="increaseInCart(i)"
+                  style="cursor: pointer"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    clip-rule="evenodd"
+                    d="M5 0C5.5523 0 6 0.44772 6 1V4H9C9.5523 4 10 4.44772 10 5C10 5.5523 9.5523 6 9 6H6V9C6 9.5523 5.5523 10 5 10C4.44771 10 4 9.5523 4 9V6H1C0.44772 6 0 5.5523 0 5C0 4.44771 0.44772 4 1 4H4V1C4 0.44772 4.44771 0 5 0Z"
+                    fill="#8093AD"
+                  />
+                </svg>
               </div>
             </div>
+            <!-- </div> -->
           </div>
         </div>
         <div class="cart_prop">
@@ -280,39 +287,89 @@ export default {
     font-weight: bold;
     cursor: pointer;
   }
-  // .sub_coupon {
-  //   width: 100%;
-  //   padding: 15px;
-  //   color: #FFF;
-  //   font-size: 16px;
-  //   background: #1F2938;
-  //   border-radius: 8px;
-  // }
-  // .subtotal, .coupon {
-  //   display: flex;
-  //   justify-content: space-between;
-  // }
-  // .subtotal {
-  //   border-bottom: 1px solid rgba(255,255,255,.25);
-  // }
-  // .coupon {
-  //   padding: 15px 0 10px;
-  //   input {
-  //     border: 1px solid #FFF;
-  //     border-radius: 4px;
-  //     background: transparent;
-  //     text-transform: uppercase;
-  //     padding: 7px 0 7px 10px;
-  //     width: 45%;
-  //   }
-  //   button {
-  //     width: 40%;
-  //     border: none;
-  //     border-radius: 4px;
-  //     background: #3A50D5;
-  //   }
-  // }
-  //
+  .fascia {
+    position: relative;
+    display: flex;
+    width: 100%;
+    // background: pink;
+    .image {
+      width: 82px;
+      height: 82px;
+      background-size: cover;
+      background-repeat: no-repeat;
+      background-position: center;
+      margin-right: 15px;
+    }
+    .name {
+      font-size: 20px;
+    }
+    .price_group, .item_subtotal {
+      font-size: 16px;
+      font-weight: 600;
+      position: absolute;
+      bottom: 0;
+    }
+    p {
+      margin: 0;
+    }
+    .item_price {
+      color: #3A50D5;
+    }
+    .item_discount_price {
+      color: #919EAB;
+      text-decoration: line-through;
+    }
+    .item_subtotal {
+      right: 0;
+    }
+  }
+  .desc, .count {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 0;
+    // border-top: 1px solid #E6E9EF;
+    border-top: 1px solid #F8F9FA;
+  }
+  .desc {
+    width: 100%;
+    font-size: 16px;
+    color: #4d5868;
+    margin-top: 15px;
+    p {
+      margin: 0;
+    }
+  }
+  .count {
+    position: relative;
+    // border-bottom: 1px solid #E6E9EF;
+    img {
+      margin: 5px auto 0;
+      height: 20px;
+    }
+    .grey {
+      position: absolute;
+      width: 120px;
+      right: 0;
+      bottom: 7px;
+      background: #f8f9fa;
+      border-radius: 4px;
+      padding: 5px 12px;
+      display: inline-flex;
+      // flex-direction: column;
+      justify-content: space-between;
+      align-items: center;
+      margin-left: 5px;
+      span {
+        font-size: 18px;
+        line-height: 20px;
+        text-align: center;
+        color: #2b2b2b;
+      }
+    }
+  }
+
+
+
   .inner {
     padding: 50px 100px;
   }
@@ -346,24 +403,18 @@ export default {
     padding-right: 100px;
     .cart-item {
       position: relative;
-      display: flex;
+      // border: 1px solid #E6E9EF;
+      background: #E6E9EF;
+      // -moz-box-shadow: 0 0 5px #E6E9EF;
+      // -webkit-box-shadow: 0 0 5px #E6E9EF;
+      // box-shadow: 0 0 5px #E6E9EF;
+      margin-bottom: 20px;
+      border-radius: 8px;
       flex-direction: row;
       align-items: center;
       justify-content: space-between;
-      border-bottom: 1px solid #e6e9ef;
-      padding: 25px 0;
+      padding: 15px 15px 10px;
       .info {
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-        .image {
-          width: 82px;
-          height: 82px;
-          background-size: cover;
-          background-repeat: no-repeat;
-          background-position: center;
-          margin-right: 15px;
-        }
         .details {
           .name {
             font-size: 16px;
@@ -371,79 +422,11 @@ export default {
             color: #2b2b2b;
             margin-bottom: 5px;
           }
-          .desc {
-            font-size: 14px;
-            line-height: 17px;
-            color: #4d5868;
-            margin-bottom: 15px;
-          }
-          .count {
-            .grey {
-              position: absolute;
-              height: 60%;
-              width: 20px;
-              top: 50%;
-              right: 0;
-              transform: translate(0,-50%);
-              background: #f8f9fa;
-              border-radius: 4px;
-              padding: 7px 12px;
-              display: inline-flex;
-              flex-direction: column;
-              justify-content: space-between;
-              align-items: center;
-              margin-left: 5px;
-              span {
-                font-size: 16px;
-                line-height: 20px;
-                text-align: center;
-                color: #2b2b2b;
-              }
-            }
-          }
         }
       }
     }
   }
-  // .form {
-  //   padding: 0 100px;
-  //   text-align: left;
-  //   .fields {
-  //     background: #f8f9fa;
-  //     border-radius: 4px;
-  //     padding: 24px;
-  //     p {
-  //       display: flex;
-  //       flex-direction: row;
-  //       justify-content: space-between;
-  //       border-bottom: 1px solid #e6e9ef;
-  //       padding-bottom: 12px;
-  //       .info {
-  //         font-size: 16px;
-  //         line-height: 20px;
-  //         color: #10102c;
-  //       }
-  //       // .price {
-  //       //   font-size: 16px;
-  //       //   line-height: 20px;
-  //       //   text-align: right;
-  //       //   color: #4d5868;
-  //       // }
-  //     }
-  //     .main-btn {
-  //       height: 50px;
-  //       width: 100%;
-  //     }
-  //   }
-  // }
-  .item_price {
-    color: #3A50D5;
-    font-weight: 600;
-  }
-  .item_discount_price {
-    color: #919EAB;
-    text-decoration: line-through;
-  }
+
   @media (max-width: 767px) {
     .inner {
       padding: 15px !important;
