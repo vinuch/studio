@@ -207,16 +207,13 @@ export default {
     reduceInCart(index) {
     // Reduces product count while viewing cart
       let product = this.cart[index]
-      if (product.count > 0) {
+      if (product.count > 1) {
         product.count--
-        if (product.count == 0) {
-          this.cart.splice(index, 1)
-        }
+        product.subTotal = product.discountAmt // refactor this - used elsewhere
+          ? (product.count * (product.price - product.discountAmt))
+          : (product.count * product.price)
+        this.$store.commit(mutationTypes.SAVE_CART, this.cart)
       }
-      product.subTotal = product.discountAmt // refactor this - used elsewhere
-        ? (product.count * (product.price - product.discountAmt))
-        : (product.count * product.price)
-      this.$store.commit(mutationTypes.SAVE_CART, this.cart)
     },
     removeFromCart(i) {
       // Deletes all instances of a product while viewing cart
@@ -327,8 +324,8 @@ export default {
     display: flex;
     justify-content: space-between;
     padding: 10px 0;
-    // border-top: 1px solid #E6E9EF;
-    border-top: 1px solid #F8F9FA;
+    border-top: 1px solid #E6E9EF;
+    // border-top: 1px solid #F8F9FA;
   }
   .desc {
     width: 100%;
@@ -341,6 +338,7 @@ export default {
   }
   .count {
     position: relative;
+    padding: 13px 0;
     // border-bottom: 1px solid #E6E9EF;
     img {
       margin: 5px auto 0;
@@ -351,7 +349,7 @@ export default {
       width: 120px;
       right: 0;
       bottom: 7px;
-      background: #f8f9fa;
+      background: #E6E9EF;
       border-radius: 4px;
       padding: 5px 12px;
       display: inline-flex;
@@ -404,7 +402,8 @@ export default {
     .cart-item {
       position: relative;
       // border: 1px solid #E6E9EF;
-      background: #E6E9EF;
+      background: #F8F9FA;
+      // background: #E6E9EF;
       // -moz-box-shadow: 0 0 5px #E6E9EF;
       // -webkit-box-shadow: 0 0 5px #E6E9EF;
       // box-shadow: 0 0 5px #E6E9EF;

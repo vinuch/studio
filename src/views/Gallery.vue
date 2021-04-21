@@ -26,6 +26,7 @@
           />
       </div>
     </div>
+    <div v-if="display == 'detail'" class="prop"></div>
   </div>
 </template>
 
@@ -124,5 +125,9 @@ export default {
   .prod_detail {
     display: flex;
     flex-direction: column;
+  }
+  .prop { // pushes up the bottom most item up
+    height:60px;
+    width: 100%;
   }
 </style>
