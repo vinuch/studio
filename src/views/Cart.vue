@@ -134,36 +134,22 @@
       </div>
       <AddressForm />
     </a-drawer>
-
-    <div v-if="cart.length > 0" class="bottom_fixed">
-      <div class="sub_coupon">
-        <div class="subtotal">
-          <p>
-            Subtotal ({{ this.cart_meta.cartCount }}
-            item<span v-if="this.cart.length > 1">s</span>)
-          </p>
-          <p>₦{{ numeral(cart_meta.preShipTotal).format("0,0") }}</p>
-        </div>
-        <div class="coupon">
-          <input v-model="coupon" placeholder="COUPON CODE">
-          <button @click="submit">Enter address</button>
-        </div>
-      </div>
-      <p @click="backToStore">Back to store</p>
-    </div>
+    <Coupon @submit="setVisible" />
   </div>
 </template>
 <script>
-import StoreNav from "../components/StoreNav";
-import AddressForm from "../components/AddressForm";
+import StoreNav from "@/components/StoreNav";
+import AddressForm from "@/components/AddressForm";
+import Coupon from "@/components/Coupon";
 import { mapGetters } from "vuex";
-import * as mutationTypes from "../store/mutationTypes";
+import * as mutationTypes from "@/store/mutationTypes";
 // import checkStock from "@/mixins/mixins";
 import numeral from "numeral";
-import { EventBus } from "../services/eventBus";
+import { EventBus } from "@/services/eventBus";
 export default {
   components: {
     StoreNav,
+    Coupon,
     AddressForm
   },
   mixins: [
@@ -183,7 +169,7 @@ export default {
     backToStore() {
       this.$router.push({name: 'Gallery'})
     },
-    checkStock(product) { // use in mixin instead
+    checkStock(product) { // refactor - also in product
       if(product.combo_qty) {
         if (product.combo_qty > product.count) {
           return true
@@ -230,7 +216,7 @@ export default {
       this.cart.splice(i, 1)
       this.$store.commit(mutationTypes.SAVE_CART, this.cart);
     },
-    submit() {
+    setVisible() {
       this.visible = true;
     },
   },
@@ -269,61 +255,61 @@ export default {
 </script>
 <style lang="scss" scoped>
 
-*:focus {
-  outline: none;
-}
+// *:focus {
+//   outline: none;
+// }
 .store-cart {
-  .coupon_prop {
-    height:160px;
-    width: 100%;
-  }
-  .bottom_fixed {
-    width: 100%;
-    position: fixed;
-    bottom: 0;
-    background: #FFF;
-    padding: 0 15px;
-  }
-  .sub_coupon {
-    width: 100%;
-    padding: 15px;
-    color: #FFF;
-    font-size: 16px;
-    background: #1F2938;
-    border-radius: 8px;
-  }
-  .subtotal, .coupon {
-    display: flex;
-    justify-content: space-between;
-  }
-  .subtotal {
-    border-bottom: 1px solid rgba(255,255,255,.25);
-  }
-  .coupon {
-    padding: 15px 0 10px;
-    input {
-      border: 1px solid #FFF;
-      border-radius: 4px;
-      background: transparent;
-      text-transform: uppercase;
-      padding: 7px 0 7px 10px;
-      width: 45%;
-    }
-    button {
-      width: 40%;
-      border: none;
-      border-radius: 4px;
-      background: #3A50D5;
-    }
-  }
-  .sub_coupon + p {
-    margin-top: 5px;
-    padding-right: 10px;
-    text-align: right;
-    font-size: 14px;
-    font-weight: bold;
-    cursor: pointer;
-  }
+  // .coupon_prop {
+  //   height:160px;
+  //   width: 100%;
+  // }
+  // .bottom_fixed {
+  //   width: 100%;
+  //   position: fixed;
+  //   bottom: 0;
+  //   background: #FFF;
+  //   padding: 0 15px;
+  // }
+  // .sub_coupon {
+  //   width: 100%;
+  //   padding: 15px;
+  //   color: #FFF;
+  //   font-size: 16px;
+  //   background: #1F2938;
+  //   border-radius: 8px;
+  // }
+  // .subtotal, .coupon {
+  //   display: flex;
+  //   justify-content: space-between;
+  // }
+  // .subtotal {
+  //   border-bottom: 1px solid rgba(255,255,255,.25);
+  // }
+  // .coupon {
+  //   padding: 15px 0 10px;
+  //   input {
+  //     border: 1px solid #FFF;
+  //     border-radius: 4px;
+  //     background: transparent;
+  //     text-transform: uppercase;
+  //     padding: 7px 0 7px 10px;
+  //     width: 45%;
+  //   }
+  //   button {
+  //     width: 40%;
+  //     border: none;
+  //     border-radius: 4px;
+  //     background: #3A50D5;
+  //   }
+  // }
+  // .sub_coupon + p {
+  //   margin-top: 5px;
+  //   padding-right: 10px;
+  //   text-align: right;
+  //   font-size: 14px;
+  //   font-weight: bold;
+  //   cursor: pointer;
+  // }
   .inner {
     padding: 50px 100px;
   }

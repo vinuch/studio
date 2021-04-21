@@ -57,7 +57,7 @@
         }}</option>
       </select>
     </FloatingLabel>
-    <div class="grey-fields">
+    <!-- <div class="grey-fields">
       <p>
         <span class="info"> Sub total ({{ this.cart.length }} items) </span>
         <span class="price utm"> ₦{{ numeral(total).format("0,0") }} </span>
@@ -84,7 +84,7 @@
           }}
         </span>
       </p>
-    </div>
+    </div> -->
     <a-button
       class="main-btn"
       style="margin-top: 20px; width: 100%; height: 50px"
@@ -93,16 +93,25 @@
     >
       Place order
     </a-button>
+    <Coupon
+      :address="true"
+      @submit="pay"
+    />
   </div>
 </template>
 <script>
 import FloatingLabel from "vue-simple-floating-labels";
 import numeral from "numeral";
+import Coupon from "@/components/Coupon";
 import { mapGetters } from "vuex";
 import { saveOrder, createOrder } from "@/services/apiServices";
 import * as mutationTypes from "@/store/mutationTypes";
 import { EventBus } from "@/services/eventBus";
 export default {
+  components: {
+    FloatingLabel,
+    Coupon,
+  },
   data() {
     return {
       loading: false,
@@ -132,9 +141,6 @@ export default {
         price: 0,
       },
     };
-  },
-  components: {
-    FloatingLabel,
   },
   computed: {
     ...mapGetters({
@@ -190,6 +196,9 @@ export default {
     },
   },
   methods: {
+    pay() {
+
+    },
     numeral,
     createOrderID() {
       var ref_type = "1"; // '1' for purchase by merchnat's customer
