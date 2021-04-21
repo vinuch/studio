@@ -63,8 +63,6 @@ export default {
     },
   },
   mounted() {
-    console.log(this.address)
-    console.log(this.city)
     EventBus.$on("closeDrawer", () => this.closeDrawer());
   },
 };

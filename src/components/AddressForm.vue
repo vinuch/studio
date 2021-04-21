@@ -52,9 +52,9 @@
         v-model="city"
         name="shipping"
       >
-        <option v-for="zone in zones" :key="zone.zone" :value="zone">{{
-          zone.zone
-        }}</option>
+        <option v-for="zone in zones" :key="zone.zone" :value="zone">
+          {{zone.zone}}
+        </option>
       </select>
     </FloatingLabel>
     <Checkout
@@ -111,7 +111,7 @@ export default {
   computed: {
     ...mapGetters({
       cart: "getCart",
-      storeItems: "getProducts",
+      cart_meta: "getCartMeta",
       storeInfo: "getStoreInfo",
       settlement: "getStoreSettlement",
     }),
@@ -138,33 +138,22 @@ export default {
     cartItems() {
       return this.cart;
     },
-    total() {
-      return this.cartItems.reduce((agg, curr) => {
-        agg += curr.qty_requested * (curr.price - curr.discountAmt);
-        return agg;
-      }, 0);
-    },
     order() {
       return this.cartItems.map((item, i) => {
         var order_item = {};
         order_item.index = i + 1;
         order_item.order = this.orderID;
         order_item.product = item.id;
-        order_item.selected_option1 = item.picked_variant_value[0];
-        order_item.selected_option2 = item.picked_variant_value[1];
-        order_item.qty = item.qty_requested;
+        order_item.selected_option1 = item.selected_option;
+        order_item.selected_option2 = item.selected_option2;
+        order_item.qty = item.count;
         order_item.productid = item.id;
-        order_item.sub_total = this.numeral(
-          parseFloat(item.price) * parseFloat(item.qty_requested)
-        ).format("0,0");
+        order_item.sub_total = this.numeral(item.subTotal).format("0,0");
         return order_item;
       });
     },
   },
   methods: {
-    pay() {
-
-    },
     numeral,
     createOrderID() {
       var ref_type = "1"; // '1' for purchase by merchnat's customer
@@ -213,25 +202,19 @@ export default {
       this.orderID =
         ref_type + store_id + month + day + cart_count + year + rand_int;
     },
-    // createOrder() {},
     saveOrderHandler() {
-      console.log("happening")
       this.createOrderID();
       let data = {
         address: this.delivery_details.address,
         email: this.delivery_details.email,
         full_name: this.delivery_details.full_name,
-        items_count: this.cartItems.reduce((agg, curr) => {
-          agg += curr.qty_requested;
-          return agg;
-        }, 0),
-        total_amount: parseFloat(this.total) * 100,
-        unique_items: this.cartItems.length,
+        items_count: this.cart_meta.cartCount,
+        total_amount: parseFloat(this.cart_meta.preShipTotal) + parseFloat(this.city.price),
+        unique_items: this.cart.length,
         order_ref: this.orderID,
         phone: this.delivery_details.phone,
-
         city: this.city.zone,
-        products_total: this.numeral(this.total).format("0,0"),
+        products_total: this.numeral(this.cart_meta.preShipTotal).format("0,0"),
         shipping: this.numeral(this.city.price).format("0,0"),
         store: this.storeInfo.id,
       };
@@ -258,11 +241,12 @@ export default {
         .then(() => {
           this.payWithPaystack();
         })
-        .catch(() => {
+        .catch((err) => {
+          console.log(err)
           EventBus.$emit(
             "open_alert",
             "error",
-            "An error occured. Please try again"
+            "Error @ Paystack or CreateOrder"
           );
         })
         .finally(() => (this.loading = false));
@@ -271,8 +255,9 @@ export default {
     payWithPaystack() {
       var handler = PaystackPop.setup({
         key: this.storeInfo.paystack_public_key,
+        // key: this.settlement.paystack_public_key,
         email: this.delivery_details.email,
-        amount: (parseFloat(this.total) + parseFloat(this.city.price)) * 100,
+        amount: (parseFloat(this.cart_meta.preShipTotal) + parseFloat(this.city.price)) * 100,
         currency: "NGN",
         ref: this.orderID,
         metadata: {
