@@ -1,17 +1,15 @@
 <template>
   <div class="conf">
-    <StoreNav />
     <div class="empty">
       <img src="../assets/hand.svg" alt="" />
       <p class="utm">
-        Order placed successfully
+        Thank you!
       </p>
       <p class="text">
-        Your order has been placed successfully. We’ve sent a confirmation email
-        to <b>{{ completedOrderInfo.email }}</b
-        >.
+        Your order has been placed and a confirmation email sent to
+        <br>{{ completedOrderInfo.email }}.
       </p>
-      <router-link :to="`/${storeName}`">
+      <router-link :to="{name: 'Home'}">
         <button class="main-btn">
           Back to store
         </button>
@@ -21,9 +19,7 @@
 </template>
 <script>
 import { mapGetters } from "vuex";
-import StoreNav from "../components/StoreNav";
 export default {
-  components: { StoreNav },
   computed: {
     ...mapGetters({
       storeName: "getStoreName",
