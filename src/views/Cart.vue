@@ -75,39 +75,39 @@
                 alt=""
               />
               <div class="grey">
-                <svg
-                  width="14"
-                  height="2"
-                  viewBox="0 0 14 2"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                  @click="reduceInCart(i)"
-                  style="cursor: pointer"
-                >
-                  <path
-                    fill-rule="evenodd"
-                    clip-rule="evenodd"
-                    d="M0 1C0 0.44772 0.44772 0 1 0H13C13.5523 0 14 0.44772 14 1C14 1.5523 13.5523 2 13 2H1C0.44772 2 0 1.5523 0 1Z"
-                    fill="#8093AD"
-                  />
-                </svg>
+                <span class="svg" @click="reduceInCart(i)">
+                  <svg
+                    width="14"
+                    height="10"
+                    viewBox="0 0 14 2"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      fill-rule="evenodd"
+                      clip-rule="evenodd"
+                      d="M0 1C0 0.44772 0.44772 0 1 0H13C13.5523 0 14 0.44772 14 1C14 1.5523 13.5523 2 13 2H1C0.44772 2 0 1.5523 0 1Z"
+                      fill="#8093AD"
+                    />
+                  </svg>
+                </span>
                 <span class="utb">{{ item.count }}</span>
-                <svg
-                  width="10"
-                  height="10"
-                  viewBox="0 0 10 10"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                  @click="increaseInCart(i)"
-                  style="cursor: pointer"
-                >
-                  <path
-                    fill-rule="evenodd"
-                    clip-rule="evenodd"
-                    d="M5 0C5.5523 0 6 0.44772 6 1V4H9C9.5523 4 10 4.44772 10 5C10 5.5523 9.5523 6 9 6H6V9C6 9.5523 5.5523 10 5 10C4.44771 10 4 9.5523 4 9V6H1C0.44772 6 0 5.5523 0 5C0 4.44771 0.44772 4 1 4H4V1C4 0.44772 4.44771 0 5 0Z"
-                    fill="#8093AD"
-                  />
-                </svg>
+                <span class="svg" @click="increaseInCart(i)">
+                  <svg
+                    width="10"
+                    height="10"
+                    viewBox="0 0 10 10"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      fill-rule="evenodd"
+                      clip-rule="evenodd"
+                      d="M5 0C5.5523 0 6 0.44772 6 1V4H9C9.5523 4 10 4.44772 10 5C10 5.5523 9.5523 6 9 6H6V9C6 9.5523 5.5523 10 5 10C4.44771 10 4 9.5523 4 9V6H1C0.44772 6 0 5.5523 0 5C0 4.44771 0.44772 4 1 4H4V1C4 0.44772 4.44771 0 5 0Z"
+                      fill="#8093AD"
+                    />
+                  </svg>
+                </span>
               </div>
             </div>
             <!-- </div> -->
@@ -258,6 +258,16 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
+.svg {
+  cursor: pointer;
+  padding: 5px 12px;
+  span {
+    font-size: 18px;
+    line-height: 20px;
+    text-align: center;
+    color: #2b2b2b;
+  }
+}
 .store-cart {
   .cart_prop { // pushes up the bottom most item in cart
     height:160px;
@@ -351,18 +361,10 @@ export default {
       bottom: 7px;
       background: #E6E9EF;
       border-radius: 4px;
-      padding: 5px 12px;
       display: inline-flex;
-      // flex-direction: column;
       justify-content: space-between;
       align-items: center;
       margin-left: 5px;
-      span {
-        font-size: 18px;
-        line-height: 20px;
-        text-align: center;
-        color: #2b2b2b;
-      }
     }
   }
 
