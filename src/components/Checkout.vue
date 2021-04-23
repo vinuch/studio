@@ -25,7 +25,7 @@
       </div>
       <div v-else class="coupon">
         <input v-model="coupon" placeholder="COUPON CODE">
-        <button @click="submit">Enter address</button>
+        <button @click="submit">Next</button>
       </div>
     </div>
   </div>
