@@ -34,7 +34,6 @@
 
     <div class="links" v-if="!isAbout && location != 'cart'">
       <div
-        @click="jumpTo(i)"
         class="link"
         v-for="(link, i) in links"
         :class="currentRoute !== `${link.to}` && 'blur'"
@@ -43,13 +42,15 @@
         <div class="badge" v-if="link.text === 'Cart' && cart.length">
           {{ cart.length }}
         </div>
-        <span
-          :class="currentRoute !== `${link.to}` && 'blur'"
-          v-html="getImg(link.icon)"
-        ></span>
-        <span :class="currentRoute !== `${link.to}` && 'blur'">{{
-          link.text
-        }}</span>
+        <span class="span" @click="jumpTo(i)">
+          <span
+            :class="currentRoute !== `${link.to}` && 'blur'"
+            v-html="getImg(link.icon)"
+          ></span>
+          <span :class="currentRoute !== `${link.to}` && 'blur'">{{
+            link.text
+          }}</span>
+        </span>
       </div>
     </div>
 
@@ -186,7 +187,9 @@ export default {
     },
     jumpTo(i) {
       this.currentLink = i; // what is currentLInk?
-      this.$router.push(`${this.links[i].to}`);
+      this.links[i].to == '/'
+        ? this.$emit('show_thumbnail')
+        : this.$router.push(`${this.links[i].to}`);
     },
     getImg(name) {
       let img = "";
@@ -298,13 +301,16 @@ export default {
       // &:hover {
       //   background: rgba(255, 255, 255, 0.05);
       // }
-      span {
-        margin-right: 5px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        &.blur {
-          opacity: 0.5;
+      .span {
+        width: 50px;
+        span {
+          margin-right: 5px;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          &.blur {
+            opacity: 0.5;
+          }
         }
       }
       .badge {

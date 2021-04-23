@@ -1,6 +1,8 @@
 <template>
   <div>
-    <StoreNav />
+    <StoreNav
+      @show_thumbnail="showThumbnail()"
+    />
     <div :class="display == 'thumbnail' ? 'prod_img' : 'prod_detail'">
       <div class="empty" v-if="!filteredInventory.length">
         <img src="../assets/discount.svg" alt="" />
@@ -71,6 +73,12 @@ export default {
       if (this.display == 'thumbnail') {
         this.display = 'detail'
         this.zoomTo(section)
+      }
+    },
+    showThumbnail() {
+      if (this.display == 'detail') {
+        this.display = 'thumbnail'
+        // this.zoomTo(section)
       }
     },
     thumbStyle(i) {
