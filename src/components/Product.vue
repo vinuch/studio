@@ -91,12 +91,12 @@
       </div>
 
       <div @click="takeToCart(product, i)">
-        <!-- {{cart.find(item => {item.id == product.id})}} -->
         <AddToCartButton
         :product="product"
         :btn_index='i'
         :btn_state='btn_state'
         :logo="logo"
+        :count="count"
         />
       </div>
     </div>
@@ -124,9 +124,10 @@ export default {
   },
   data() {
     return {
-      display: 'thumbnail', // or detail
       btn_state: false,
       btn_id: null,
+      count: 0,
+      display: 'thumbnail', // or detail
       product_meta: {},
     }
   },
@@ -155,20 +156,15 @@ export default {
         option2: option2,
       };
 
-      let already_in_cart = this.cart.filter(
-        (x) =>
-          x.id == id &&
-          x.has_variant &&
-          x.multiple_variants
-      )
+      let already_in_cart = this.cart.filter((x) => x.id == id)
 
       let no_v = this.cart.find((x) => x.id == id)
 
       let one_v = already_in_cart.find(
-        (x) => x.selected_option == option1
-      )
+        (x) => {return x.selected_option == option1})
 
-      let two_v = already_in_cart.find((x) => {
+      let two_v = already_in_cart.find(
+        (x) => {
         return (
           x.selected_option == option1 &&
           x.selected_option2 == option2
@@ -176,7 +172,7 @@ export default {
       })
 
       let addProduct = () => {
-        product.count = 0
+        product.count = 0 // initialising count on product (in cart)
         if (!this.checkStock(product)) {return}
         this.newCartObject(product, false)
         this.subTotal()
@@ -249,6 +245,7 @@ export default {
     checkMatchQty(match_count, match, product, variant) {
       if (match_count > match.count) {
         match.count++;
+        this.updateCount(product.id)
         this.subTotal();
       } else {
         this.outOfStock(product, variant);
@@ -295,21 +292,11 @@ export default {
       }
       return null;
     },
-    pushToCart() {
-      // if (this.product.has_variant) {
-      //   this.goToProduct();
-      //   return;
-      // }
-      // let cart;
-      // if (!this.cart.find((c) => c.id === this.product.id)) {
-      //   cart = [...this.cart, { ...this.product, qty_requested: 1 }];
-      //   this.$store.commit(mutationTypes.SAVE_CART, cart);
-      // }
-    },
     newCartObject(product, button_state) {
       product.count = 1;
       let entry = Object.assign({}, product);
       this.cart.push(entry);
+      this.updateCount(product.id)
       this.button_state = button_state;
     },
     subTotal() {
@@ -335,6 +322,20 @@ export default {
       this.cart_meta.preShipTotal = total
       this.$store.commit(mutationTypes.SAVE_CART_META, this.cart_meta)
     },
+    updateCount(id) {
+      let items = this.cart.filter((x) => x.id == id)
+      let count = 0
+      // for (i=0; items.length > i; i++) {
+      //
+      // }
+      for (let item of items) {
+        count += item.count
+      }
+      this.count = count
+    }
+  },
+  mounted() {
+    this.updateCount(this.product.id)
   },
   watch: {
     // cart: {
