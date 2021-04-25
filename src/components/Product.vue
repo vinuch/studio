@@ -253,12 +253,22 @@ export default {
     },
     countItemsInCart() {
       let items_count = 0
-      for (let i = 0; i < this.cart.length; i++) {
-        items_count += Number(this.cart[i].count)
+      for (let item of this.cart) {
+        items_count += Number(item.count)
       }
+
       this.cart_meta.cartCount = items_count
       this.$store.commit(mutationTypes.SAVE_CART_META, this.cart_meta)
       this.preShipTotal();
+    },
+    countProductsInCart() { // counts unique products in cart
+      let in_cart = []
+      for (let item of this.cart) {
+        in_cart.push(item.id)
+      }
+
+      this.cart_meta.productCount = [... new Set(in_cart)].length
+      this.$store.commit(mutationTypes.SAVE_CART_META, this.cart_meta)
     },
     goToProduct() {
       this.$router.push(`/store-item/${this.product.id}`);
@@ -312,7 +322,7 @@ export default {
         : (product.count * product.price)
 
       this.$store.commit(mutationTypes.SAVE_CART, this.cart);
-      this.countItemsInCart();
+      this.countItemssInCart();
     },
     preShipTotal() {
       let total = 0
@@ -325,9 +335,6 @@ export default {
     updateCount(id) {
       let items = this.cart.filter((x) => x.id == id)
       let count = 0
-      // for (i=0; items.length > i; i++) {
-      //
-      // }
       for (let item of items) {
         count += item.count
       }

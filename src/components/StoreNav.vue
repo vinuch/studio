@@ -39,8 +39,8 @@
         :class="currentRoute !== `${link.to}` && 'blur'"
         :key="`link${i}`"
       >
-        <div class="badge" v-if="link.text === 'Cart' && cart.length">
-          {{ cart.length }}
+        <div class="badge" v-if="link.text === 'Cart'">
+          {{ cart_meta.cartCount }}
         </div>
         <span class="span" @click="jumpTo(i)">
           <span
@@ -139,8 +139,6 @@ export default {
   },
   computed: {
     ...mapGetters({
-      cart: "getCart",
-      // cartCount: "getCartMeta.cartCount",
       cart_meta: "getCartMeta",
       store_name: "getStoreName",
       storeInfo: "getStoreInfo",
