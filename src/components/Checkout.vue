@@ -18,7 +18,7 @@
         <div class="subs">
           <p v-if="address">Total</p>
           <p v-if="address">₦{{
-            numeral(parseFloat(cart_meta.preShipTotal) + parseFloat(shipping)).format("0,0")
+            numeral(cart_meta.preShipTotal + shipping).format("0,0")
           }}</p>
         </div>
         <button @click="submit">Place order</button>

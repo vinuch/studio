@@ -322,7 +322,7 @@ export default {
         : (product.count * product.price)
 
       this.$store.commit(mutationTypes.SAVE_CART, this.cart);
-      this.countItemssInCart();
+      this.countItemsInCart();
     },
     preShipTotal() {
       let total = 0

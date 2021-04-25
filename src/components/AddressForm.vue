@@ -116,24 +116,15 @@ export default {
       settlement: "getStoreSettlement",
     }),
     zones() {
-      let zones = this.storeInfo.default_shipping
-        ? this.storeInfo.default_shipping.split(",")
-        : [];
-      let zones_ = zones
-        .map((zone, i) => {
-          let obj = {};
-          if (i % 2 === 0) {
-            obj = {
-              zone,
-              price: zones[i + 1],
-            };
-            return obj;
-          } else {
-            return null;
-          }
-        })
-        .filter((zone) => zone);
-      return zones_;
+      let zone = this.storeInfo.default_shipping.split(",")
+      let zones = []
+      for (let i = 0; i < zone.length; i += 2) {
+        let object = {};
+        object["zone"] = zone[i]
+        object["price"] = Number(zone[i + 1])
+        zones.push(object);
+      }
+      return zones
     },
     cartItems() {
       return this.cart;
