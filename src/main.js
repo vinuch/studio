@@ -24,7 +24,7 @@ Vue.use(Col);
 Vue.use(Icon);
 Vue.use(Button);
 
-let token = window.sessionStorage.getItem("iam_cart_token");
+let token = window.sessionStorage.getItem("leyyow_token");
 if (token) {
   axios.defaults.headers.common["Authorization"] = `Token ${token}`;
 }
