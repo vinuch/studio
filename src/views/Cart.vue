@@ -127,18 +127,17 @@
         backgroundColor: 'rgba(16, 16, 44, 0.25);',
       }"
     >
-      <div class="drawer-title" slot="title">
-        <span class="utb">
-          Complete purchase
-        </span>
-        <img
-          @click="closeDrawer"
-          src="../assets/close.svg"
-          alt=""
-          style="cursor: pointer"
-        />
-      </div>
       <AddressForm />
+      <p
+        @click="closeDrawer"
+        style="
+        position: fixed;
+        bottom: 0;
+        width: 100%;
+        "
+      >
+        Back to cart
+      </p>
     </a-drawer>
     <Checkout @submit="setVisible" />
     <p v-if="cart.length" class="back" @click="backToStore">Back to store</p>
@@ -288,8 +287,8 @@ export default {
     right: 0;
     margin-bottom: 0;
     padding: 10px;
-    padding-right: 25px;
-    text-align: right;
+    padding-left: 15px;
+    text-align: left;
     font-size: 14px;
     font-weight: bold;
     cursor: pointer;

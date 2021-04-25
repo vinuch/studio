@@ -2,7 +2,7 @@
   <div v-if="cart.length > 0" class="cart_summary">
     <div class="sub_coupon">
       <div class="subtotal">
-        <div class="subs">
+        <div class="subs" :class="{fixed_height : address}">
           <p>
             Subtotal ({{ this.cart_meta.cartCount }}
             item<span v-if="this.cart.length > 1">s</span>)
@@ -72,6 +72,9 @@ export default {
 *:focus {
   outline: none;
 }
+.no_margin {
+  margin: 0;
+}
 .cart_summary {
   .sub_coupon {
     width: 100%;
@@ -84,6 +87,9 @@ export default {
   .subs, .coupon {
     display: flex;
     justify-content: space-between;
+  }
+  .fixed_height {
+    height: 30px;
   }
   .subtotal {
     border-bottom: 1px solid rgba(255,255,255,.25);
