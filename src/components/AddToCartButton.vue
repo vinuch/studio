@@ -2,7 +2,7 @@
   <div
   class="add_to_cart">
     <button>
-      <img class="store_logo" :src="logo" alt="Store logo">
+      <img v-if="logo" class="store_logo" :src="logo">
       <p>Add to cart</p>
       <div>
         <span class="btn_item_count" :id="'btn_' + btn_index">{{ count }}</span>
