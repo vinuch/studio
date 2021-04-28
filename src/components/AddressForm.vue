@@ -25,7 +25,7 @@
         hasContent: true,
       }"
     >
-      <input v-model="delivery_details.phone" name="phone" />
+      <input v-model.trim="delivery_details.phone" maxlength="11" pattern="[0-9]*" inputmode="numeric" name="phone">
     </FloatingLabel>
     <FloatingLabel
       :config="{
