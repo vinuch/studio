@@ -27,8 +27,12 @@
           :logo="storeInfo.logo"
           />
       </div>
+
+      <div v-if="blankThumbnail == 2" class="thumbnail">
+      </div>
+
     </div>
-    <div v-if="display == 'detail'" class="prop"></div>
+    <div class="prop"></div>
   </div>
 </template>
 
@@ -59,6 +63,9 @@ export default {
           .toLowerCase()
           .match(this.search.toLowerCase());
       });
+    },
+    blankThumbnail() {
+      return this.filteredInventory.length % 3
     },
     productImages() {
       let images = []
@@ -120,10 +127,10 @@ export default {
     flex-wrap: wrap;
     justify-content: space-evenly;
   }
-  .prod_img::after {
-    content: "";
-    flex: auto;
-  }
+  // .prod_img::after {
+  //   content: "";
+  //   flex: auto;
+  // }
   .thumbnail {
     position: relative;
     width: 32%;
