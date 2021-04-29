@@ -11,11 +11,12 @@
     </div>
 
     <div v-else>
-      <div>
-        <!-- <img v-if="storeInfo.background" :src="storeInfo.background" width="100%" alt="" /> -->
-        <!-- <div v-else style="background: #FFF000; height: 80vh;"></div> -->
-        <div :style="bckgrndCol"></div>
-        <!-- background photo or default image -->
+      <div :style="bckgrndCol">
+        <img
+          v-if="storeInfo.background"
+          :src="storeInfo.background"
+          class="image"
+        />
       </div>
       <!-- <div>
         <p>About</p>
@@ -36,6 +37,7 @@ import * as mutationTypes from "@/store/mutationTypes";
 export default {
   data() {
     return {
+      widthOverLength: true,
       isAbout: true,
       loadingStore: false,
       floatStyle: "left",
@@ -90,7 +92,8 @@ export default {
     this.bckgrndCol = {
       background: this.bck_colours[i],
       height: '100vh',
-      width: '100%'
+      width: '100%',
+      overflow: 'hidden',
     }
   },
   mounted() {
@@ -115,8 +118,8 @@ export default {
     }
 
     if (this.storeName) {
-      fethcProducts(this.storeName, 1);
       fetchStoreInfo(this.storeName);
+      fethcProducts(this.storeName, 1);
       fetchStoreSettlement(this.storeName) // fetch this nearer to checkout
         // .then(() => {})
         .catch(() => {
@@ -142,6 +145,10 @@ export default {
 <style lang="scss" scoped>
 .nav {
   position: absolute;
+}
+.image {
+  height: 100%;
+
 }
 .about {
   .order-items {
