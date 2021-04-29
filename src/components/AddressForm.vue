@@ -25,7 +25,13 @@
         hasContent: true,
       }"
     >
-      <input v-model.trim="delivery_details.phone" maxlength="11" pattern="[0-9]*" inputmode="numeric" name="phone">
+      <input
+        v-model.trim="delivery_details.phone"
+        maxlength="11" pattern="[0-9]*"
+        inputmode="numeric"
+        name="phone"
+        @keypress="numberOnly($event)"
+        >
     </FloatingLabel>
     <FloatingLabel
       :config="{
@@ -67,6 +73,7 @@
 <script>
 import FloatingLabel from "vue-simple-floating-labels";
 import numeral from "numeral";
+import numberOnly from "@/mixins/mixins";
 import Checkout from "@/components/Checkout";
 import { mapGetters } from "vuex";
 import { saveOrder, createOrder } from "@/services/apiServices";
@@ -77,6 +84,9 @@ export default {
     FloatingLabel,
     Checkout,
   },
+  mixins: [
+    numberOnly
+  ],
   data() {
     return {
       loading: false,
