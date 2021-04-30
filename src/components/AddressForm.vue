@@ -255,8 +255,7 @@ export default {
     /* eslint-disable */
     payWithPaystack() {
       var handler = PaystackPop.setup({
-        key: this.storeInfo.paystack_public_key,
-        // key: this.settlement.paystack_public_key,
+        key: this.settlement[0].paystack_public_key,
         email: this.delivery_details.email,
         amount: (parseFloat(this.cart_meta.preShipTotal) + parseFloat(this.city.price)) * 100,
         currency: "NGN",
@@ -268,7 +267,7 @@ export default {
             },
           ],
         },
-        subaccount: this.settlement[0].subaccount,
+        subaccount: this.settlement.subaccount,
         callback: (response) => {
           this.$store.commit(mutationTypes.SAVE_CART, []);
           this.$store.commit(mutationTypes.COMPLETED_ORDER_INFO, {
