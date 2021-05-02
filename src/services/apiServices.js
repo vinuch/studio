@@ -30,7 +30,11 @@ export const fetchStoreSettlement = async (slug) => {
       method: "get",
       url: `${urls.storeSettlementUrl}${slug}`,
     });
-    store.commit(mutationTypes.SAVE_SETTLEMENT, res.data);
+    let settlement = {
+      "paystack_public_key": res.data[0].paystack_public_key,
+      "subaccount": res.data[0].subaccount,
+    }
+    store.commit(mutationTypes.SAVE_SETTLEMENT, settlement);
   } catch (error) {
     store.commit(mutationTypes.SAVE_SETTLEMENT, {});
   }

@@ -120,8 +120,7 @@ export default {
     if (this.storeName) {
       fetchStoreInfo(this.storeName);
       fethcProducts(this.storeName, 1);
-      fetchStoreSettlement(this.storeName) // fetch this nearer to checkout
-        // .then(() => {})
+      fetchStoreSettlement(this.storeName) // fetch nearer to checkout
         .catch(() => {
           EventBus.$emit(
             "open_alert",
@@ -132,7 +131,7 @@ export default {
         .finally(() => (this.loadingStore = false));
     } else {
       this.$store.commit(mutationTypes.SAVE_STORE_INFO, {});
-      this.$store.commit(mutationTypes.SAVE_SETTLEMENT, {}); // do this nearer to checkout
+      this.$store.commit(mutationTypes.SAVE_SETTLEMENT, {}); // see fetchStoreSettlement comment
       this.$store.commit(mutationTypes.SAVE_PRODUCTS, []);
     }
 
