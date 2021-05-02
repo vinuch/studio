@@ -255,7 +255,7 @@ export default {
     /* eslint-disable */
     payWithPaystack() {
       var handler = PaystackPop.setup({
-        key: this.settlement[0].paystack_public_key,
+        key: this.settlement.paystack_public_key,
         email: this.delivery_details.email,
         amount: (parseFloat(this.cart_meta.preShipTotal) + parseFloat(this.city.price)) * 100,
         currency: "NGN",
