@@ -7,7 +7,8 @@ import * as mutationTypes from "./mutationTypes";
 Vue.use(Vuex);
 
 const vuexLocal = new VuexPersistence({
-  storage: window.localStorage,
+  storage: window.sessionStorage,
+  key: "leyyow_gallery"
 });
 
 export default new Vuex.Store({
