@@ -150,6 +150,7 @@ export default {
         order_item.qty = item.count;
         order_item.productid = item.id;
         order_item.sub_total = this.numeral(item.subTotal).format("0,0");
+        order_item.image_url = item.product_image;
         return order_item;
       });
     },
