@@ -10,7 +10,10 @@
           <p>₦{{ numeral(cart_meta.preShipTotal).format("0,0") }}</p>
         </div>
         <div class="subs">
-          <p v-if="address">Delivery fee</p>
+          <p v-if="address">
+            <span v-if="city">{{ city }}</span>
+            <span v-else>Delivery fee</span>
+          </p>
           <p v-if="address">₦{{ numeral(shipping).format("0,0") }}</p>
         </div>
       </div>
@@ -38,6 +41,7 @@ export default {
   props: {
     address: Boolean,
     shipping: [Number, String],
+    city: [String]
   },
   data() {
     return {

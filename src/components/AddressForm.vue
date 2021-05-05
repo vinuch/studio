@@ -66,6 +66,7 @@
     <Checkout
     :address="true"
     :shipping="city.price"
+    :city="city.zone"
     @submit="saveOrderHandler()"
     />
   </div>
