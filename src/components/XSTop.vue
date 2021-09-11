@@ -9,7 +9,7 @@
 
 <script>
   export default {
-    name: 'XSTop',
+    name: 'xsTop',
 
     data: () => ({
    

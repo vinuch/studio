@@ -1,6 +1,6 @@
 <template>
 <v-container class="pa-0" fluid no-gutters>
-  <XSTop />
+  <xsTop />
 
   <v-container fluid no-gutters>
     <v-row>
@@ -33,6 +33,9 @@
               outlined
               :rules="storeLinkRules"
             ></v-text-field>
+            <p class="footnote">
+              <router-link to="/forgot_password"><span class="blue_link">Forgot password</span></router-link>
+            </p>
             <v-btn block depressed height=56px color="#3A50D5">Login</v-btn>
             <p>Don't have a store?
               <router-link to="/register"><span class="blue_link">Create one</span></router-link>
@@ -47,13 +50,13 @@
 
 <script>
   import About from '@/components/About'
-  import XSTop from '@/components/XSTop'
+  import xsTop from '@/components/xsTop'
 
   export default {
     name: 'Login',
     components: {
       About,
-      XSTop,
+      xsTop,
     },
     data: () => ({
       storeName: "",
