@@ -1,8 +1,10 @@
 <template>
-  <v-container pa-0 fluid>
-    <div class="pink lighten-3 d-flex d-sm-none">
-      Top filler image
-    </div>
+  <v-container pa-0 fluid d-flex d-sm-none>
+    <v-img
+      :src="require('@/assets/mobile_pane.svg')"
+      class=""
+      contain
+    />
   </v-container>
 
 </template>

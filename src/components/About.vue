@@ -1,6 +1,11 @@
 <template>
-  <v-container>
-    <p>This is the about container</p>
+  <v-container pa-0>
+    <v-img
+      alt="about pane"
+      :src="require('@/assets/desktop_pane.svg')"
+      class=""
+      contain
+    />
   </v-container>
 </template>
 

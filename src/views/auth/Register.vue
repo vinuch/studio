@@ -1,66 +1,67 @@
 <template>
-<v-container class="pa-0" fluid no-gutters>
+<v-container class="pa-0" fluid fill-height no-gutters>
   <xsTop />
 
-  <v-container fluid no-gutters>
-    <v-row>
-      <v-col class="pink lighten-3 d-sm-flex d-none col-5">
+  <v-container class="pa-0" fluid fill-height no-gutters>
+    <v-row class="full_row">
+      <v-col class="d-sm-flex d-none col-6 pa-0">
         <About />
       </v-col>
 
-      <v-col class="auth blue lighten-5 pa-0">
-        <v-container>
+      <v-col :class="{'blue lighten-5': !$vuetify.breakpoint.xs}" class="auth mobile pa-0">
+        <v-container fill-height>
           <v-img
+            v-if="!$vuetify.breakpoint.xs"
             alt="leyyow logo"
             :src="require('@/assets/leyyow_logo_old.svg')"
             class="logo"
             contain
             position="center left"
-            height="20"
           />
           <h1 class="text-left">Create your store</h1>
-          <!-- <p class="text-left note">Enter your store name, custom link, and select a store type.</p> -->
-          <v-form class="form_lg">
+          <p class="text-left note">Enter your store name, custom link, and select a store type.</p>
+          <v-form class="auth_form_xs" :class="{'form_lg': !$vuetify.breakpoint.xs}">
             <v-stepper>
               <v-stepper-header>
-                <v-stepper-step :complete="step1" step="1"></v-stepper-step>
+                <v-stepper-step :complete="step1" :color="color1" step="1"></v-stepper-step>                
                 <v-divider></v-divider>
-                <v-stepper-step :complete="step2" step="2"></v-stepper-step>
+                <v-stepper-step :complete="step2" :color="color2" step="2"></v-stepper-step>
               </v-stepper-header>
             </v-stepper>
             <div v-if="step === 1">
-              <p class="text-left label">Store Name</p>
               <v-text-field
+                label="Store Name"
                 v-model="storeName" 
                 outlined
                 :rules="storeNameRules"
               ></v-text-field>
-              <p class="text-left label">Store Link</p>
               <v-text-field
+                label="Store Link"
                 v-model="storeLink" 
                 outlined
                 :rules="storeLinkRules"
               ></v-text-field>
-              <p class="text-left label">Store Type</p>
               <v-select
+                label="Store Type"
                 v-model="storeType" 
                 outlined 
                 :store_types="store_types"
               ></v-select>
             </div>
             <div v-if="step === 2">
-              <p class="text-left label">Email address</p>
               <v-text-field
+                label="Email"
                 v-model="email" 
                 outlined
-                :rules="storeNameRules"
+                :rules="emailRules"
               ></v-text-field>
-              <p class="text-left label">Create password</p>
               <v-text-field
+                label="Password"
                 v-model="password" 
                 outlined
-                :rules="storeLinkRules"
+                :rules="passwordRules"
               ></v-text-field>
+              <p @click="previousStep">Back</p>
             </div>
             <v-btn 
               block 
@@ -76,6 +77,7 @@
               <router-link to="/login"><span class="blue_link">Log in</span></router-link>
             </p>
             <p class="footnote">By signing up, I agree to Leyyow's <span>Privacy Policy</span> and <span>Terms &#38; Conditions</span></p>
+            <!-- <div class="auth_float"></div> -->
           </v-form>
         </v-container>
       </v-col>
@@ -95,6 +97,8 @@
       xsTop,
     },
     data: () => ({
+      color1: "primary",
+      color2: "",
       step: 1, // current step displayed
       storeName: "",
       storeLink: "",
@@ -105,12 +109,20 @@
       storeNameRules: [
         v => v.lenght >= 3 || "Store name should be three letters or more",
       ],
+      emailRules: [
+      ],
+      passwordRules: [
+      ],
       storeLinkRules: []
     }),
     methods: {
       createStore() {
         if (this.step === 1) {
           this.step = 2
+          // this.color2 = "primary"
+          if (this.step1 == false) {
+            this.color1 = "grey"
+          }
         } else {
           if (this.step1 && this.step2 == true) {
             console.log("submit form")
@@ -118,11 +130,15 @@
             console.log ("incomplete")
           }
         }
+      },
+      previousStep() {
+        this.step = 1
+        this.color1 = "primary"
       }
     },
     computed: {
       step1() {
-        if (this.storeName && this.storeLink) {
+        if (this.storeName && this.storeLink && this.storeType) {
           return true
         } else {
           return false
@@ -143,5 +159,11 @@
   .auth .v-sheet.v-stepper:not(.v-sheet--outlined) {
     box-shadow: 0 0 0;
     margin-bottom: 30px;
+  }
+  .v-stepper__header {
+    height: 50px;
+    width: 220px;
+    margin: 0 auto;
+    box-shadow: 0 0 0;
   }
 </style>

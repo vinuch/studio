@@ -28,6 +28,11 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
+  height: 100vh;
+}
+.full_row {
+  margin: 0;
+  height: 100vh;
 }
 .v-btn {
   text-transform: none !important;
@@ -37,32 +42,42 @@ export default {
   font-size: 32px;
   color: #19212C;
 }
+.auth_form_xs h1 {
+  font-size: 24px;
+  color: #19212C;
+}
 .note {
   font-size: 18px;
   color: #868B90;
 }
 .footnote {
-  font-size: 12px;
+  font-size: 14px;
 }
 .auth .logo {
   margin-top: 50px;
   margin-bottom: 50px;
-  margin-left: 0;
+  width: 100%;
+  height:25px;
 }
 .auth .container {
-  width: 550px;
+  width: 500px;
   padding: 0;
 }
-.auth .form_lg {
+.auth_form_xs .container {
+  // width: 100%;
+}
+.form_lg {
   background: #FFF;
-  margin-top: 20px;
+  width: 100%;
+  padding-top: 30px;
+  padding-bottom: 0;
+}
+.auth .form_lg {
+  height: 715px;
   padding: 90px;
   padding-top: 30px;
+  padding-bottom: 0;
   border-radius: 40px 40px 0 0;
-}
-.auth .label {
-  color: #868B90;
-  margin-bottom: 5px;
 }
 .auth .form_lg .v-btn {
   margin-bottom: 20px;
@@ -74,6 +89,13 @@ export default {
 }
 .auth .form_lg .v-text-field--outlined fieldset {
   border: 2px solid #E5E5E5;
+}
+.auth_float {
+  width: 100%;
+  height: 20px;
+  position: relative;
+  bottom: 0;
+  background: green;
 }
 /* COLOURS */
 .light_grey {

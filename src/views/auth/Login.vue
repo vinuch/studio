@@ -1,39 +1,38 @@
 <template>
-<v-container class="pa-0" fluid no-gutters>
+<v-container class="pa-0" fluid fill-height no-gutters>
   <xsTop />
 
-  <v-container fluid no-gutters>
-    <v-row>
-      <v-col class="pink lighten-3 d-sm-flex d-none col-5">
+  <v-container class="pa-0" fluid fill-height no-gutters>
+    <v-row class="full_row">
+      <v-col class="pink lighten-3 d-sm-flex d-none col-6">
         <About />
       </v-col>
 
       <v-col class="auth blue lighten-5 pa-0">
-        <v-container>
+        <v-container fill-height>
           <v-img
             alt="leyyow logo"
             :src="require('@/assets/leyyow_logo_old.svg')"
             class="logo"
             contain
             position="center left"
-            height="20"
           />
           <h1 class="text-left">Welcome back</h1>
           <p class="text-left note">Enter your email and password to log in.</p>
           <v-form class="form_lg">
-            <p class="text-left label">Email address</p>
             <v-text-field
+              label="Email"
               v-model="storeName" 
               outlined
               :rules="storeNameRules"
             ></v-text-field>
-            <p class="text-left label">Password</p>
             <v-text-field
+              label="password"
               v-model="storeLink" 
               outlined
               :rules="storeLinkRules"
             ></v-text-field>
-            <p class="footnote">
+            <p class="text-right footnote">
               <router-link to="/forgot_password"><span class="blue_link">Forgot password</span></router-link>
             </p>
             <v-btn block depressed height=56px color="#3A50D5">Login</v-btn>
@@ -73,3 +72,13 @@
     }
   }
 </script>
+
+<style scoped>
+.form_lg {
+  padding-top: 90px;
+}
+.footnote {
+  position: relative;
+  margin-top: -20px;
+}
+</style>
