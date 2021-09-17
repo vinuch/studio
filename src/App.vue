@@ -82,13 +82,13 @@ export default {
 .auth .form_lg .v-btn {
   margin-bottom: 20px;
 }
-// vuetify input and button radius
-.auth .form_lg .v-text-field--outlined,
+// vuetify input, select and button radius
+.v-text-field--outlined,
 .v-btn:not(.v-btn--round).v-size--default {
-  border-radius: 8px;
+  border-radius: 8px !important;
 }
-.auth .form_lg .v-text-field--outlined fieldset {
-  border: 2px solid #E5E5E5;
+.v-text-field--outlined fieldset {
+  border: 1px solid #E5E5E5 !important;
 }
 .auth_float {
   width: 100%;
@@ -97,9 +97,24 @@ export default {
   bottom: 0;
   background: green;
 }
+.title {
+  font-size: 22px;
+  line-height: 24px;
+}
+.pointer {
+  cursor: pointer;
+}
+.float-right {
+  float: right;
+}
+.float-left {
+  float: left;
+}
 /* COLOURS */
 .light_grey {
-  background: #ECF0F4;
+  // background: #ECF0F4;
+  // background: #F6F8FA;
+  background: #EAECEE;
 }
 .blue_link {
   color: #3A50D5;

@@ -6,33 +6,38 @@ Vue.use(VueRouter)
 
 const routes = [
   {
-    path: '/',
-    name: 'Home',
-    component: Home
-  },
-  {
-    path: '/forgot_password',
-    name: 'ForgotPassword',
-    component: () => import(/* webpackChunkName: "forgot_password" */ '../views/auth/ForgotPassword.vue')
-  },
-  {
-    path: '/login',
-    name: 'Login',
-    component: () => import(/* webpackChunkName: "login" */ '../views/auth/Login.vue')
-  },
-  {
-    path: '/register',
-    name: 'Register',
-    component: () => import(/* webpackChunkName: "register" */ '../views/auth/Register.vue')
-  },
-  {
-    path: '/about',
     name: 'About',
+    path: '/about',
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
     component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
-  }
+  },
+  {
+    name: 'Dashboard',
+    path: '/dash',
+    component: () => import(/* webpackChunkName: "forgot_password" */ '../views/Dashboard.vue')
+  },
+  {
+    name: 'ForgotPassword',
+    path: '/forgot_password',
+    component: () => import(/* webpackChunkName: "forgot_password" */ '../views/auth/ForgotPassword.vue')
+  },
+  {
+    name: 'Home',
+    path: '/',
+    component: Home
+  },
+  {
+    name: 'Login',
+    path: '/login',
+    component: () => import(/* webpackChunkName: "login" */ '../views/auth/Login.vue')
+  },
+  {
+    name: 'Register',
+    path: '/register',
+    component: () => import(/* webpackChunkName: "register" */ '../views/auth/Register.vue')
+  },
 ]
 
 const router = new VueRouter({
