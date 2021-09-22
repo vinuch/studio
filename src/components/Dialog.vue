@@ -8,6 +8,9 @@
     >
       <VerifyID v-if="modal == 'verify'" />
       <SetBankAcc v-if="modal == 'set_bank'" />
+      <BusinessHours v-if="modal == 'business_hours'" />
+      <StoreDetails v-if="modal == 'store_details'" />
+      <SetShipping v-if="modal == 'shipping'" />
     </v-dialog>
   </v-row>
 </div>
@@ -16,16 +19,22 @@
 <script>
 import VerifyID from '@/components/VerifyID'
 import SetBankAcc from '@/components/SetBankAcc'
+import BusinessHours from '@/components/BusinessHours'
+import StoreDetails from '@/components/StoreDetails'
+import SetShipping from '@/components/SetShipping'
 
 export default {
     name: 'Dialog',
     components: {
       VerifyID,
       SetBankAcc,
+      BusinessHours,
+      StoreDetails,
+      SetShipping,
     },
     data: () => ({
       dialog: true,
-      modal: "set_bank",
+      modal: "shipping",
     }),
   }
 </script>

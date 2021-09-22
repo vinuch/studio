@@ -17,6 +17,7 @@ export default new Vuetify({
                 main_blue: '#3A50D5',
                 bg_grey: '#F6F8FA',
                 grey_border: '#E2E8F0',
+                text_grey: '#69747E',
             }
         }
     }

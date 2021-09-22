@@ -17,7 +17,7 @@
 
 <script>
   export default {
-    name: 'Menu',
+    name: 'Snackbar',
 
     data: () => ({
    
