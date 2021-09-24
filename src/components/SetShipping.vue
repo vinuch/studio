@@ -103,61 +103,62 @@
 
       <div v-if="shipping_mode == 'in_house' && delivery_opt != 'pick_up'">
         <v-card-text class="text-left pa-0 pt-5 mt-5">Set delivery fees</v-card-text>
-        <v-sheet
-          :style="shipping_mode == 'in_house' ? {borderColor: activeBorderColor} : ''"
-          outlined
-          elevation="0"
-          rounded="lg"
-          class="mt-2 pa-5"
-          color="bg_grey"
+        <div
+          v-for="i in shipping_price_index"
+          :key="i"
+          :ref="'ref_' + i"
         >
-          <div>
-            <v-card-text class="text-left pa-0 mb-1">Price</v-card-text>
-            <v-text-field
-              class="mb-5"
-              v-model="shipping_price"
-              hide-details="true"
-              outlined prepend-inner-icon="mdi-cash"></v-text-field
-            >
-            <v-card-text
-              v-if="this.shipping_price == null"
-              class="text-left pa-0 mb-1">Area / shipping destination
-            </v-card-text>
-            <v-card-text 
-              v-else 
-              class="text-left pa-0 mb-1">List areas that cost <span style="font-weight: bold">{{this.shipping_price}}</span> to deliver to. Separate each area with a comma or press enter.
-            </v-card-text>
-            <v-text-field
-              outlined
-              prepend-inner-icon="mdi-map-marker-outline"
-              hide-details="true"
-            >
-            </v-text-field>
-          </div>
-        </v-sheet>
+          <setShippingPrices />
+        </div>
+
+      <p
+        class="text-left mt-5 pl-5 blue_link pointer describe"
+        style="color: blue"
+        @click="addPriceLocation()"
+      >
+        + add more price-to-area combinations.
+      </p>
       </div>
 
     </div>
-    <setupFooter />
+    <setupFooter
+      @saveSetUp="saveSetUp()"
+      @closeDialog="closeDialog()"
+    >
+      Save Shipping
+    </setupFooter>
   </v-card>
 </div>
 </template>
 
 <script>
   import setupFooter from '@/components/setupFooter'
+  import setShippingPrices from '@/components/setShippingPrices'
 
   export default {
     name: 'SetShipping',
     components: {
       setupFooter,
+      setShippingPrices,
     },
     data: () => ({
       activeBorderColor: '#3A50D5',
       delivery_opt: "delivery",
-      shipping_mode: null,
-      shipping_price: null,
+      shipping_mode: "in_house",
+      // shipping_mode: null,
+      shipping_price_index: 1, // note: not zero indexed
     }),
     methods: {
+      addPriceLocation() {
+        this.shipping_price_index += 1
+        console.log("ref_" + this.shipping_price_index)
+      },
+      closeDialog() {
+        this.$emit('closeDialog')
+      },
+      saveSetUp() {
+        console.log("saving")
+      },
       setDeliveryOption(option) {
         this.delivery_opt = option
       },

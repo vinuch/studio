@@ -146,27 +146,24 @@
       <p class="text-left mt-5 pl-5 blue_link pointer">+ specify more days and times</p>
     </v-col>
 
-    <v-card-actions 
-      class="justify-center light_grey"
+    <setupFooter
+      @saveSetUp="saveSetUp()"
+      @closeDialog="closeDialog()"
     >
-      <v-text-field
-        @click="dialog=false"
-        class="mr-5"
-        depressed
-      >Cancel</v-text-field>
-      <v-btn 
-        @click="dialog=false"
-        class="main_blue ma-3 ml-5"
-        depressed
-      >Save account</v-btn>
-    </v-card-actions>
+      Save Business Hours
+    </setupFooter>
   </v-card>
 </div>
 </template>
 
 <script>
+  import setupFooter from "@/components/setupFooter"
+
   export default {
     name: 'BusinessHours',
+    components: {
+      setupFooter,
+    },
     data: () => ({
       days: [
         {day: 'Mon', open:'', close: '', selected: false, isset: false},
@@ -185,6 +182,11 @@
       open_time: null,
       menu2: "",
     }),
+    methods: {
+      closeDialog() {
+        this.$emit('closeDialog')
+      },
+    }
   }
 </script>
 

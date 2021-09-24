@@ -2,7 +2,11 @@
 <div class="pa-5">
   <Snackbar />
   <Menu />
-  <Dialog />
+  <Dialog
+    v-if="dialog == true" 
+    :modal="modal" 
+    @closeDialog = closeDialog()
+    />
     
   <div style="width: 100%; height: 6em">
     <h2 class="title" style="margin-top: 3em">Hello Abdul &#128526;</h2>
@@ -37,7 +41,12 @@
             </v-checkbox>
             <v-card-title class="pa-0" style="font-size: 1.2rem">{{dash.title}}</v-card-title>
             <v-card-text class="pa-0 pb-3">{{dash.text}}</v-card-text>
-            <v-btn depressed class="main_blue">{{dash.btn_title}}
+            <v-btn
+              depressed
+              class="main_blue"
+              @click="openDialog(dash.modal)"
+            >
+              {{dash.btn_title}}
             </v-btn>
           </v-card>
         </v-col>
@@ -61,16 +70,23 @@
     },
     data: () => ({
       dashboard: [
-        {status: 0, title: "Payments", text: "Get paid by customers", btn_title: "Setup payment account"},
-        {status: 0, title: "Store details", text: "Store contacts, etc", btn_title: "Add store details"},
-        {status: 0, title: "Business hours", text: "Opening & closing hours", btn_title: "Set hours"},
-        {status: 0, title: "Shipping", text: "Delivery & pick-up arrangements", btn_title: "Set shipping"}
+        {status: 0, title: "Payments", text: "Get paid by customers", btn_title: "Setup payment account", modal: "set_bank"},
+        {status: 0, title: "Store details", text: "Store contacts, etc", btn_title: "Add store details", modal: "store_details"},
+        {status: 0, title: "Business hours", text: "Opening & closing hours", btn_title: "Set hours", modal: "business_hours"},
+        {status: 0, title: "Shipping", text: "Delivery & pick-up arrangements", btn_title: "Set shipping", modal: "shipping"}
       ],
-      dialog: "",
+      dialog: false,
+      modal: null,
     }),
-    computed: {
-
-    }
+    methods: {
+      openDialog(setup) {
+        this.dialog=true
+        this.modal=setup
+      },
+      closeDialog() {
+        this.dialog=false
+      }
+    },
   }
 </script>
 

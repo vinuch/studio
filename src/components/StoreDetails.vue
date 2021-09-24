@@ -64,27 +64,24 @@
         </ul>
       </v-sheet>
     </div>
-    <v-card-actions 
-      class="justify-center light_grey"
+    <setupFooter
+      @saveSetUp="saveSetUp()"
+      @closeDialog="closeDialog()"
     >
-      <v-text-field
-        @click="dialog=false"
-        class="mr-5"
-        depressed
-      >Cancel</v-text-field>
-      <v-btn 
-        @click="dialog=false"
-        class="main_blue ma-3 ml-5"
-        depressed
-      >Save account</v-btn>
-    </v-card-actions>
+      Save StoreDetails
+    </setupFooter>
   </v-card>
 </div>
 </template>
 
 <script>
+  import setupFooter from '@/components/setupFooter'
+
   export default {
     name: 'StoreDetails',
+    components: {
+      setupFooter,
+    },
     data: () => ({
       platforms: [
         {logo: "", name: "Instagram", handle: ""},
@@ -92,6 +89,11 @@
         {logo: "", name: "Facebook", handle: ""},
       ],
     }),
+    methods: {
+      closeDialog() {
+        this.$emit('closeDialog')
+      },
+    }
   }
 </script>
 

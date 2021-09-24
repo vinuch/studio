@@ -6,11 +6,15 @@
       <v-btn 
         style="background-color: transparent; color: grey !important; font-weight: bold; letter-spacing: 0"
         depressed
+        @click="closeDialog()"
       >Cancel</v-btn>
       <v-btn 
         class="main_blue ma-3 ml-5"
         depressed
-      >Save account</v-btn>
+        @click="save()"
+      >
+        <slot>Save</slot>  
+      </v-btn>
     </v-card-actions>
   </div>
 </template>
@@ -21,5 +25,13 @@
 
     data: () => ({
     }),
+    methods: {
+      closeDialog() {
+        this.$emit('closeDialog')
+      },
+      save() {
+        this.$emit('saveSetUp')
+      }
+    }
   }
 </script>

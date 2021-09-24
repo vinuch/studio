@@ -6,11 +6,11 @@
       persistent
       max-width="600"
     >
-      <VerifyID v-if="modal == 'verify'" />
-      <SetBankAcc v-if="modal == 'set_bank'" />
-      <BusinessHours v-if="modal == 'business_hours'" />
-      <StoreDetails v-if="modal == 'store_details'" />
-      <SetShipping v-if="modal == 'shipping'" />
+      <VerifyID v-if="propModal == 'verify'" @closeDialog="closeDialog()"/>
+      <SetBankAcc v-if="propModal == 'set_bank'" @closeDialog="closeDialog()"/>
+      <BusinessHours v-if="propModal == 'business_hours'" @closeDialog="closeDialog()"/>
+      <StoreDetails v-if="propModal == 'store_details'" @closeDialog="closeDialog()" />
+      <SetShipping v-if="propModal == 'shipping'" @closeDialog="closeDialog()" />
     </v-dialog>
   </v-row>
 </div>
@@ -32,10 +32,23 @@ export default {
       StoreDetails,
       SetShipping,
     },
+    props: [
+      'modal',
+    ],
     data: () => ({
       dialog: true,
-      modal: "shipping",
     }),
+    methods: {
+      closeDialog() {
+        this.$emit('closeDialog') // make this universal
+        this.dialog=false
+      },
+    },
+    computed: {
+      propModal() {
+        return this.modal
+      },
+    },
   }
 </script>
 
