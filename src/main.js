@@ -4,7 +4,14 @@ import router from './router'
 import store from './store'
 import vuetify from './plugins/vuetify'
 
+import axios from "axios"
+
 Vue.config.productionTip = false
+
+let token = window.sessionStorage.getItem("leyyow_token");
+if (token) {
+  axios.defaults.headers.common["Authorization"] = `Token ${token}`;
+}
 
 new Vue({
   router,
