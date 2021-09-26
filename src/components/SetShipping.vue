@@ -151,7 +151,6 @@
     methods: {
       addPriceLocation() {
         this.shipping_price_index += 1
-        console.log("ref_" + this.shipping_price_index)
       },
       closeDialog() {
         this.$emit('closeDialog')

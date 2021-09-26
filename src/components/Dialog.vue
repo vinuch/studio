@@ -36,7 +36,8 @@ export default {
       'modal',
     ],
     data: () => ({
-      dialog: true,
+      dialog: true, // default is false
+      propModal: "business_hours",
     }),
     methods: {
       closeDialog() {
@@ -45,9 +46,9 @@ export default {
       },
     },
     computed: {
-      propModal() {
-        return this.modal
-      },
+      // propModal() {
+      //   // return this.modal // replace propModal in data with this
+      // },
     },
   }
 </script>

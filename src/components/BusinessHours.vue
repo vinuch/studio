@@ -12,7 +12,7 @@
       elevation="0"
       rounded="lg"
       color="bg_grey"
-      class="ma-5 pa-5"
+      class="ma-5 mb-0 pa-5"
     >
       <div>
         <p
@@ -32,119 +32,38 @@
       </div>
       <p class="describe">Setting your store to <b>"Always open"</b> means that you are always available to receive orders.</p>
     </v-sheet>
+    <div v-if="always_open == true" style="height: 50px"></div>
 
-    <v-col
-      cols="12"
-      sm="7"
-      md="6"
-      lg="5"
-      class="pa-5"
+    <div
+      v-for="(period, i) in periods" 
+      :ref="'period_' + i"
+      :key="i"
     >
-      <v-sheet
-        elevation="0"
-        rounded="lg"
-        color="bg_grey"
+      <v-icon
+        v-if="always_open != true"
+        class="delete"
+        @click="deletePeriod(i)"
       >
-        <v-icon class="delete">mdi-delete-outline</v-icon>
-        <div class="pa-4">
-          <v-chip-group
-            active-class="primary--text"
-            column
-          >
-            <v-chip
-              v-for="(day, i) in days"
-              :key="i"
-            >
-              {{ day.day }}
-            </v-chip>
-          </v-chip-group>
-        </div>
-        <p
-          class="text-left pa-5 pt-0 describe"
-        >
-          Take orders from
-          <span class="time">
-            <v-dialog
-              ref="open_time"
-              v-model="time_modal2"
-              :return-value.sync="time"
-              persistent
-              width="290px"
-            >
-              <template v-slot:activator="{ on, attrs }">
-                <input
-                  v-model="open_time"
-                  readonly
-                  v-bind="attrs"
-                  v-on="on"
-                >
-              </template>
-              <v-time-picker
-                v-if="time_modal2"
-                v-model="open_time"
-                full-width
-              >
-                <v-spacer></v-spacer>
-                <v-btn
-                  text
-                  color="primary"
-                  @click="time_modal2 = false"
-                >
-                  Cancel
-                </v-btn>
-                <v-btn
-                  text
-                  color="primary"
-                  @click="$refs.open_time.save(time)"
-                >
-                  OK
-                </v-btn>
-              </v-time-picker>
-            </v-dialog>
-          </span> to
-          <span class="time">
-            <v-dialog
-              ref="close_time"
-              v-model="time_modal"
-              :return-value.sync="time"
-              persistent
-              width="290px"
-            >
-              <template v-slot:activator="{ on, attrs }">
-                <input
-                  v-model="close_time"
-                  readonly
-                  v-bind="attrs"
-                  v-on="on"
-                >
-              </template>
-              <v-time-picker
-                v-if="time_modal"
-                v-model="close_time"
-                full-width
-              >
-                <v-spacer></v-spacer>
-                <v-btn
-                  text
-                  color="primary"
-                  @click="time_modal = false"
-                >
-                  Cancel
-                </v-btn>
-                <v-btn
-                  text
-                  color="primary"
-                  @click="$refs.close_time.save(time)"
-                >
-                  OK
-                </v-btn>
-              </v-time-picker>
-            </v-dialog>
-          </span>
-        </p>
-      </v-sheet>
-      <p class="text-left mt-5 pl-5 blue_link pointer">+ specify more days and times</p>
-    </v-col>
+        mdi-delete-outline
+      </v-icon>
+     <Period 
+        v-if="always_open != true" 
+        @setSelectedDay="setSelectedDay($event)"
+        @setOpenTime="setOpenTime($event)"
+        @setCloseTime="setCloseTime($event)"
+        :days_with_times="days_with_times"
+        :disable_days_with_times="disable_days_with_times"
+        :freeze="freeze"
+        :periods="periods"
+      />
+    </div>
+
+    <p
+      v-if="always_open != true"
+      class="text-left mb-5 pl-5 pointer describe"
+      style="color: blue"
+      @click="addPeriod()"
+    >+ specify more days and times</p>
 
     <setupFooter
       @saveSetUp="saveSetUp()"
@@ -158,35 +77,140 @@
 
 <script>
   import setupFooter from "@/components/setupFooter"
+  import Period from "@/components/Period"
 
   export default {
     name: 'BusinessHours',
+
     components: {
       setupFooter,
+      Period,
     },
+
     data: () => ({
-      days: [
-        {day: 'Mon', open:'', close: '', selected: false, isset: false},
-        {day: 'Tue', open:'', close: '', selected: false, isset: false},
-        {day: 'Wed', open:'', close: '', selected: false, isset: false},
-        {day: 'Thu', open:'', close: '', selected: false, isset: false},
-        {day: 'Fri', open:'', close: '', selected: false, isset: false},
-        {day: 'Sat', open:'', close: '', selected: false, isset: false},
-        {day: 'Sun', open:'', close: '', selected: false, isset: false}
-      ],
-      time_modal: false,
-      time_modal2: false,
-      time: null,
-      always_open: null,
-      close_time: null,
-      open_time: null,
-      menu2: "",
+      always_open: true,
+      close: null, // current closing time
+      days: null, // days of the week with truthy values
+      days_with_times: [],
+      disable_days_with_times: false,
+      freeze: false, // freeze all edits after time is set
+      open: null, // current open time
+      periods: [{}], // days with same open and closing times
+      stringified_hours: "",
     }),
+
     methods: {
+      addPeriod(){
+        this.ensureDaysSelected()
+        if (this.days_selected) {
+          this.preSave()
+          this.incrementPeriod()
+          this.stringifyBizHrs()
+          this.days_selected = false
+          this.open = null
+          this.close = null
+        }
+      },
       closeDialog() {
         this.$emit('closeDialog')
       },
-    }
+      deletePeriod(index) {
+        // ask if sure
+        this.periods.splice(index, 1)
+        // $refs.["period_" + index].
+        // this.periods[index]
+        // emit remove days
+        // remove days
+      },
+      ensureDaysSelected() {
+        if (this.periods.length > 1) { // subsequent days
+            this.days.forEach(e => {
+              if (e.selected == true && e.time_is_fixed == false) {
+                this.days_selected = true // it's ok not to break because short loop
+              }
+            })
+            this.days_selected ? "" : console.log("please select more days")
+        } else { // first day(s)
+          if (this.days) {
+            this.days.forEach(e => {
+              if (e.selected == true && e.time_is_fixed == false) {
+                this.days_selected = true // it's ok not to break because short loop
+              }
+            })
+          }
+          this.days_selected ? "" : console.log("please select a day - first")
+        }
+      },
+      incrementPeriod() {
+        if (this.days_with_times.length < this.days.length) {
+          if (this.open != null && this.close != null) {
+            this.periods.push({})
+            this.disable_days_with_times = false // in case not already false
+          } else {
+            console.log("please set opening and closing times")
+          }
+        } else {
+          console.log("business hours have been set for all days of the week")
+        }
+
+        this.$nextTick(function(){
+          this.disable_days_with_times = true
+          this.freeze = false
+        })
+      },
+      preSave() {
+        for (let i=0; i < this.days.length; i++) {
+          if (this.days[i].selected == true && this.days[i].time_is_fixed == false && this.days.length <= 7) {
+            this.days[i].open = this.open
+            this.days[i].close = this.close
+            this.days[i].period = this.periods.length
+            this.days_with_times.push(i)
+          } else  {
+            console.log("you might have reached the limit of days in days_with_times")
+          }
+        }
+        this.freeze = true // prevent days from being double-set in next period
+      },
+      save(){
+      //   this.preSave()
+      //   this.stringifyBizHrs()
+      //   let data = {
+      //     open_hours: this.stringified_hours,
+      //   }
+      //   updateStore(data, this.store.id)
+      //   .then(res => {
+      //     let store = res.data
+      //     this.$store.commit(mutationTypes.SAVE_STORE, store);
+      //   })
+      //   .catch(err => console.log(err))
+      //   .finally(() => {
+      //     this.$router.push("/dashboard/dash");
+      //   });
+      },
+      setCloseTime(time){
+        this.close = time
+      },
+      setOpenTime(time){
+        this.open = time
+      },
+      setSelectedDay(days) {
+        this.days = days
+      },
+      stringifyBizHrs() {
+        for (let i=0; i < this.days.length; i++) {
+          if (this.days[i].selected) {
+            this.stringified_hours += this.days[i].day + ","
+            this.stringified_hours += this.days[i].open + ","
+            this.stringified_hours += this.days[i].close + ","
+          }
+        }
+      },
+    },
+    computed: {
+      // ...mapGetters({
+      //   store: "getStore",
+      // }),
+    },
   }
 </script>
 
@@ -225,7 +249,7 @@
     padding: 4px;
     border-radius: 16px;
     float: right;
-    right: 10px;
+    right: 25px;
     top: -16px;
     cursor: pointer;
   }

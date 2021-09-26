@@ -75,7 +75,8 @@
         {status: 0, title: "Business hours", text: "Opening & closing hours", btn_title: "Set hours", modal: "business_hours"},
         {status: 0, title: "Shipping", text: "Delivery & pick-up arrangements", btn_title: "Set shipping", modal: "shipping"}
       ],
-      dialog: false,
+      dialog: true,
+      // dialog: false, default is false
       modal: null,
     }),
     methods: {
