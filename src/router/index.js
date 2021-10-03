@@ -5,6 +5,7 @@ import Home from '../views/Home.vue'
 Vue.use(VueRouter)
 
 const routes = [
+  // Routes with * are used as routing names in BottomNav. Don't change
   {
     name: 'About',
     path: '/about',
@@ -14,7 +15,7 @@ const routes = [
     component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
   },
   {
-    name: 'Dashboard',
+    name: 'Dashboard', // *
     path: '/dash',
     component: () => import(/* webpackChunkName: "forgot_password" */ '../views/Dashboard.vue')
   },
@@ -29,9 +30,24 @@ const routes = [
     component: Home
   },
   {
+    name: 'Inventory', // *
+    path: '/inventory',
+    component: () => import(/* webpackChunkName: "login" */ '../views/Inventory.vue')
+  },
+  {
     name: 'Login',
     path: '/login',
     component: () => import(/* webpackChunkName: "login" */ '../views/auth/Login.vue')
+  },
+  {
+    name: 'Manage', // *
+    path: '/manage',
+    component: () => import(/* webpackChunkName: "login" */ '../views/Manage.vue')
+  },
+  {
+    name: 'Orders', // *
+    path: '/orders',
+    component: () => import(/* webpackChunkName: "login" */ '../views/Orders.vue')
   },
   {
     name: 'Register',

@@ -6,14 +6,19 @@
       <router-view/>
     </v-main>
 
+    <BottomNav />
+
   </v-app>
 </template>
 
 <script>
+import BottomNav from "@/components/BottomNav"
 
 export default {
-  name: 'App',
-
+  name: "App",
+  components: {
+    BottomNav,
+  },
   data: () => ({
     //
   }),

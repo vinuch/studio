@@ -3,8 +3,10 @@
     <v-card-actions 
       class="justify-center light_grey rounded-b-xl"
     >
-      <v-btn 
-        style="background-color: transparent; color: grey !important; font-weight: bold; letter-spacing: 0"
+      <v-btn
+        color="primary"
+        text
+        style="font-weight: bold; letter-spacing: 0"
         depressed
         @click="closeDialog()"
       >Cancel</v-btn>

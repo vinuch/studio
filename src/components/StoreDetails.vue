@@ -26,7 +26,7 @@
       <v-text-field outlined class="mt-2"></v-text-field>
 
       <v-btn width=100% depressed color="primary" @click="refs.inputUpload.$el.click()">Upload</v-btn>
-      <input v-show="false" ref="inputUpload" type="file" @change="yourFunction" >
+      <input v-show="false" ref="inputUpload" type="file" @change="yourFunction()" >
 
       <v-card-text class="text-left pa-0 mt-5">About your store</v-card-text>
       <v-sheet
