@@ -88,6 +88,26 @@
               <p style="text-align: left" class="ma-0">
                 &#8358; {{item.price}}
               </p>
+              <div>
+                <!-- <p
+                style="text-align: left; color: #69747E; font-weight: 600;"
+                > -->
+                  <v-icon style="float: left; top: 30px" v-if="display==true">mdi-store-outline</v-icon>
+                  <v-icon style="float: left; top: 30px" v-else>mdi-store-remove</v-icon>
+                  <span class="switch">
+                    <v-switch
+                    class="float-right mt-0 pt-0"
+                    color="success"
+                    style="position: relative; right: -12px; top: 6px"
+                    id="switch"
+                    v-model="display"
+                    inset
+                    hide-details=""
+                  >
+                  </v-switch>
+                  </span>
+                <!-- </p> -->
+              </div>
             </v-col>
           </v-row>
         </v-card>
@@ -116,6 +136,7 @@
     },
     data: () => {
 			return {
+        display: true,
 				inventory: [
           {name: "Unisex (for male and female)", price: "86,000", qty: 12, image: ""},
           {name: "Gown", price: 8000, qty: 6, image: ""},

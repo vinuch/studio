@@ -62,4 +62,35 @@ const router = new VueRouter({
   routes
 })
 
+router.beforeEach((to, from, next) => {
+  let token = window.sessionStorage.getItem("leyyow_token");
+  let whitelist = [
+    "/", "/login", "/register", "/forgot_password" // "/set-new-password/"
+  ];
+  // let whitelist = [
+  //   {name: "Home"}, 
+  //   {name: "Signin"}, 
+  //   {name: "Signup"}, 
+  //   {name: "ResetPassword"},
+  //   {name: "newPassword"}
+  // ];
+  if (whitelist.includes(to.path)) {
+    if (token) {
+      next({
+        name: 'Dashboard'
+      })
+    } else {
+      next();
+    }
+  } else {
+    if (token) {
+      next();
+    } else {
+      next({
+        name: 'Login'
+      })
+    }
+  }
+});
+
 export default router

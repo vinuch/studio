@@ -1,7 +1,7 @@
 <template>
   <v-container pa-0 fluid d-flex d-sm-none>
     <v-img
-      :src="require('@/assets/mobile_pane.svg')"
+      :src="require('@/assets/red_banner.svg')"
       class=""
       contain
     />

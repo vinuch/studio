@@ -12,11 +12,23 @@
         fluid
         class="pa-0"
       >
-        <v-card>
-
+        <v-card-text class="text-left text-body-2 pb-2 mt-5 ">Upload up to five product images</v-card-text>
+        <v-card
+          class="pa-5"
+          flat
+          outlined
+          rounded="lg"
+        >
+          <v-sheet>
+            <v-file-input
+              accept="image/*"
+              multiple
+              chips
+            ></v-file-input>
+          </v-sheet>
         </v-card>
 
-        <v-card-text class="text-left text-body-2 pa-0 pl-5 mt-5 ">Product name</v-card-text>
+        <v-card-text class="text-left text-body-2 pb-0 mt-5 ">Product name</v-card-text>
         <v-text-field
           outlined
           hide-details
@@ -24,7 +36,7 @@
         ></v-text-field>
         <v-card-text class="text-left text-body-2 pt-0 mt-1 mb-5 describe">Give your product a short and clear name.</v-card-text>
 
-        <v-card-text class="text-left pa-0 pl-5 mt-5 describe">Description</v-card-text>
+        <v-card-text class="text-left pb-0 mt-5 describe">Description</v-card-text>
         <v-text-field
           outlined
           hide-details
@@ -230,13 +242,6 @@
         <v-card-actions 
         class="mt-5 justify-center light_grey rounded-lg"
         >
-          <v-btn
-            color="primary"
-            text
-            style="font-weight: bold; letter-spacing: 0"
-            depressed
-            @click="closeDialog()"
-          >Cancel</v-btn>
           <v-btn 
             class="main_blue ma-3 ml-5"
             depressed
@@ -245,8 +250,6 @@
             Add product
           </v-btn>
         </v-card-actions>
-
-        
       </v-container>
     </div>
   </div>

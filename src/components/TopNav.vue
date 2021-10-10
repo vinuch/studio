@@ -6,18 +6,51 @@
       </h1>
       <v-spacer></v-spacer>
       <v-icon class="mr-3">mdi-bell-outline</v-icon>
-      <v-icon>mdi-chevron-down</v-icon>
+      <v-menu
+        bottom
+        left
+      >
+        <template v-slot:activator="{ on, attrs }">
+          <v-btn
+            dark
+            icon
+            v-bind="attrs"
+            v-on="on"
+          >
+            <v-icon style="color: grey">mdi-chevron-down</v-icon>
+          </v-btn>
+        </template>
+
+        <v-list>
+          <v-list-item>
+            <v-list-item-title @click="logout()">
+              <v-icon style="color: grey">mdi-logout</v-icon>Logout
+            </v-list-item-title>
+          </v-list-item>
+        </v-list>
+      </v-menu>
     </v-breadcrumbs>      
   </v-container>
 </template>
 
 <script>
-  export default {
-    name: 'topNav',
+  import * as mutationTypes from "@/store/mutationTypes"
 
+  export default {    
+    name: 'topNav',
     data: () => ({
    
     }),
+    methods: {
+      logout() {
+        let store = {}
+        sessionStorage.clear();
+        localStorage.clear();
+        this.$store.commit(mutationTypes.LOGGED_IN, false);
+        this.$store.commit(mutationTypes.LOGOUT, store); // this should be the whole state not just store
+        this.$router.push("/login");
+      },
+    }
   }
 </script>
 <style scoped>

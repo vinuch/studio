@@ -13,19 +13,26 @@ const vuexLocal = new VuexPersistence({
 
 export default new Vuex.Store({
   state: {
-    store: {},
-    settlement: {},
     account_id: null,
-    inventory: [],
-    orders: [],
-    unregistered_email: "",
-    to_be_editted: null,
-    visitor_inventory: {},
-    visitor_cart: [],
-    visited_store_name: "",
     form_touched: false,
+    inventory: [],
+    logged_in: false,
+    orders: [],
+    settlement: {},
+    store: {},
+    to_be_editted: null,
+    unregistered_email: "",
   },
   mutations: {
+    [mutationTypes.FORM_TOUCHED](state, data) {
+      state.form_touched = data;
+    },
+    [mutationTypes.LOGOUT](state, data) {
+      state.store = data;
+    },
+    [mutationTypes.LOGGED_IN](state, data) {
+      state.logged_in = data;
+    },
     [mutationTypes.SAVE_EMAIL](state, data) {
       state.unregistered_email = data;
     },
@@ -34,9 +41,6 @@ export default new Vuex.Store({
     },
     [mutationTypes.SAVE_SETTLEMENT](state, data) {
       state.settlement = data;
-    },
-    [mutationTypes.SAVE_VISITOR_INVENTORY](state, data) {
-      state.visitor_inventory = data;
     },
     [mutationTypes.SAVE_ACCOUNT_ID](state, data) {
       state.account_id = data;
@@ -47,17 +51,8 @@ export default new Vuex.Store({
     [mutationTypes.SAVE_ORDERS](state, data) {
       state.orders = data;
     },
-    [mutationTypes.SAVE_VISITOR_CART](state, data) {
-      state.visitor_cart = data;
-    },
     [mutationTypes.SAVE_PRODUCT_TO_BE_EDITTED](state, data) {
       state.to_be_editted = data;
-    },
-    [mutationTypes.SAVE_VISITED_STORE_NAME](state, data) {
-      state.visited_store_name = data;
-    },
-    [mutationTypes.FORM_TOUCHED](state, data) {
-      state.form_touched = data;
     },
   },
   getters: {
@@ -65,13 +60,10 @@ export default new Vuex.Store({
     getStore: (state) => state.store,
     getSettlement: (state) => state.settlement,
     getInventory: (state) => state.inventory,
+    getLoggedIn: (state) => state.logged_in,
     getOrders: (state) => state.orders,
     getItemToBeEditted: (state) => state.to_be_editted,
     getFormTouched: (state) => state.form_touched,
-
-    getVisitorStore: (state) => state.visitor_inventory,
-    getVisitorCart: (state) => state.visitor_cart,
-    getVisitedStoreName: (state) => state.visited_store_name,
   },
   actions: {},
   modules: {},

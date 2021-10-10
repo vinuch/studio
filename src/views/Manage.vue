@@ -36,6 +36,7 @@
               color="#F6F8FA"
             >
               <h2 style="text-align: left; font-size: 18px; color: #94A3B8">{{link.name}}</h2>
+              <SetBankAcc v-if="i == 0" />
               <BusinessHours v-if="i == 2" />
             </v-sheet>
           </v-card>
@@ -49,12 +50,14 @@
 <script>
   import topNav from "@/components/TopNav"
   import BusinessHours from "@/components/BusinessHours"
+  import SetBankAcc from "@/components/SetBankAcc"
 
   export default {
     name: 'Manage',
     components: {
       topNav,
       BusinessHours,
+      SetBankAcc,
     },
     data: () => {
       return {

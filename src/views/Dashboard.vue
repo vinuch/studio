@@ -21,10 +21,10 @@
     pa-0
   >
     <div>
-      <p class="text-left pa-5 ma-0">Setup progress <span>0/4</span></p>
+      <p class="text-left pa-5 ma-0">Setup progress: <span>{{verified_count}}/4</span></p>
 
       <v-row class="ma-0">
-        <v-col v-for="dash in dashboard" :key="dash.title" cols=12 class="pa-0">
+        <v-col v-for="(dash, i) in dashboard" :key="i" cols=12 class="pa-0">
           <v-card
             class="text-left pa-3 pb-5 pl-5" 
             tile 
@@ -32,10 +32,12 @@
             outlined
             style="background: #F6F8FA; border: none; border-top: 1px solid #E2E8F0"
           >
-            <v-checkbox 
-              class="ma-0" 
+            <v-checkbox
+              v-model="dash.status"
+              class="ma-0 veri_check"
               dense 
-              disabled 
+              readonly
+              color="success"
               hide-details=""
             >
             </v-checkbox>
@@ -53,13 +55,17 @@
       </v-row>
     </div>
   </v-container>
+  <menu-spacer></menu-spacer>
 </div>
 </template>
 
 <script>
+  import { mapGetters } from "vuex";
+  // import * as dayjs from "dayjs";
   import Menu from '@/components/Menu'
   import Snackbar from '@/components/Snackbar'
   import Dialog from '@/components/Dialog'
+  import MenuSpacer from '../components/MenuSpacer.vue'
 
   export default {
     name: 'Dashboard',
@@ -67,6 +73,7 @@
       Menu,
       Snackbar,
       Dialog,
+      MenuSpacer,
     },
     data: () => ({
       dashboard: [
@@ -78,6 +85,9 @@
       dialog: false,
       // dialog: false, default is false
       modal: null,
+      verified_count: 0,
+      verified: "",
+      // bar_width: "1%",
     }),
     methods: {
       openDialog(setup) {
@@ -88,9 +98,120 @@
         this.dialog=false
       }
     },
+    computed: {
+      ...mapGetters({
+        store: "getStore",
+        orders: "getOrders",
+      }),
+      // time() {
+      //   let hrs = dayjs().get("hours");
+      //   return hrs < 12
+      //     ? "morning"
+      //     : hrs >= 12 && hrs < 6
+      //     ? "afternoon"
+      //     : "evening";
+      // },
+      // today() {
+      //   return dayjs().format("DD MMM YYYY");
+      // },
+      // yesterday() {
+      //   return dayjs()
+      //     .subtract(1, "days")
+      //     .format("DD MMM YYYY");
+      // },
+      // reshapedOrders() {
+      //   return this.orders.map((order) => {
+      //     let date = dayjs(order.created).format("DD MMM YYYY");
+      //     return {
+      //       ...order,
+      //       date,
+      //       isToday: date === this.today,
+      //       isYesterday: date === this.yesterday,
+      //     };
+      //   });
+      // },
+      // metrics() {
+        // let todayOrders = this.reshapedOrders.filter((order) => order.isToday);
+        // let yesterdayOrders = this.reshapedOrders.filter(
+        //   (order) => order.isYesterday
+        // );
+
+        // let ordersCount = this.reshapedOrders.length;
+        // let todaySalesCount = this.reshapedOrders.filter((order) => order.isToday)
+        //   .length;
+        // let yesterdaySalesCount = this.reshapedOrders.filter(
+        //   (order) => order.isYesterday
+        // ).length;
+
+        // let totalSales = this.reshapedOrders.reduce((agg, curr) => {
+        //   agg += curr.total_amount / 100;
+        //   return agg;
+        // }, 0);
+        // let todaySalesTotal = todayOrders.length
+        //   ? todayOrders.reduce((agg, curr) => {
+        //       agg += curr.total_amount / 100;
+        //       return agg;
+        //     }, 0)
+        //   : 0;
+        // let yesterdaySalesTotal = yesterdayOrders.length
+        //   ? yesterdayOrders.reduce((agg, curr) => {
+        //       agg += curr.total_amount / 100;
+        //       return agg;
+        //     }, 0)
+        //   : 0;
+
+        // let changeInSales = todaySalesTotal - yesterdaySalesTotal;
+        // let changeInSalesCount = todaySalesCount - yesterdaySalesCount;
+
+        // let avgCheckoutSize = totalSales / ordersCount;
+        // let todayAvgCheckoutSize = todaySalesCount
+        //   ? todaySalesTotal / todaySalesCount
+        //   : 0;
+        // let yesterdayAvgCheckoutSize = yesterdaySalesTotal / yesterdaySalesCount;
+        // let changeInAvgCheckoutSize =
+        //   todayAvgCheckoutSize - yesterdayAvgCheckoutSize;
+
+        // return [
+        //   {
+        //     title: "Total sales",
+        //     // count: `NGN ${numeral(totalSales).format("0,0")}`,
+        //     percent: `${Math.abs(changeInSales / yesterdaySalesTotal) * 100}%`,
+        //     up: changeInSales > 0,
+        //   },
+        //   {
+        //     title: "Number of transactions",
+        //     count: this.reshapedOrders.length,
+        //     percent: `${Math.abs(changeInSalesCount / yesterdaySalesCount) *
+        //       100}%`,
+        //     up: changeInSalesCount > 0,
+        //   },
+        //   {
+        //     title: "Average checkout size",
+        //     // count: `NGN ${numeral(avgCheckoutSize).format("0,0")}`,
+        //     percent: `${Math.abs(
+        //       changeInAvgCheckoutSize / yesterdayAvgCheckoutSize
+        //     ) * 100}`,
+        //     up: changeInAvgCheckoutSize > 0,
+        //   },
+        //   {
+        //     title: "Number of store visits",
+        //     count: "0",
+        //     percent: "0%",
+        //     up: true,
+        //   },
+        // ];
+      // },
+    },
+    mounted() {
+      this.verified = this.store.verified
+      for (var i=1; i < this.verified.length; i++) { // starting loop from 1 not 0
+        this.dashboard[i-1].status = parseInt(this.verified[i]) // the first i is the email status
+        if (this.store.verified[i] == 1) {
+          this.verified_count += 1
+        }
+      }
+      // let bar_width = this.verified_count * 20
+      // this.bar_width = bar_width + "%"
+    },
   }
 </script>
-
-<style scoped>
-
-</style>
