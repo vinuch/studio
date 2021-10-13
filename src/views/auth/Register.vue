@@ -1,15 +1,15 @@
 <template>
-<v-container class="pa-0" fluid fill-height no-gutters>
+<div class="pa-0">
   <xsTop />
 
-  <v-container class="pa-0" fluid fill-height no-gutters>
-    <v-row class="full_row">
+  <div class="" fluid fill-height no-gutters>
+    <v-row pa-0 ma-0>
       <v-col class="d-sm-flex d-none col-6 pa-0">
         <About />
       </v-col>
 
-      <v-col :class="{'blue lighten-5': !$vuetify.breakpoint.xs}" class="auth mobile pa-0">
-        <v-container fill-height>
+      <v-col :class="{'blue lighten-5': !$vuetify.breakpoint.xs}" class="auth mobile">
+        <div class="pa-5 pb-0 pt-0">
           <v-img
             v-if="!$vuetify.breakpoint.xs"
             alt="leyyow logo"
@@ -18,8 +18,8 @@
             contain
             position="center left"
           />
-          <h1 class="text-left">Create your store</h1>
-          <p class="text-left note">Enter your store name, custom link, and select a store type.</p>
+          <h1 class="text-left mt-5 pt-5 text-h6 text_pink--text">Create your store</h1>
+          <p class="text-left text-body-2 text_pink--text">Enter your store name, custom link, and select a store type.</p>
           <v-form class="auth_form_xs" :class="{'form_lg': !$vuetify.breakpoint.xs}">
             <v-stepper>
               <v-stepper-header>
@@ -43,9 +43,12 @@
               ></v-text-field>
               <v-select
                 label="Store Type"
-                v-model="storeType" 
+                v-model="store_type" 
                 outlined 
-                :store_types="store_types"
+                item-text="name"
+                item-value="type"
+                :items="store_types"
+                item-color="success"
               ></v-select>
             </div>
             <div v-if="step === 2">
@@ -67,23 +70,23 @@
               block 
               depressed 
               height=56px 
-              color="#3A50D5"
+              color="#F62873"
               @click="createStore()"
             >
               <span v-if="step === 1" >Continue</span>
               <span v-if="step === 2" >Create store</span>
             </v-btn>
-            <p>Already have an account?
-              <router-link to="/login"><span class="blue_link">Log in</span></router-link>
+            <p class="mt-5 text-body-2">Already have an account?
+              <router-link to="/login"><span class="pink_link">Log in</span></router-link>
             </p>
-            <p class="footnote">By signing up, I agree to Leyyow's <span>Privacy Policy</span> and <span>Terms &#38; Conditions</span></p>
+            <p class="footnote text-body-2">By signing up, I agree to Leyyow's <span>Privacy Policy</span> and <span>Terms &#38; Conditions</span></p>
             <!-- <div class="auth_float"></div> -->
           </v-form>
-        </v-container>
+        </div>
       </v-col>
     </v-row>
-  </v-container>
-</v-container>
+  </div>
+</div>
 </template>
 
 <script>
@@ -97,7 +100,7 @@
       xsTop,
     },
     data: () => ({
-      color1: "primary",
+      color1: "#F62873",
       color2: "",
       step: 1, // current step displayed
       storeName: "",
@@ -105,7 +108,15 @@
       storeType: "",
       email: "",
       password: "",
-      store_types: ["Food", "Fashion"],
+      store_type: null,
+      store_types: [
+        {name: "Food", type: 0}, 
+        {name: "Fashion & Accessories", type: 1},
+        {name: "Health & Beauty", type: 2},
+        {name: "Gadgets & Electronics", type: 3},
+        {name: "Events", type: 4},
+        {name: "Other", type: 5},
+      ],
       storeNameRules: [
         v => v.lenght >= 3 || "Store name should be three letters or more",
       ],
@@ -133,7 +144,7 @@
       },
       previousStep() {
         this.step = 1
-        this.color1 = "primary"
+        this.color1 = "#F62873"
       }
     },
     computed: {

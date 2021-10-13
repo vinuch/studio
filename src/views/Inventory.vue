@@ -29,7 +29,6 @@
           ><v-icon>mdi-plus</v-icon></v-btn>
         </v-col>
       </v-row>
-      
 
 			<v-row
         v-for="(item, i) in inventory"

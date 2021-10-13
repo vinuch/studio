@@ -40,10 +40,6 @@ export default {
   color: #2c3e50;
   height: 100vh;
 }
-.full_row {
-  // margin: 0;
-  // height: 100vh;
-}
 .v-btn {
   text-transform: none !important;
   color: #FFF !important;
@@ -61,7 +57,7 @@ export default {
   color: #868B90;
 }
 .footnote {
-  font-size: 14px;
+  // font-size: 14px;
 }
 .auth .logo {
   margin-top: 50px;
@@ -128,5 +124,8 @@ export default {
 }
 .blue_link {
   color: #3A50D5;
+}
+.pink_link {
+  color: #F62873;
 }
 </style>

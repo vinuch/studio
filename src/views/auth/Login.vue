@@ -1,26 +1,25 @@
 <template>
 <div class="pa-0">
-  <xsTop style="display: none !important;" />
+  <xsTop />
 
-  <v-container class="pa-0" fluid no-gutters>
-    <v-row class="">
-      <v-col class="pink lighten-3 d-sm-flex d-none">
+  <div class="" fluid fill-height no-gutters>
+    <v-row pa-0 ma-0>
+      <v-col class="d-sm-flex d-none col-6 pa-0">
         <About />
       </v-col>
 
-      <v-col class="auth blue lighten-5 pa-0"
-      style="background: yellow;">
-        <v-container ma-0>
-          <!-- <v-img
+      <v-col :class="{'blue lighten-5': !$vuetify.breakpoint.xs}" class="auth mobile">
+        <div class="pa-5 pb-0 pt-0">
+          <v-img
+            v-if="!$vuetify.breakpoint.xs"
             alt="leyyow logo"
             :src="require('@/assets/leyyow_logo_old.svg')"
             class="logo"
             contain
             position="center left"
-          /> -->
-          <!-- <h1 class="text-left text-h5">Welcome back</h1> -->
-          <!-- <p class="text-left note">Enter your email and password to log in.</p> -->
-          <v-form class="form_lg">
+          />
+          <h1 class="text-left mt-5 pt-5 text-h6 text_pink--text">Log in</h1>
+          <v-form class="auth_form_xs mt-2" :class="{'form_lg': !$vuetify.breakpoint.xs}">
             <v-text-field
               label="Email"
               v-model="username" 
@@ -35,23 +34,25 @@
               :rules="storeLinkRules"
             ></v-text-field>
             <p class="text-right footnote">
-              <router-link to="/forgot_password"><span class="blue_link">Forgot password</span></router-link>
+              <router-link to="/forgot_password"><span class="pink_link text-body-2">Forgot password</span></router-link>
             </p>
-            <v-btn
-              block
-              depressed
-              height=56px
-              color="#3A50D5"
+            <v-btn 
+              block 
+              depressed 
+              height=56px 
+              color="#F62873"
               @click="login()"
-            >Login</v-btn>
-            <p>Don't have a store?
-              <router-link to="/register"><span class="blue_link">Create one</span></router-link>
+            >
+              Login
+            </v-btn>
+            <p class="text-body-2 mt-5">Don't have a store?
+              <router-link to="/register"><span class="pink_link">Create one</span></router-link>
             </p>
           </v-form>
-        </v-container>
+        </div>
       </v-col>
     </v-row>
-  </v-container>
+  </div>
 </div>
 </template>
 
@@ -79,7 +80,6 @@
       password: null,
       storeName: "",
       storeLink: "",
-      storeType: "",
       store_types: ["Food", "Fashion"],
       storeNameRules: [
         v => v.length >= 3 || "Store name should be three letters or more",

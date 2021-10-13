@@ -15,6 +15,7 @@ export default new Vuetify({
                 warning: '#FFC107',
 
                 main_blue: '#3A50D5',
+                text_pink: '#620426',
                 bg_grey: '#F6F8FA',
                 grey_border: '#E2E8F0',
                 text_grey: '#69747E',
