@@ -37,7 +37,18 @@
 					:order="order"
 				/>
 			</v-row>
+			
+			<v-row class="ma-0">
+        <Products
+          v-for="(product, i) in inventory"
+          :key="i"
+          class="mb-5"
+          :product="product"
+        />
+			</v-row>
+
     </v-container>
+		<menu-spacer></menu-spacer>
   </div>
 </template>
 
@@ -50,11 +61,13 @@
 	// } from "@/services/apiServices";
 	import topNav from "@/components/TopNav"
 	import OrderItem from "@/components/OrderItem";
+  import MenuSpacer from '../components/MenuSpacer.vue'
 
 	export default {
 		components: {
 			topNav,
 			OrderItem,
+			MenuSpacer,
 		},
 		data: () => {
 			return {

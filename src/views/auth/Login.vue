@@ -1,10 +1,10 @@
 <template>
-<div class="pa-0">
+<div class="">
   <xsTop />
 
-  <div class="" fluid fill-height no-gutters>
+  <div class="">
     <v-row pa-0 ma-0>
-      <v-col class="d-sm-flex d-none col-6 pa-0">
+      <v-col style="display: none !important;" class="d-sm-flex d-none col-6 pa-0">
         <About />
       </v-col>
 
@@ -106,6 +106,10 @@
             let store = res.data.store;
             let settlement = res.data.settlement;
             let acct_id = res.data.account_id;
+            // For some reason, the slug wasn't being sent with the rest of the store data
+            // so I included it explicitly as part of the API response hence why it needs
+            // to be fetched as res.data.slug below, and then saved with the store.
+            store.slug = res.data.slug;
 
             // fetch inventory
             fethcStoreInventory(store.slug);

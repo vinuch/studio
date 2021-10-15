@@ -30,86 +30,14 @@
         </v-col>
       </v-row>
 
-			<v-row
-        v-for="(item, i) in inventory"
-        :key="i"
-        class="ma-0 mb-5"
-      >
-        <v-card
-          rounded="lg"
-          class="pa-5"
-          outlined
-          style="width: 100%"
-        >
-          <v-row>
-            <v-col class="pa-0" cols="3">
-              <v-img
-                src="https://bad.src/not/valid"
-                lazy-src="https://picsum.photos/id/11/100/60"
-                height="80"
-                class="rounded"
-              >
-                <template v-slot:placeholder>
-                  <v-row
-                    class="fill-height ma-0"
-                    align="center"
-                    justify="center"
-                  >
-                    <v-progress-circular
-                      indeterminate
-                      color="grey lighten-5"
-                    ></v-progress-circular>
-                  </v-row>
-                </template>
-              </v-img>
-            </v-col>
-            <v-col
-              cols=6
-              class="pa-0 pl-2"
-              style="position: relative"
-            >
-              <p style="text-align: left" class="ma-0 pr-5">{{item.name}}</p>
-              <v-chip
-                small
-                color="success"
-                class="ml-2"
-                outlined
-                style="position: absolute; bottom: 0; left: 0"
-              >
-                Stock: {{item.qty}}
-              </v-chip>
-            </v-col>
-            <v-col
-              cols=3
-              class="pa-0"
-              style="font-size: 16px;"
-            >
-              <p style="text-align: left" class="ma-0">
-                &#8358; {{item.price}}
-              </p>
-              <div>
-                <!-- <p
-                style="text-align: left; color: #69747E; font-weight: 600;"
-                > -->
-                  <v-icon style="float: left; top: 30px" v-if="display==true">mdi-store-outline</v-icon>
-                  <v-icon style="float: left; top: 30px" v-else>mdi-store-remove</v-icon>
-                  <span class="switch">
-                    <v-switch
-                    class="float-right mt-0 pt-0"
-                    color="success"
-                    style="position: relative; right: -12px; top: 6px"
-                    id="switch"
-                    v-model="display"
-                    inset
-                    hide-details=""
-                  >
-                  </v-switch>
-                  </span>
-                <!-- </p> -->
-              </div>
-            </v-col>
-          </v-row>
-        </v-card>
+			<v-row class="ma-0">
+        <Products
+          v-for="(product, i) in inventory"
+          :key="i"
+          class="mb-5"
+          :product="product"
+          @click="viewProduct(product)"
+        />
 			</v-row>
     </v-container>
     <v-navigation-drawer
@@ -120,35 +48,98 @@
     >
       <AddProduct @close="close()" />
     </v-navigation-drawer>
+    <menu-spacer></menu-spacer>
   </div>
 </template>
 
 <script>
+  import { mapGetters } from "vuex";
+  import * as mutationTypes from "@/store/mutationTypes";
+  import { fethcStoreInventory } from "@/services/apiServices";
+  import { EventBus } from "@/services/eventBus";
+  
   import topNav from "@/components/TopNav"
+  import Products from "@/components/Products"
   import AddProduct from "@/components/AddProduct"
+  import MenuSpacer from '../components/MenuSpacer.vue'
+  // import InventoryItem from "@/components/InventoryItem"
 
   export default {
     name: 'Inventory',
     components: {
       topNav,
+      Products,
       AddProduct,
+      MenuSpacer,
+      // InventoryItem,
     },
     data: () => {
 			return {
         display: true,
-				inventory: [
-          {name: "Unisex (for male and female)", price: "86,000", qty: 12, image: ""},
-          {name: "Gown", price: 8000, qty: 6, image: ""},
-          {name: "Shorts", price: 9000, qty: 2, image: ""},
-        ],
         product_drawer: null,
-        // inventory: false,
       }
     },
     methods: {
       close() {
         this.product_drawer = false
-      }
-    }
+      },
+      showConfirm() {
+        this.$confirm({
+          title: "Save progress?",
+          content:
+            "You have unsaved changes. Proceeding will mean losing these changes",
+          onOk: () => {
+            this.visible = false;
+          },
+          onCancel() {},
+        });
+      },
+      closeDrawer() {
+        if (this.currentProduct && this.unsavedChange) {
+          this.showConfirm();
+        } else {
+          this.visible = false;
+          this.$store.commit(mutationTypes.SET_PRODUCT_TO_BE_EDITTED, {});
+        }
+      },
+      viewProduct(product) {
+        this.$store.commit(mutationTypes.UNSAVED_CHANGE, false);
+        this.$store.commit(mutationTypes.SET_PRODUCT_TO_BE_EDITTED, product);
+        this.visible = true;
+        this.emitOpen();
+      },
+      openAdd() {
+        this.$store.commit(mutationTypes.SET_PRODUCT_TO_BE_EDITTED, null);
+        this.visible = true;
+        this.emitOpen();
+      },
+      emitOpen() {
+        EventBus.$emit("openDrawer");
+      },
+    },
+    computed: {
+      ...mapGetters({
+        inventory: "getInventory",
+        store: "getStore",
+        currentProduct: "getProductToBeEditted",
+        unsavedChange: "getUnsavedChange",
+      }),
+    },
+    mounted() {
+      // if (window.innerWidth < 640) {
+      //   this.drawerWidth = window.innerWidth;
+      // }
+
+      // window.addEventListener("resize", () => {
+      //   if (this.$refs.inv.scrollWidth < 1000) {
+      //     this.drawerWidth = window.innerWidth;
+      //   } else {
+      //     this.drawerWidth = 640;
+      //   }
+      // });
+
+      fethcStoreInventory(this.store.slug);
+      EventBus.$on("close_drawer", () => (this.visible = false));
+    },
   }
 </script>

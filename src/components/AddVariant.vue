@@ -61,7 +61,7 @@
     }),
     methods: {
       changeInp() {
-      // this.$store.commit(mutationTypes.FORM_TOUCHED, true);
+      // this.$store.commit(mutationTypes.UNSAVED_CHANGE, true);
       },
       setCurrentInput(i) {
         this.currentInput = i;
@@ -109,7 +109,7 @@
       // ...mapGetters({
       //   store: "getStore",
       //   currentItem: "getItemToBeEditted",
-      //   formTouched: "getFormTouched",
+      //   unsavedChange: "getUnsavedChange",
       // }),
       // drawerWidth() {
       //   return window.innerWidth > 640 ? 590 : window.innerWidth - 50;

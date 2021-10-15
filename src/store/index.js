@@ -14,7 +14,6 @@ const vuexLocal = new VuexPersistence({
 export default new Vuex.Store({
   state: {
     account_id: null,
-    form_touched: false,
     inventory: [],
     logged_in: false,
     orders: [],
@@ -22,10 +21,11 @@ export default new Vuex.Store({
     store: {},
     to_be_editted: null,
     unregistered_email: "",
+    unsaved_change: false,
   },
   mutations: {
-    [mutationTypes.FORM_TOUCHED](state, data) {
-      state.form_touched = data;
+    [mutationTypes.UNSAVED_CHANGE](state, data) {
+      state.unsaved_change = data;
     },
     [mutationTypes.LOGOUT](state, data) {
       state.store = data;
@@ -51,7 +51,7 @@ export default new Vuex.Store({
     [mutationTypes.SAVE_ORDERS](state, data) {
       state.orders = data;
     },
-    [mutationTypes.SAVE_PRODUCT_TO_BE_EDITTED](state, data) {
+    [mutationTypes.SET_PRODUCT_TO_BE_EDITTED](state, data) {
       state.to_be_editted = data;
     },
   },
@@ -62,8 +62,8 @@ export default new Vuex.Store({
     getInventory: (state) => state.inventory,
     getLoggedIn: (state) => state.logged_in,
     getOrders: (state) => state.orders,
-    getItemToBeEditted: (state) => state.to_be_editted,
-    getFormTouched: (state) => state.form_touched,
+    getProductToBeEditted: (state) => state.to_be_editted,
+    getUnsavedChange: (state) => state.unsaved_change,
   },
   actions: {},
   modules: {},

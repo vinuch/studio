@@ -13,7 +13,7 @@
 				class="pb-3"
 				rounded="lg"
 			>
-				<v-row>
+				<v-row @click="openCollapse(true)">
 					<v-col cols=8 class="pt-0">
 						<p class="text-left text-subtitle-1 font-weight-bold mb-0">
 							{{ order.full_name }}
@@ -25,46 +25,20 @@
 							class="text-left text-body-2 mb-1"
 						>
 							{{ order_date }}<span><sup>{{ ordinal_suffix }}</sup>
-								<v-icon class="pa-0">mdi-circle-small</v-icon>
-								<v-tooltip
-									v-model="show"
-									top
-								>
-									<template v-slot:activator="{ on, attrs }">
-										<span
-											v-bind="attrs"
-											v-on="on"
-										>#...{{ order_ref_preview }}</span>
-									</template>
-									<span>{{ order.order_ref }}</span>
-								</v-tooltip>
 							</span>
 						</p>
-							<v-btn
-								rounded
-								depressed
-								small
-								text
-								absolute
-								left
-								color="success"
-								style="background: #E4F7E4"
-							>Delivered</v-btn>
+						<p class="text-left text-body-2 mb-1"><span># {{ order.order_ref }}</span></p>
+							
+							
 					</v-col>
 					<v-col cols=4 class="pt-0">
 						<p
-							class="text-right text-subtitle-1 font-weight-bold mb-1"
+							class="text-right text-subtitle-1 font-weight-bold mb-0"
 						>&#8358;{{ order.products_total }}</p>
-						<p class="text-right text-body-2 mb-1">
+						<p class="text-right text-body-2 mb-0">
 							{{ order.fulfilled }}/{{ order.items_count }}
 						</p>
-						<v-container class="pa-0" @click="openCollapse(true)">
-							<v-row class="ma-0 pt-1">
-								<v-spacer></v-spacer>
-								<v-icon v-if="!open">mdi-chevron-down</v-icon>
-								<v-icon v-else>mdi-chevron-up</v-icon>
-							</v-row>
-						</v-container>
+						<p style="color: #4CAF50;" class="text-right mb-0">Delivered</p>
 					</v-col>
 				</v-row>
 			</v-sheet>
@@ -77,7 +51,7 @@
 				flat
 				style="position: relative"
 			>
-				<div style="height: 10px" class="mb-5 mt-0">
+				<div style="height: 7px" class="mb-5 mt-0">
 					<v-btn
 						rounded
 						depressed
@@ -85,7 +59,7 @@
 						color="success"
 						absolute
 						right
-						style="margin: -5px -5px 0"
+						style="margin: -8px -5px 0"
 					>
 						Check all
 					</v-btn>
@@ -99,24 +73,25 @@
 				>
 					<v-col cols=3>
 						<v-img
-                :src="orderItem.image_url"
-                lazy-src="https://picsum.photos/id/11/100/60"
-                height="51"
-                class="pa-0 rounded"
-              >
-                <template v-slot:placeholder>
-                  <v-row
-                    class="fill-height ma-0"
-                    align="center"
-                    justify="center"
-                  >
-                    <v-progress-circular
-                      indeterminate
-                      color="grey lighten-5"
-                    ></v-progress-circular>
-                  </v-row>
-                </template>
-              </v-img>
+							:src="orderItem.image_url"
+							lazy-src="https://picsum.photos/id/11/100/60"
+							height="51"
+							width="51"
+							class="pa-0 rounded"
+						>
+							<template v-slot:placeholder>
+								<v-row
+									class="fill-height ma-0"
+									align="center"
+									justify="center"
+								>
+									<v-progress-circular
+										indeterminate
+										color="grey lighten-5"
+									></v-progress-circular>
+								</v-row>
+							</template>
+						</v-img>
 					</v-col>
 					<v-col cols=6 class="pl-0">
 						<p class="text-left text-body-2 font-weight-bold mb-2">
@@ -156,7 +131,7 @@
 						color="FFF"
 						width="100%"
 					>
-						<h4 class="mb-3 text-left">Customer</h4>
+						<h5 class="mb-3 text-left">Customer</h5>
 						<ul class="text-left pl-0 text-body-2" style="list-style-type: none; display: block">
 							<li class="pb-3">
 								<v-icon>mdi-account</v-icon>
@@ -284,10 +259,6 @@ export default {
         return ty[difference] + " - " + order_date
       }
     },
-		order_ref_preview() {
-			let ref = this.order.order_ref
-			return ref.slice(ref.length -10)
-		},
     ordinal_suffix() {
       let order_date = parseInt(this.order.created.substring(8,10))
       var j = order_date % 10,
