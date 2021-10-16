@@ -1,7 +1,7 @@
 <template>
 <div class="pa-5">
-  <Snackbar />
-  <Menu />
+  <topNav>Dashboard</topNav>
+  <Snackbar v-if="this.verified[0] == 0" />
   <Dialog
     v-if="dialog == true" 
     :modal="modal" 
@@ -9,8 +9,8 @@
     />
     
   <div style="width: 100%; height: 6em">
-    <h2 class="title" style="margin-top: 3em">Hello Abdul &#128526;</h2>
-    <p>Things to get you started.</p>
+    <h2 class="title" style="margin-top: 1em">Hello Abdul &#128526;</h2>
+    <p @click="emitBus()">Things to get you started.</p>
   </div>
 
   <v-container 
@@ -21,7 +21,7 @@
     pa-0
   >
     <div>
-      <p class="text-left pa-5 ma-0">Setup progress: <span>{{verified_count}}/4</span></p>
+      <p class="text-left pa-5 ma-0">Setup progress: <span>{{setup_steps}}/4</span></p>
 
       <v-row class="ma-0">
         <v-col v-for="(dash, i) in dashboard" :key="i" cols=12 class="pa-0">
@@ -41,10 +41,11 @@
               hide-details=""
             >
             </v-checkbox>
-            <v-card-title class="pa-0" style="font-size: 1.2rem">{{dash.title}}</v-card-title>
+            <v-card-title class="pa-0" style="font-size: 1.1rem; margin-bottom: -4px">{{dash.title}}</v-card-title>
             <v-card-text class="pa-0 pb-3">{{dash.text}}</v-card-text>
             <v-btn
               depressed
+              small
               class="main_blue"
               @click="openDialog(dash.modal)"
             >
@@ -61,8 +62,11 @@
 
 <script>
   import { mapGetters } from "vuex";
-  // import * as dayjs from "dayjs";
-  import Menu from '@/components/Menu'
+  import { EventBus } from "@/services/eventBus"
+  import * as mutationTypes from "@/store/mutationTypes";
+// import * as dayjs from "dayjs";
+
+  import topNav from "@/components/TopNav"
   import Snackbar from '@/components/Snackbar'
   import Dialog from '@/components/Dialog'
   import MenuSpacer from '../components/MenuSpacer.vue'
@@ -70,7 +74,7 @@
   export default {
     name: 'Dashboard',
     components: {
-      Menu,
+      topNav,
       Snackbar,
       Dialog,
       MenuSpacer,
@@ -85,11 +89,13 @@
       dialog: false,
       // dialog: false, default is false
       modal: null,
-      verified_count: 0,
       verified: "",
-      // bar_width: "1%",
+      setup_steps: 0,
     }),
     methods: {
+      emitBus() {
+        EventBus.$emit("open_alert", "error", "message")
+      },
       openDialog(setup) {
         this.dialog=true
         this.modal=setup
@@ -202,16 +208,21 @@
         // ];
       // },
     },
-    mounted() {
+    created() {
       this.verified = this.store.verified
+
       for (var i=1; i < this.verified.length; i++) { // starting loop from 1 not 0
         this.dashboard[i-1].status = parseInt(this.verified[i]) // the first i is the email status
         if (this.store.verified[i] == 1) {
-          this.verified_count += 1
+          this.setup_steps += 1
         }
       }
-      // let bar_width = this.verified_count * 20
-      // this.bar_width = bar_width + "%"
+
+      if (this.verified[0] == 0) {
+        this.$store.commit(mutationTypes.EMAIL_VERIFIED, false);
+      } else {
+        this.$store.commit(mutationTypes.EMAIL_VERIFIED, true);
+      }
     },
   }
 </script>

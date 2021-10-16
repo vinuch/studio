@@ -14,6 +14,7 @@ const vuexLocal = new VuexPersistence({
 export default new Vuex.Store({
   state: {
     account_id: null,
+    email_verified: false,
     inventory: [],
     logged_in: false,
     orders: [],
@@ -24,6 +25,9 @@ export default new Vuex.Store({
     unsaved_change: false,
   },
   mutations: {
+    [mutationTypes.EMAIL_VERIFIED](state, data) {
+      state.email_verified = data;
+    },
     [mutationTypes.UNSAVED_CHANGE](state, data) {
       state.unsaved_change = data;
     },

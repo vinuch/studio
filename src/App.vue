@@ -1,6 +1,11 @@
 <template>
   <v-app id="app">
-  
+    <Snackbar
+      v-if="show_alert"
+      :message="message"
+      :alert_type="alert_type"
+      :action="action"
+    />
 
     <v-main>
       <router-view/>
@@ -13,20 +18,42 @@
 
 <script>
 import { mapGetters } from "vuex"
+import { EventBus } from "@/services/eventBus";
+
+import Snackbar from "@/components/Snackbar"
 import BottomNav from "@/components/BottomNav"
 
 export default {
   name: "App",
   components: {
+    Snackbar,
     BottomNav,
   },
   data: () => ({
+    action: "",
+    alert_type: "",
+    message: "",
+    show_alert: false,
   }),
   computed: {
     ...mapGetters({
       logged_in: "getLoggedIn",
     }),
   },
+  created() {
+    EventBus.$on("open_alert", (type, message, action) => {
+      this.show_alert = true
+      this.alert_type = type
+      this.message = message
+      this.action = action
+      setTimeout(() => {
+        this.show_alert = false
+        this.action = ""
+        this.alert_type = ""
+        this.message = ""
+      }, 6000)
+    })
+  }
 };
 </script>
 

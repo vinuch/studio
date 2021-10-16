@@ -36,7 +36,7 @@
           :key="i"
           class="mb-5"
           :product="product"
-          @click="viewProduct(product)"
+          @viewProduct="viewProduct()"
         />
 			</v-row>
     </v-container>
@@ -46,7 +46,7 @@
       :width="400"
       v-model="product_drawer"
     >
-      <AddProduct @close="close()" />
+      <AddOrEditProduct @close="close()" />
     </v-navigation-drawer>
     <menu-spacer></menu-spacer>
   </div>
@@ -55,23 +55,21 @@
 <script>
   import { mapGetters } from "vuex";
   import * as mutationTypes from "@/store/mutationTypes";
-  import { fethcStoreInventory } from "@/services/apiServices";
-  import { EventBus } from "@/services/eventBus";
+  // import { fethcStoreInventory } from "@/services/apiServices";
+  // import { EventBus } from "@/services/eventBus";
   
   import topNav from "@/components/TopNav"
   import Products from "@/components/Products"
-  import AddProduct from "@/components/AddProduct"
+  import AddOrEditProduct from "@/components/AddOrEditProduct"
   import MenuSpacer from '../components/MenuSpacer.vue'
-  // import InventoryItem from "@/components/InventoryItem"
 
   export default {
     name: 'Inventory',
     components: {
       topNav,
       Products,
-      AddProduct,
+      AddOrEditProduct,
       MenuSpacer,
-      // InventoryItem,
     },
     data: () => {
 			return {
@@ -102,44 +100,25 @@
           this.$store.commit(mutationTypes.SET_PRODUCT_TO_BE_EDITTED, {});
         }
       },
-      viewProduct(product) {
-        this.$store.commit(mutationTypes.UNSAVED_CHANGE, false);
-        this.$store.commit(mutationTypes.SET_PRODUCT_TO_BE_EDITTED, product);
-        this.visible = true;
-        this.emitOpen();
-      },
       openAdd() {
         this.$store.commit(mutationTypes.SET_PRODUCT_TO_BE_EDITTED, null);
         this.visible = true;
         this.emitOpen();
       },
-      emitOpen() {
-        EventBus.$emit("openDrawer");
+      // emitOpen() {
+      //   EventBus.$emit("openDrawer");
+      // },
+      viewProduct() {
+        this.product_drawer=true
       },
     },
     computed: {
       ...mapGetters({
         inventory: "getInventory",
         store: "getStore",
-        currentProduct: "getProductToBeEditted",
-        unsavedChange: "getUnsavedChange",
+        // currentProduct: "getProductToBeEditted",
+        // unsavedChange: "getUnsavedChange",
       }),
-    },
-    mounted() {
-      // if (window.innerWidth < 640) {
-      //   this.drawerWidth = window.innerWidth;
-      // }
-
-      // window.addEventListener("resize", () => {
-      //   if (this.$refs.inv.scrollWidth < 1000) {
-      //     this.drawerWidth = window.innerWidth;
-      //   } else {
-      //     this.drawerWidth = 640;
-      //   }
-      // });
-
-      fethcStoreInventory(this.store.slug);
-      EventBus.$on("close_drawer", () => (this.visible = false));
     },
   }
 </script>

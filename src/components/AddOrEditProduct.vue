@@ -5,7 +5,7 @@
       class="mr-5" 
       style="float: right; top: -47px;"
       @click="close"
-      >mdi-close-thick</v-icon>
+    >mdi-close-thick</v-icon>
     <v-divider></v-divider>
     <div class="pa-5">
       <v-container
@@ -33,6 +33,7 @@
           outlined
           hide-details
           class="mt-2 mb-0"
+          :placeholder="currentProduct.product_name"
         ></v-text-field>
         <v-card-text class="text-left text-body-2 pt-0 mt-1 mb-5 describe">Give your product a short and clear name.</v-card-text>
 
@@ -41,6 +42,7 @@
           outlined
           hide-details
           class="mt-2 mb-0"
+          :placeholder="currentProduct.description"
         ></v-text-field>
         <v-card-text class="text-left pt-0 mt-1 mb-5 describe">Provide a clear description for your customers.</v-card-text>
 
@@ -54,21 +56,22 @@
           <div>
             <p
             style="text-align: left; color: #69747E; font-weight: 600;"
-            >Add product variants? 
+            >
+              <span v-if="currentProduct.has_variant">Variants</span>
+              <span v-else>Add product variants</span>
               <span class="switch">
                 <v-switch
                 class="float-right mt-0 pt-0"
                 color="success"
                 style="position: relative; right: -12px;"
-                id="switch"
-                v-model="variants"
+                v-model="currentProduct.has_variant"
                 inset
               >
               </v-switch>
               </span>
             </p>
           </div>
-          <p v-if="variants==false" class="describe ">This product comes in variants e.g. different sizes, colours, materials, etc.</p>
+          <p v-if="has_variant" class="describe ">This product comes in variants e.g. different sizes, colours, materials, etc.</p>
           <div
             v-for="i in variant_index"
             :key="i"
@@ -178,7 +181,7 @@
                 color="success"
                 style="position: relative; right: -12px;"
                 id="switch"
-                v-model="discount"
+                v-model="currentProduct.has_discount"
                 inset
               >
               </v-switch>
@@ -229,7 +232,7 @@
                 color="success"
                 style="position: relative; right: -12px;"
                 id="switch"
-                v-model="display"
+                v-model="currentProduct.display"
                 inset
               >
                 </v-switch>
@@ -256,20 +259,21 @@
 </template>
 
 <script>
+  import { mapGetters } from "vuex"
+  import * as mutationTypes from "@/store/mutationTypes";
+
   import AddVariant from "@/components/AddVariant"
-  // import setupFooter from "@/components/setupFooter"
 
   export default {
-    name: 'AddProduct',
+    name: 'AddOrViewProduct',
     components: {
       AddVariant,
-      // setupFooter
     },
     data: () => {
 			return {
         discount: true,
-        display: true, // display product in gallery
-        variants: true,
+        // has_variant: true,
+        variants: null,
         variant_index: 1, // not zero indexed
         combos: 25, // should be an array
       }
@@ -280,8 +284,24 @@
       },
       close() {
         this.$emit("close")
+        this.$store.commit(mutationTypes.SET_PRODUCT_TO_BE_EDITTED, {});
       } 
-    }
+    },
+    computed: {
+      ...mapGetters({
+        store: "getStore",
+        currentProduct: "getProductToBeEditted",
+        unsavedChange: "getUnsavedChange",
+      }),
+      // has_variant = this.currentProduct.has_variant
+    },
+    mounted() {
+      // console.log(this.has_variant)
+      // this.$nextTick(function(){
+      //   this.has_variant = this.currentProduct.has_variant
+      //   console.log(this.has_variant)
+      // })
+    },
   }
 </script>
 

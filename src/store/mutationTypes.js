@@ -1,6 +1,7 @@
 export const LOGGED_IN = "LOGGED_IN";
 export const LOGOUT = "LOGOUT";
 export const SAVE_EMAIL = "SAVE_EMAIL";
+export const EMAIL_VERIFIED = "EMAIL_VERIFIED";
 export const SAVE_USER = "SAVE_USER";
 export const SAVE_STORE = "SAVE_STORE";
 export const SAVE_SETTLEMENT = "SAVE_SETTLEMENT";

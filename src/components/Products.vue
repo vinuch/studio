@@ -1,5 +1,7 @@
 <template>
-  <div style="width: 100%">
+  <div style="width: 100%"
+    @click="viewProduct(product)"
+  >
     <v-card
       rounded="lg"
       class="pa-5"
@@ -76,13 +78,13 @@
 </template>
 
 <script>  
+  import * as mutationTypes from "@/store/mutationTypes";
+
   export default {
     name: 'Products',
     props: [
       "product",
     ],
-    components: {
-    },
     data: () => {
 			return {
         display: true,
@@ -92,7 +94,14 @@
       toggleDisplay() {
         // update display at server level
         // update store to new display status
-      }
+      },
+      viewProduct(product) {
+        this.$store.commit(mutationTypes.UNSAVED_CHANGE, false);
+        this.$store.commit(mutationTypes.SET_PRODUCT_TO_BE_EDITTED, product);
+        this.visible = true;
+        this.$emit('viewProduct')
+        // this.emitOpen();
+      },
     },
     mounted() {
       this.display = this.product.display

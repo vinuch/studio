@@ -59,13 +59,15 @@
 
 <script>
   import { mapGetters } from "vuex"
-  import setupFooter from "@/components/setupFooter"
+  import { EventBus } from "@/services/eventBus"
   import {
     bankList,
     resolveAcc,
     createSubAcc,
     saveMerchSettlement,
   } from "@/services/apiServices";
+
+  import setupFooter from "@/components/setupFooter"
 
   export default {
     name: 'SetBankAcc',
@@ -106,12 +108,13 @@
           }
           saveMerchSettlement(save_data)
         })
-        .catch(err => (
-          // event bus this
+        .catch(err => {
+          EventBus.$emit("open_alert", "error", "message")
           console.log(err)
-        ))
+        })
         .finally(() => {
-          this.$router.push("/dash");
+          EventBus.$emit("open_alert", "success", "message")
+          // this.$router.push("/dash");
         });
       }
     },
