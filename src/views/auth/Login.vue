@@ -64,7 +64,7 @@
   } from "@/services/apiServices"
   import * as mutationTypes from "@/store/mutationTypes"
   import axios from "axios"
-  // import { EventBus } from "../services/eventBus"
+  import { EventBus } from "@/services/eventBus"
 
   import About from '@/components/About'
   import xsTop from '@/components/xsTop'
@@ -119,18 +119,14 @@
             this.$store.commit(mutationTypes.SAVE_STORE, store);
             this.$store.commit(mutationTypes.SAVE_SETTLEMENT, settlement);
             this.$store.commit(mutationTypes.SAVE_ACCOUNT_ID, acct_id);
-            if (store.store_name) {
-              this.$router.push("/dash");
-            } else {
-              this.$router.push("/dashboard/setup");
-            }
+            this.$router.push("/dash");
           })
           .catch(() => {
-            // EventBus.$emit(
-            //   "open_alert",
-            //   "error",
-            //   "Wrong or invalid credentials. Please try again"
-            // );
+            EventBus.$emit(
+              "open_alert",
+              "error",
+              "Wrong or invalid credentials. Please try again"
+            )
           })
           .finally(() => {
             this.loading = false;

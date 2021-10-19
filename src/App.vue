@@ -7,6 +7,12 @@
       :action="action"
     />
 
+    <Dialog
+      v-if="dialog == true" 
+      :modal="modal" 
+      @closeDialog = closeDialog()
+    />
+
     <v-main>
       <router-view/>
     </v-main>
@@ -20,19 +26,23 @@
 import { mapGetters } from "vuex"
 import { EventBus } from "@/services/eventBus";
 
+import Dialog from "@/components/Dialog"
 import Snackbar from "@/components/Snackbar"
 import BottomNav from "@/components/BottomNav"
 
 export default {
   name: "App",
   components: {
-    Snackbar,
     BottomNav,
+    Dialog,
+    Snackbar,
   },
   data: () => ({
     action: "",
-    alert_type: "",
+    alert_type: "", // colour theme e.g. success, etc
+    dialog: false,
     message: "",
+    modal:"",
     show_alert: false,
   }),
   computed: {
@@ -52,6 +62,12 @@ export default {
         this.alert_type = ""
         this.message = ""
       }, 6000)
+    }),
+    EventBus.$on("dialog", (state, modal) => {
+      console.log(state)
+      state == "open" ? this.dialog = true : this.dialog = false
+      console.log(modal)
+      modal == "" ? this.modal = "" : this.modal = modal
     })
   }
 };

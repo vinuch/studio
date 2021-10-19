@@ -2,6 +2,7 @@ import axios from "axios";
 import * as urls from "./urls";
 
 import * as mutationTypes from "@/store/mutationTypes";
+import { EventBus } from "@/services/eventBus"
 import store from "@/store/index";
 
 try {
@@ -66,7 +67,7 @@ export const createStore = (data) => {
     store.commit(mutationTypes.SAVE_STORE, res.data);
   })
   .catch((err) => {
-    console.log({ err });
+    EventBus.$emit("open_alert", "error", err)
   });
 };
 
@@ -179,7 +180,6 @@ export const bankList = () => {
 };
 
 export const resolveAcc = (bank_code, acc_no) => {
-  console.log("api services")
   return axios({
     method: "get",
     url: `${urls.resolveAccUrl}${acc_no}&bank_code=${bank_code}`,

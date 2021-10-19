@@ -1,16 +1,14 @@
 <template>
 <div class="pa-5">
   <topNav>Dashboard</topNav>
-  <Snackbar v-if="this.verified[0] == 0" />
-  <Dialog
+  <!-- <Dialog
     v-if="dialog == true" 
     :modal="modal" 
     @closeDialog = closeDialog()
-    />
+  /> -->
     
   <div style="width: 100%; height: 6em">
     <h2 class="title" style="margin-top: 1em">Hello Abdul &#128526;</h2>
-    <p @click="emitBus()">Things to get you started.</p>
   </div>
 
   <v-container 
@@ -62,21 +60,19 @@
 
 <script>
   import { mapGetters } from "vuex";
-  import { EventBus } from "@/services/eventBus"
   import * as mutationTypes from "@/store/mutationTypes";
-// import * as dayjs from "dayjs";
+  import { EventBus } from "@/services/eventBus"
+  // import * as dayjs from "dayjs";
 
   import topNav from "@/components/TopNav"
-  import Snackbar from '@/components/Snackbar'
-  import Dialog from '@/components/Dialog'
-  import MenuSpacer from '../components/MenuSpacer.vue'
+  // import Dialog from '@/components/Dialog'
+  import MenuSpacer from '@/components/MenuSpacer.vue'
 
   export default {
     name: 'Dashboard',
     components: {
       topNav,
-      Snackbar,
-      Dialog,
+      // Dialog,
       MenuSpacer,
     },
     data: () => ({
@@ -89,20 +85,13 @@
       dialog: false,
       // dialog: false, default is false
       modal: null,
-      verified: "",
       setup_steps: 0,
+      verified: "00000",
     }),
     methods: {
-      emitBus() {
-        EventBus.$emit("open_alert", "error", "message")
-      },
       openDialog(setup) {
-        this.dialog=true
-        this.modal=setup
+        EventBus.$emit("dialog", "open", setup)
       },
-      closeDialog() {
-        this.dialog=false
-      }
     },
     computed: {
       ...mapGetters({
@@ -210,6 +199,9 @@
     },
     created() {
       this.verified = this.store.verified
+      if (this.verified[0] == 0) {
+        EventBus.$emit("open_alert", "warning", "email not verified", "Verify Email")
+      }
 
       for (var i=1; i < this.verified.length; i++) { // starting loop from 1 not 0
         this.dashboard[i-1].status = parseInt(this.verified[i]) // the first i is the email status

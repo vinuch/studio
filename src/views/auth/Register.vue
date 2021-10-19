@@ -31,15 +31,19 @@
             <div v-if="step === 1">
               <v-text-field
                 label="Store Name"
-                v-model="storeName" 
+                v-model="store_name" 
                 outlined
                 :rules="storeNameRules"
               ></v-text-field>
               <v-text-field
                 label="Store Link"
-                v-model="storeLink" 
+                v-model="store_slug" 
                 outlined
+                :hint="store_link_url"
+                persistent-hint
                 :rules="storeLinkRules"
+                @keyup="cleanStoreUrl()"
+                @blur="cleanStoreUrl('blur')"
               ></v-text-field>
               <v-select
                 label="Store Type"
@@ -62,6 +66,7 @@
                 label="Password"
                 v-model="password" 
                 outlined
+                type="password"
                 :rules="passwordRules"
               ></v-text-field>
               <p @click="previousStep">Back</p>
@@ -71,7 +76,7 @@
               depressed 
               height=56px 
               color="#F62873"
-              @click="createStore()"
+              @click="createAccount()"
             >
               <span v-if="step === 1" >Continue</span>
               <span v-if="step === 2" >Create store</span>
@@ -90,6 +95,13 @@
 </template>
 
 <script>
+  import axios from "axios"
+  import {
+    signUp,
+    createStore,
+  } from "@/services/apiServices"
+  import { EventBus } from "@/services/eventBus"
+
   import About from '@/components/About'
   import xsTop from '@/components/xsTop'
 
@@ -103,14 +115,16 @@
       color1: "#F62873",
       color2: "",
       step: 1, // current step displayed
-      storeName: "",
-      storeLink: "",
-      storeType: "",
+      store_name: "",
+      store_slug: "",
+      store_link_url: "",
       email: "",
       password: "",
       store_type: null,
       store_types: [
-        {name: "Food", type: 0}, 
+        // get this from API (not built yet)
+        // {name: "Food", type: 0}, doesn't recognise as true
+        {name: "Food", type: 6}, 
         {name: "Fashion & Accessories", type: 1},
         {name: "Health & Beauty", type: 2},
         {name: "Gadgets & Electronics", type: 3},
@@ -127,7 +141,7 @@
       storeLinkRules: []
     }),
     methods: {
-      createStore() {
+      createAccount() {
         if (this.step === 1) {
           this.step = 2
           // this.color2 = "primary"
@@ -136,10 +150,58 @@
           }
         } else {
           if (this.step1 && this.step2 == true) {
-            console.log("submit form")
+            let data = {
+              email: this.email,
+              password: this.password
+            }
+            signUp(data)
+            .then((res) => {
+              window.sessionStorage.setItem("leyyow_token", res.data.token);
+              axios.defaults.headers.common[
+                "Authorization"
+              ] = `Token ${res.data.token}`;
+
+              // create store
+              let data = {
+                store_name: this.store_name,
+                slug: this.store_slug,
+                business_type: this.store_type,
+              }
+              createStore(data)
+            })
+            .catch(() => {
+              EventBus.$emit("open_alert", "error", "Signup error")
+            })
+            .finally(() => {
+              this.loading = false;
+              this.$router.push("/dash")
+              EventBus.$emit("open_alert", "success", "Sign up successful")
+            });
           } else {
-            console.log ("incomplete")
+              EventBus.$emit("open_alert", "error", "Sign up form incomplete")
           }
+        }
+      },
+      cleanStoreUrl(blur) {
+        if (this.store_slug) {
+          this.store_slug = this.store_slug.toString().normalize('NFD').replace(/[\u0300-\u036f]/g, "") //remove diacritics
+            .toLowerCase()
+            .replace(/\s+/g, '-') //spaces to dashes
+            .replace(/_/g, '-') //underscore to dashes
+            .replace(/&/g, '-and-') //ampersand to and
+            .replace(/[^\w-]+/g, '') //remove non-words
+            .replace(/--+/g, '-') //collapse multiple dashes
+            // .replace(/\-\-+/g, '-') //collapse multiple dashes
+            .replace(/^-+/, '') //trim starting dash
+
+          this.store_link_url = this.store_link + ".leyyow.com"
+
+          if (blur == 'blur'){
+            this.store_slug = this.store_slug.replace(/-+$/, ''); //trim ending dash
+            this.store_link_url = this.store_slug + ".leyyow.com"
+          }
+        } else {
+          this.store_link_url = ""
         }
       },
       previousStep() {
@@ -149,7 +211,7 @@
     },
     computed: {
       step1() {
-        if (this.storeName && this.storeLink && this.storeType) {
+        if (this.store_name && this.store_slug && this.store_type) {
           return true
         } else {
           return false
@@ -162,7 +224,9 @@
           return false
         }
       }
-    }
+    },
+    watch: {
+    },
   }
 </script>
 

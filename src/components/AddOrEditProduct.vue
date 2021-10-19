@@ -13,27 +13,18 @@
         class="pa-0"
       >
         <v-card-text class="text-left text-body-2 pb-2 mt-5 ">Upload up to five product images</v-card-text>
-        <v-card
-          class="pa-5"
-          flat
-          outlined
-          rounded="lg"
-        >
-          <v-sheet>
-            <v-file-input
-              accept="image/*"
-              multiple
-              chips
-            ></v-file-input>
-          </v-sheet>
-        </v-card>
+
+        <input type=file accept="image/*" @change="uploadImage">
+        <v-img v-if="image_preview" :src="image_preview"></v-img>
 
         <v-card-text class="text-left text-body-2 pb-0 mt-5 ">Product name</v-card-text>
         <v-text-field
           outlined
           hide-details
           class="mt-2 mb-0"
-          :placeholder="currentProduct.product_name"
+          @keyup="unsavedChangeMade()"
+          v-model="product_name"
+          :placeholder="!currentProduct ? '' : currentProduct.product_name"
         ></v-text-field>
         <v-card-text class="text-left text-body-2 pt-0 mt-1 mb-5 describe">Give your product a short and clear name.</v-card-text>
 
@@ -42,7 +33,9 @@
           outlined
           hide-details
           class="mt-2 mb-0"
-          :placeholder="currentProduct.description"
+          @keyup="unsavedChangeMade()"
+          v-model="description"
+          :placeholder="!currentProduct ? '' : currentProduct.description"
         ></v-text-field>
         <v-card-text class="text-left pt-0 mt-1 mb-5 describe">Provide a clear description for your customers.</v-card-text>
 
@@ -64,7 +57,7 @@
                 class="float-right mt-0 pt-0"
                 color="success"
                 style="position: relative; right: -12px;"
-                v-model="currentProduct.has_variant"
+                v-model="has_variant"
                 inset
               >
               </v-switch>
@@ -109,7 +102,7 @@
             hide-delimiter-background
           >
             <v-carousel-item
-              v-for="(combo, i) in combos"
+              v-for="(pair, i) in variant_pairs"
               :key="i"
               eager
             > -->
@@ -261,6 +254,12 @@
 <script>
   import { mapGetters } from "vuex"
   import * as mutationTypes from "@/store/mutationTypes";
+  import {
+    createProduct,
+    // fethcStoreInventory,
+    // updateProduct,
+  } from "@/services/apiServices";
+  import { EventBus } from "@/services/eventBus"
 
   import AddVariant from "@/components/AddVariant"
 
@@ -271,11 +270,18 @@
     },
     data: () => {
 			return {
+        variant_pairs: 25, // should be an array
+        description: "",
         discount: true,
-        // has_variant: true,
+        has_variant: false,
+        image_preview: null,
+        preview: null,
+        product_id: null,
+        product_name: "",
+        product_image: "",
+        uploading_image: false, // implement loading icon
         variants: null,
         variant_index: 1, // not zero indexed
-        combos: 25, // should be an array
       }
     },
     methods: {
@@ -285,7 +291,29 @@
       close() {
         this.$emit("close")
         this.$store.commit(mutationTypes.SET_PRODUCT_TO_BE_EDITTED, {});
-      } 
+      },
+      unsavedChangeMade() {
+        this.$store.commit(mutationTypes.UNSAVED_CHANGE, true);
+      },
+      uploadImage(e) {
+        const image = e.target.files[0]
+        this.image_preview = URL.createObjectURL(image)
+
+        let form = new FormData();
+        form.append("product_image", e.target.files[0]);
+        this.uploading_image = true;
+        createProduct(form)
+          .then((res) => {
+            this.product_image = res.data.product_image;
+            this.product_id = res.data.id;
+          })
+          .catch(() => {
+            EventBus.$emit("error", "There was an error uploading the image")
+          })
+          .finally(() => {
+            this.uploading_image = false;
+          });
+      },
     },
     computed: {
       ...mapGetters({

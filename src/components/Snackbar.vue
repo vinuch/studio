@@ -25,7 +25,9 @@
       "action",
     ],
     data: () => ({
-   
+      methods: {
+        // actions here
+      }
     }),
   }
 </script>

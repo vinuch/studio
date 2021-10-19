@@ -17,6 +17,8 @@
 </template>
 
 <script>
+// import { EventBus } from "@/services/eventBus"
+
 import VerifyID from '@/components/VerifyID'
 import SetBankAcc from '@/components/SetBankAcc'
 import BusinessHours from '@/components/BusinessHours'
@@ -40,10 +42,9 @@ export default {
       // propModal: "shipping",
     }),
     methods: {
-      closeDialog() {
-        this.$emit('closeDialog') // make this universal
-        this.dialog=false
-      },
+      // closeDialog() {
+      //   EventBus.$emit( "open_dialog", "close", "")
+      // },
     },
     computed: {
       propModal() {

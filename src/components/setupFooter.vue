@@ -22,6 +22,7 @@
 </template>
 
 <script>
+  import { EventBus } from "@/services/eventBus"
   export default {
     name: 'setupFooter',
 
@@ -29,7 +30,8 @@
     }),
     methods: {
       closeDialog() {
-        this.$emit('closeDialog')
+        // this.$emit( "closeDialog")
+        EventBus.$emit( "dialog", "close", "")
       },
       save() {
         this.$emit('saveSetUp')

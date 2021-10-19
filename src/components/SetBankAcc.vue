@@ -49,7 +49,6 @@
     </div>
     <setupFooter
       @saveSetUp="saveSetUp()"
-      @closeDialog="closeDialog()"
     >
       Save Bank Details
     </setupFooter>
@@ -85,9 +84,9 @@
       bank_name: "",
     }),
     methods: {
-      closeDialog() {
-        this.$emit('closeDialog')
-      },
+      // closeDialog() {
+      //   this.$emit('closeDialog')
+      // },
       saveSetUp(){
         let trans_data = {
           business_name: "Another business name",
@@ -109,11 +108,10 @@
           saveMerchSettlement(save_data)
         })
         .catch(err => {
-          EventBus.$emit("open_alert", "error", "message")
-          console.log(err)
+          EventBus.$emit("open_alert", "error", "Error creating subaccount or saving settlement" + err) 
         })
         .finally(() => {
-          EventBus.$emit("open_alert", "success", "message")
+          EventBus.$emit("open_alert", "success", "Settlement bank details added")
           // this.$router.push("/dash");
         });
       }
