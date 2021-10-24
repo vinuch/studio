@@ -159,6 +159,7 @@
           twitter: this.store.twitter,
           facebook: this.store.facebook,
         }
+        console.log(data)
         updateStore(data, this.store.id)
           .then(res => {
             let store = res.data

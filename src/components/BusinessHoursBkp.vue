@@ -33,39 +33,15 @@
       <p class="describe">Setting your store to <b>"Always open"</b> means that you are always available to receive orders.</p>
     </v-sheet>
     <div v-if="always_open == true" style="height: 50px"></div>
-
-    <div
-      v-for="(period, i) in periods" 
-      :ref="'period_' + i"
-      :key="i"
-    >
-      <v-icon
-        v-if="always_open != true"
-        class="delete"
-        @click="deletePeriod(i)"
-      >
-        mdi-delete-outline
-      </v-icon>
-     <OpenHours 
-        v-if="always_open != true" 
-        @setSelectedDay="setSelectedDay($event)"
-        @setOpenTime="setOpenTime($event)"
-        @setCloseTime="setCloseTime($event)"
-        :isset_status="isset_status"
-        :disable_set_days="disable_set_days"
-        :set_indexes="set_indexes"
-      />
-    </div>
-
-    <p
-      v-if="always_open != true"
-      class="text-left mb-5 pl-5 pointer describe"
-      style="color: blue"
-      @click="addPeriod()"
-    >+ specify more days and times</p>
-
+    
+    <OpenHours 
+      v-if="always_open != true" 
+      @setSelectedDay="setSelectedDay($event)"
+      @setOpenTime="setOpenTime($event)"
+      @setCloseTime="setCloseTime($event)"
+    />
     <setupFooter
-      @saveSetUp="save()"
+      @saveSetUp="saveSetUp()"
     >
       Save Business Hours
     </setupFooter>
@@ -74,13 +50,6 @@
 </template>
 
 <script>
-  import {
-    updateStore,
-  } from "@/services/apiServices"
-  import { mapGetters } from "vuex"
-  import * as mutationTypes from "@/store/mutationTypes"
-  import { EventBus } from "@/services/eventBus"
-
   import setupFooter from "@/components/setupFooter"
   import OpenHours from "@/components/OpenHours"
 
@@ -97,71 +66,32 @@
       close: null, // current closing time
       days: null, // days of the week with truthy values
       days_with_times: [],
-      disable_set_days: false,
+      disable_days_with_times: false,
       freeze: false, // freeze all edits after time is set
-      isset_status: null,
-      loading: false,
       open: null, // current open time
-      periods: [{}], // days with same open and closing times
-      set_indexes: [],
       stringified_hours: "",
     }),
 
     methods: {
-      addPeriod(){
-        this.preSave()
-
-        if (this.set_indexes.length < this.days.length) {
-          this.periods.push({})
-          this.disable_set_days = false // in case not already false
-        } else {
-          EventBus.$emit("open_alert", "error", "Business hours have been set for all days of the week")
-        }
-
-        this.$nextTick(function(){
-          this.disable_set_days = true
-          this.isset_status = false
-        })
-
-        this.stringifyBizHrs()
+      deletePeriod() {
       },
-      closeDialog() {
-        this.$emit('closeDialog')
-      },
-      deletePeriod(index) {
-        this.periods.splice(index, 1)
-      },
-      preSave() {
-        if(this.days){
-          for (let i=0; i < this.days.length; i++) {
-            if (this.days[i].selected == true && this.days[i].isset == false) {
-              this.days[i].open = this.open
-              this.days[i].close = this.close
-              this.set_indexes.push(i)
-            }
-          }
-          this.isset_status = true // prevent next period from editing
-        } else {
-          EventBus.$emit("open_alert", "error", "Select at least one day")
-          console.log("days is empty")
-        }
+      incrementPeriod() {
       },
       save(){
-        this.preSave()
-        this.stringifyBizHrs()
-        let data = {
-          open_hours: this.stringified_hours,
-        }
-        updateStore(data, this.store.id)
-        .then(res => {
-          let store = res.data
-          this.$store.commit(mutationTypes.SAVE_STORE, store);
-        })
-        .catch(err => console.log(err))
-        .finally(() => {
-          EventBus.$emit("open_alert", "success", "Business hours saved")
-          // this.$router.push("/dash");
-        });
+      //   this.preSave()
+      //   this.stringifyBizHrs()
+      //   let data = {
+      //     open_hours: this.stringified_hours,
+      //   }
+      //   updateStore(data, this.store.id)
+      //   .then(res => {
+      //     let store = res.data
+      //     this.$store.commit(mutationTypes.SAVE_STORE, store);
+      //   })
+      //   .catch(err => console.log(err))
+      //   .finally(() => {
+      //     this.$router.push("/dashboard/dash");
+      //   });
       },
       setCloseTime(time){
         this.close = time
@@ -183,9 +113,9 @@
       },
     },
     computed: {
-      ...mapGetters({
-        store: "getStore",
-      }),
+      // ...mapGetters({
+      //   store: "getStore",
+      // }),
     },
   }
 </script>
