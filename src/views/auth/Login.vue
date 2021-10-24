@@ -122,11 +122,7 @@
             this.$router.push("/dash");
           })
           .catch(() => {
-            EventBus.$emit(
-              "open_alert",
-              "error",
-              "Wrong or invalid credentials. Please try again"
-            )
+            EventBus.$emit("open_alert", "error", "Wrong or invalid credentials. Please try again")
           })
           .finally(() => {
             this.loading = false;

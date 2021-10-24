@@ -52,6 +52,7 @@ export default {
   },
   created() {
     EventBus.$on("open_alert", (type, message, action) => {
+      // console.log("receiving emit")
       this.show_alert = true
       this.alert_type = type
       this.message = message
@@ -64,9 +65,7 @@ export default {
       }, 6000)
     }),
     EventBus.$on("dialog", (state, modal) => {
-      console.log(state)
       state == "open" ? this.dialog = true : this.dialog = false
-      console.log(modal)
       modal == "" ? this.modal = "" : this.modal = modal
     })
   }

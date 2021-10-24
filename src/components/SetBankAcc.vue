@@ -5,7 +5,7 @@
     Settlement Account
     </v-card-title>
     <v-card
-      v-if="acc_set == false"
+      v-if="acc_set == true"
 
     >
       <p class="sub-title">Payments from orders will be settled in this account:</p>
@@ -18,7 +18,7 @@
     <v-card-text v-else>
       Payments from your orders will be settled in this account:
     </v-card-text>
-    <div v-if="acc_set">
+    <div v-if="!acc_set">
       <v-col
         class="d-flex pa-5 pt-0 pb-0"
       >
@@ -84,16 +84,13 @@
       bank_name: "",
     }),
     methods: {
-      // closeDialog() {
-      //   this.$emit('closeDialog')
-      // },
       saveSetUp(){
         let trans_data = {
           business_name: "Another business name",
           settlement_bank: this.bank_code,
           account_number: this.acc_no,
-          percentage_charge: 5.0,
-          description: "Transaction on merchant.leyyow.com",
+          percentage_charge: 5.0, // this shouldn't be hard coded. Model not yet implemented
+          description: "Creating merchant settlement account as sub account for Leyyow",
         }
         createSubAcc(trans_data)
         .then(response => {
@@ -112,7 +109,7 @@
         })
         .finally(() => {
           EventBus.$emit("open_alert", "success", "Settlement bank details added")
-          // this.$router.push("/dash");
+          EventBus.$emit("dialog", "close", "")
         });
       }
     },
@@ -138,7 +135,9 @@
             this.acc_name = response.data.data.account_name
             this.acc_resolved = true
           })
-          .catch(() => {})
+          .catch((err) => {
+            EventBus.$emit("open_alert", "error", "Error getting account details" + err) 
+          })
         }
       }
     },

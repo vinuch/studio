@@ -67,7 +67,6 @@
 
     <setupFooter
       @saveSetUp="saveSetUp()"
-      @closeDialog="closeDialog()"
     >
       Save Business Hours
     </setupFooter>
@@ -110,9 +109,6 @@
           this.open = null
           this.close = null
         }
-      },
-      closeDialog() {
-        this.$emit('closeDialog')
       },
       deletePeriod(index) {
         // ask if sure

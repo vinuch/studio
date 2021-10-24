@@ -30,7 +30,6 @@
     }),
     methods: {
       closeDialog() {
-        // this.$emit( "closeDialog")
         EventBus.$emit( "dialog", "close", "")
       },
       save() {

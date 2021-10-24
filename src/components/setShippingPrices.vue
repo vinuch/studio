@@ -14,7 +14,8 @@
         class="mb-5"
         v-model="shipping_price"
         hide-details="true"
-        outlined prepend-inner-icon="mdi-cash"></v-text-field
+        outlined prepend-inner-icon="mdi-cash"
+        @blur="emitPrice()"></v-text-field
       >
       <div v-if="shipping_price != null">
         <v-card-text 
@@ -46,9 +47,7 @@
 <script>
 
   export default {
-    name: 'SetShipping',
-    components: {
-    },
+    name: 'priceAndLocations',
     data: () => ({
       activeBorderColor: '#3A50D5',
       shipping_price: null,
@@ -81,6 +80,7 @@
 
           this.newLocation = this.newLocation.replace(",", ""),
           this.locations.push(this.newLocation)
+          this.$emit('aLocation', this.newLocation)
           this.newLocation = "";
         }
       },
@@ -99,6 +99,9 @@
                 values: v.values.filter((val, valIndex) => valIndex !== j),
               };
         });
+      },
+      emitPrice() {
+        this.$emit('price', this.shipping_price)
       },
     },
     computed: {
@@ -141,7 +144,8 @@
       // },
       // locations: {
       //   handler() {
-      //     this.$emit("setLocationPrice", this.locations[0].key)
+      //     let price_and_locations = {"price": this.shipping_price, "locations": this.locations}
+      //     this.$emit('priceAndLocations', price_and_locations)
       //   },
       //   deep: true,
       // }

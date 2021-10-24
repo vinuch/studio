@@ -1,6 +1,5 @@
 <template>
   <v-bottom-navigation
-    class="pt-3"
     fixed
     background-color="#FBEDDA"
   >

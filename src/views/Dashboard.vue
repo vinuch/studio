@@ -1,14 +1,8 @@
 <template>
 <div class="pa-5">
   <topNav>Dashboard</topNav>
-  <!-- <Dialog
-    v-if="dialog == true" 
-    :modal="modal" 
-    @closeDialog = closeDialog()
-  /> -->
-    
   <div style="width: 100%; height: 6em">
-    <h2 class="title" style="margin-top: 1em">Hello Abdul &#128526;</h2>
+    <h2 class="title" style="margin-top: 1em">Welcome to {{ store.store_name }} &#128526;</h2>
   </div>
 
   <v-container 
@@ -65,14 +59,12 @@
   // import * as dayjs from "dayjs";
 
   import topNav from "@/components/TopNav"
-  // import Dialog from '@/components/Dialog'
   import MenuSpacer from '@/components/MenuSpacer.vue'
 
   export default {
     name: 'Dashboard',
     components: {
       topNav,
-      // Dialog,
       MenuSpacer,
     },
     data: () => ({

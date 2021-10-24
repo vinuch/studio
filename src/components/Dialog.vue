@@ -6,11 +6,11 @@
       persistent
       max-width="600"
     >
-      <VerifyID v-if="propModal == 'verify'" @closeDialog="closeDialog()"/>
-      <SetBankAcc v-if="propModal == 'set_bank'" @closeDialog="closeDialog()"/>
-      <BusinessHours v-if="propModal == 'business_hours'" @closeDialog="closeDialog()"/>
-      <StoreDetails v-if="propModal == 'store_details'" @closeDialog="closeDialog()" />
-      <SetShipping v-if="propModal == 'shipping'" @closeDialog="closeDialog()" />
+      <VerifyID v-if="propModal == 'verify'" />
+      <SetBankAcc v-if="propModal == 'set_bank'" />
+      <BusinessHours v-if="propModal == 'business_hours'" />
+      <StoreDetails v-if="propModal == 'store_details'"  />
+      <SetShipping v-if="propModal == 'shipping'"  />
     </v-dialog>
   </v-row>
 </div>
@@ -42,9 +42,6 @@ export default {
       // propModal: "shipping",
     }),
     methods: {
-      // closeDialog() {
-      //   EventBus.$emit( "open_dialog", "close", "")
-      // },
     },
     computed: {
       propModal() {

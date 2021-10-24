@@ -103,27 +103,15 @@
 
         <div v-if="shipping_mode == 'in_house' && delivery_opt != 'pick_up'">
           <v-card-text class="text-left pa-0 pt-5 mt-5">Set delivery fees</v-card-text>
-          <div
-            v-for="i in shipping_price_index"
-            :key="i"
-            :ref="'ref_' + i"
-          >
-            <setShippingPrices />
-          </div>
-
-        <p
-          class="text-left mt-5 pl-5 blue_link pointer describe"
-          style="color: blue"
-          @click="addPriceLocation()"
-        >
-          + add more price-to-area combinations.
-        </p>
+            <ShippingPrices
+              @resetStringify="resetStringify()"
+              :stringify = stringify
+            />
         </div>
 
       </div>
       <setupFooter
-        @saveSetUp="saveSetUp()"
-        @closeDialog="closeDialog()"
+        @saveSetUp="save()"
       >
         Save Shipping
       </setupFooter>
@@ -132,38 +120,60 @@
 </template>
 
 <script>
+  import {
+    updateStore,
+  } from "@/services/apiServices"
+  import * as mutationTypes from "@/store/mutationTypes"
+  import { mapGetters } from 'vuex'
+  import { EventBus } from '@/services/eventBus'
+    
   import setupFooter from '@/components/setupFooter'
-  import setShippingPrices from '@/components/setShippingPrices'
+  import ShippingPrices from '@/components/ShippingPrices'
 
   export default {
     name: 'SetShipping',
     components: {
       setupFooter,
-      setShippingPrices,
+      ShippingPrices,
     },
     data: () => ({
       activeBorderColor: '#3A50D5',
       delivery_opt: "delivery",
       shipping_mode: "in_house",
-      // shipping_mode: null,
-      shipping_price_index: 1, // note: not zero indexed
+      stringify: false,
+      stringified_locations: "",
     }),
     methods: {
-      addPriceLocation() {
-        this.shipping_price_index += 1
-      },
-      closeDialog() {
-        this.$emit('closeDialog')
-      },
-      saveSetUp() {
-        console.log("saving")
+      save(){
+        this.stringifyLocations()
+        let data = {
+          default_shipping: this.stringified_locations,
+        }
+        updateStore(data, this.store.id)
+        .then(res => {
+          let store = res.data
+          this.$store.commit(mutationTypes.SAVE_STORE, store);
+        })
+        .catch(err => EventBus.$emit("open_alert", "error", "there was an error setting locations" + err))
+        .finally(() => {
+          // this.$router.push("/dash");
+        });
       },
       setDeliveryOption(option) {
         this.delivery_opt = option
       },
+      resetStringify() {
+        this.stringify = false
+      },
+      stringifyLocations() {
+        this.stringify = true
+      },
     },
     computed: {
-    }
+      ...mapGetters ({
+        store: "getStore",
+      }),
+    },
   }
 </script>
 
@@ -207,9 +217,9 @@
     padding-left: 32px;
   }
   .sel {
-    background: orange;
+    /* background: orange;
     .v-sheet--outlined {
       border-color: blue;
-    }
+    } */
   }
 </style>
