@@ -104,6 +104,7 @@
         <div v-if="shipping_mode == 'in_house' && delivery_opt != 'pick_up'">
           <v-card-text class="text-left pa-0 pt-5 mt-5">Set delivery fees</v-card-text>
             <ShippingPrices
+              @getLocations="saveLocations($event)"
               @resetStringify="resetStringify()"
               :stringify = stringify
             />
@@ -111,7 +112,7 @@
 
       </div>
       <setupFooter
-        @saveSetUp="save()"
+        @saveSetUp="stringifyLocations()"
       >
         Save Shipping
       </setupFooter>
@@ -141,14 +142,21 @@
       delivery_opt: "delivery",
       shipping_mode: "in_house",
       stringify: false,
-      stringified_locations: "",
+      // stringified_locations: "",
     }),
     methods: {
-      save(){
-        this.stringifyLocations()
+      // getLocations(locations) {
+      //   console.log("from getLocation", locations)
+      //   this.stringified_locations=locations
+      // },
+      resetStringify() {
+        this.stringify = false
+      },
+      saveLocations(locations){
         let data = {
-          default_shipping: this.stringified_locations,
+          default_shipping: locations,
         }
+        console.log("save", locations)
         updateStore(data, this.store.id)
         .then(res => {
           let store = res.data
@@ -156,14 +164,12 @@
         })
         .catch(err => EventBus.$emit("open_alert", "error", "there was an error setting locations" + err))
         .finally(() => {
+          // this.stringified_locations = ""
           // this.$router.push("/dash");
         });
       },
       setDeliveryOption(option) {
         this.delivery_opt = option
-      },
-      resetStringify() {
-        this.stringify = false
       },
       stringifyLocations() {
         this.stringify = true

@@ -54,20 +54,20 @@
         rounded="lg"
         class="mt-2"
       >
-        <v-textarea outlined v-model="about"></v-textarea>
+        <v-textarea outlined v-model="about" :placeholder="store.about"></v-textarea>
       </v-sheet>
 
       <v-card-text class="text-left pa-0">Support store email</v-card-text>
-      <v-text-field outlined class="mt-2" v-model="email"></v-text-field>
+      <v-text-field outlined class="mt-2" v-model="email" :placeholder="store.email"></v-text-field>
       
       <v-card-text class="text-left pa-0">Phone number</v-card-text>
-      <v-text-field outlined type="number" class="mt-2" v-model="phone1"></v-text-field>
+      <v-text-field outlined type="number" class="mt-2" v-model="phone1" :placeholder="store.phone1"></v-text-field>
       
       <v-card-text class="text-left pa-0">Alternate phone number (optional)</v-card-text>
-      <v-text-field outlined type="number" class="mt-2" v-model="phone2"></v-text-field>
+      <v-text-field outlined type="number" class="mt-2" v-model="phone2" :placeholder="store.phone2"></v-text-field>
       
       <v-card-text class="text-left pa-0">Address (if public)</v-card-text>
-      <v-text-field outlined class="mt-2" v-model="address"></v-text-field>
+      <v-text-field outlined class="mt-2" v-model="address" :placeholder="store.address"></v-text-field>
 
       <v-card-text class="text-left pa-0 mt-5">Social media handles</v-card-text>
       <v-sheet
@@ -80,7 +80,7 @@
           <li
             v-for="(platform, i) in platforms"
             :key="i"
-          >{{platform.logo}} {{platform.name}} <v-text-field class="ma-0" v-model="platforms[i].handle"></v-text-field> </li>
+          >{{platform.logo}} {{platform.name}} <v-text-field class="ma-0" v-model="platforms[i].handle" placeholder=""></v-text-field> </li>
         </ul>
       </v-sheet>
     </div>
@@ -149,17 +149,16 @@
           })
       },
       save() {
-        let data = {
-          about: this.store.about,
-          email: this.store.email,
-          phone1: this.store.phone1,
-          phone2: this.store.phone2,
-          address: this.store.address,
-          instagram: this.store.instagram,
-          twitter: this.store.twitter,
-          facebook: this.store.facebook,
-        }
-        console.log(data)
+        let data = {}
+        this.about.trim() != this.store.about.trim() ? data.about = this.about : ""
+        this.email.trim() != this.store.email.trim() ? data.email = this.email : ""
+        this.phone1.trim() != this.store.phone1.trim() ? data.phone1 = this.phone1 : ""
+        this.phone2.trim() != this.store.phone2.trim() ? data.phone2 = this.phone2 : ""
+        this.address.trim() != this.store.address.trim() ? data.address = this.address : ""
+        this.platforms[0].handle.trim() != this.store.instagram.trim() ? data.instagram = this.platforms[0].handle : ""
+        this.platforms[1].handle.trim() != this.store.twitter.trim() ? data.twitter = this.platforms[1].handle : ""
+        this.platforms[2].handle.trim() != this.store.facebook.trim() ? data.facebook = this.platforms[2].handle : ""
+
         updateStore(data, this.store.id)
           .then(res => {
             let store = res.data

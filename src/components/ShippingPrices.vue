@@ -227,7 +227,7 @@ import { EventBus } from '@/services/eventBus'
         this.band[this.band_index].locations.splice(i, 1)
       },
       stringifyLocations() {
-        this.band[this.band_index].locations.lenght > 0 ?
+        this.band[this.band_index].locations.length > 0 ?
           this.band[this.band_index].isset = true : ""
 
         var stringified_locations = ""
@@ -257,7 +257,7 @@ import { EventBus } from '@/services/eventBus'
     },
     watch: {
       stringify() {
-        this.stringifyLocations()
+        this.stringify ? this.stringifyLocations() : ""
       },
       // currentItem(newValue) {
       //   if (newValue) {

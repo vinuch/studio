@@ -48,7 +48,7 @@
       </v-col>
     </div>
     <setupFooter
-      @saveSetUp="saveSetUp()"
+      @saveSetUp="save()"
     >
       Save Bank Details
     </setupFooter>
@@ -84,9 +84,9 @@
       bank_name: "",
     }),
     methods: {
-      saveSetUp(){
+      save(){
         let trans_data = {
-          business_name: "Another business name",
+          business_name: this.store.store_name, // should be business name - model not implemented
           settlement_bank: this.bank_code,
           account_number: this.acc_no,
           percentage_charge: 5.0, // this shouldn't be hard coded. Model not yet implemented
@@ -133,6 +133,7 @@
           resolveAcc(this.bank_code, this.acc_no)
           .then(response => {
             this.acc_name = response.data.data.account_name
+            this.bank_name = response.data.data.name
             this.acc_resolved = true
           })
           .catch((err) => {
