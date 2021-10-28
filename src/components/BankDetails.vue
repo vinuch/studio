@@ -65,11 +65,12 @@
     createSubAcc,
     saveMerchSettlement,
   } from "@/services/apiServices";
+  // import * as mutationTypes from "@/store/mutationTypes"
 
   import setupFooter from "@/components/setupFooter"
 
   export default {
-    name: 'SetBankAcc',
+    name: 'BankDetails',
     components: {
       setupFooter,
     },
@@ -103,6 +104,9 @@
             store: this.store.store_name
           }
           saveMerchSettlement(save_data)
+          // .then(response => (
+          //   this.$store.commit(mutationTypes.SAVE_STORE, response)
+          // ))
         })
         .catch(err => {
           EventBus.$emit("open_alert", "error", "Error creating subaccount or saving settlement" + err) 
@@ -133,7 +137,10 @@
           resolveAcc(this.bank_code, this.acc_no)
           .then(response => {
             this.acc_name = response.data.data.account_name
-            this.bank_name = response.data.data.name
+            let the_bank = this.banks.filter((bank) => {
+              return bank.id == response.data.data.bank_id
+            })
+            this.bank_name = the_bank[0].name
             this.acc_resolved = true
           })
           .catch((err) => {

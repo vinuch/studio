@@ -36,8 +36,10 @@
               color="#F6F8FA"
             >
               <h2 style="text-align: left; font-size: 18px; color: #94A3B8">{{link.name}}</h2>
-              <SetBankAcc v-if="i == 0" />
+              <BankDetails v-if="i == 0" />
+              <StoreDetails v-if="i == 1" />
               <BusinessHours v-if="i == 2" />
+              <Shipping v-if="i == 3" />
             </v-sheet>
           </v-card>
         </v-tab-item>
@@ -50,14 +52,18 @@
 <script>
   import topNav from "@/components/TopNav"
   import BusinessHours from "@/components/BusinessHours"
-  import SetBankAcc from "@/components/SetBankAcc"
+  import BankDetails from "@/components/BankDetails"
+  import Shipping from "@/components/Shipping"
+  import StoreDetails from "@/components/StoreDetails"
 
   export default {
     name: 'Manage',
     components: {
       topNav,
+      BankDetails,
       BusinessHours,
-      SetBankAcc,
+      Shipping,
+      StoreDetails,
     },
     data: () => {
       return {

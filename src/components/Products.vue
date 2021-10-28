@@ -67,6 +67,7 @@
               inset
               hide-details=""
               @change="toggleDisplay()"
+              @click.stop=""
             >
             </v-switch>
             </span>
@@ -78,7 +79,12 @@
 </template>
 
 <script>  
-  import * as mutationTypes from "@/store/mutationTypes";
+  import * as mutationTypes from "@/store/mutationTypes"
+  import { EventBus } from '../services/eventBus'
+  import {
+    fethcStoreInventory,
+    updateProduct,
+  } from "@/services/apiServices"
 
   export default {
     name: 'Products',
@@ -91,9 +97,26 @@
       }
     },
     methods: {
-      toggleDisplay() {
-        // update display at server level
-        // update store to new display status
+      toggleDisplay () {
+        let data = {display: this.display}
+
+        updateProduct(data, this.product.id)
+          .then(() => {
+            EventBus.$emit(
+              "open_alert",
+              "success",
+              this.currentItem
+                ? "Product displayed in gallery"
+                : "Removed from gallery"
+            )
+            fethcStoreInventory(this.product.slug) // perhaps fetch only this item and update it
+          })
+          .catch((err) => {
+            EventBus.$emit("open_alert", "error", `There was an error changing display status ${err}`)
+          })
+          .finally(() => {
+            this.loading = false;
+          });
       },
       viewProduct(product) {
         this.$store.commit(mutationTypes.UNSAVED_CHANGE, false);

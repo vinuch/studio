@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h2 class="text-left text-h6 ma-5">Add a new product</h2>
+    <h2 class="text-left text-h6 ma-5">Add a product</h2>
     <v-icon
       class="mr-5" 
       style="float: right; top: -47px;"
@@ -64,25 +64,53 @@
               </span>
             </p>
           </div>
-          <p v-if="has_variant" class="describe ">This product comes in variants e.g. different sizes, colours, materials, etc.</p>
+          <p class="describe ">This product comes in variants e.g. different sizes, colours, materials, etc.</p>
           <div
             v-for="i in variant_index"
             :key="i"
           >
-            <AddVariant v-if="variants" :variant_count=variant_count />
+            <AddVariant v-if="has_variant" />
           </div>
-          <p
-            v-if="variants==true && variant_index == 1"
-            class="text-left mt-5 blue_link pointer describe"
-            style="color: blue"
-            @click="addVariant()"
-          >
-            + add another variant.
-          </p>
         </v-sheet>
 
+        <!-- non-variant qty and pricing -->
         <v-sheet
-          id="carousel"
+          v-if="!has_variant"
+          elevation="0"
+          rounded="lg"
+          color="bg_grey"
+          class="mt-5 pa-5"
+        >
+          <v-row
+            align="center"
+            justify="center"
+            class="pa-0"
+          > 
+            <v-col cols=6>
+              <v-text-field
+                outlined
+                dense
+                :placeholder="!currentProduct ? 'Price' : currentProduct.price"
+                background-color="grey lighten-5"
+                hide-details="true"
+                v-model="price"
+              ></v-text-field>
+            </v-col>
+            <v-col cols=6>
+              <v-text-field
+                outlined
+                dense
+                :placeholder="!currentProduct ? 'Qty' : currentProduct.total_stock"
+                background-color="grey lighten-5"
+                hide-details="true"
+                v-model="total_stock"
+                ></v-text-field>
+            </v-col>
+          </v-row>
+        </v-sheet>
+
+        <!-- Discount -->
+        <v-sheet
           elevation="0"
           rounded="lg"
           color="bg_grey"
@@ -90,122 +118,50 @@
         >
           <div>
             <p
-            style="text-align: left; color: #69747E; font-weight: 600;"
-            >Add quantity and price
-            </p>
-            <p class="describe">Enter the quantity and price for each combination of variants.</p>
-          </div>
-          <!-- <v-carousel
-            height="auto"
-            style="position: relative;"
-            :show-arrows="false"
-            hide-delimiter-background
-          >
-            <v-carousel-item
-              v-for="(pair, i) in variant_pairs"
-              :key="i"
-              eager
-            > -->
-              <v-sheet>
-                  <v-row
-                    align="center"
-                    justify="center"
-                    class="mt-5"
-                  >
-                    <v-col cols=6 class="pt-0">
-                      <v-text-field
-                        outlined
-                        dense
-                        placeholder="Colour"
-                        background-color="grey lighten-5"
-                        hide-details="true"
-                        disabled
-                      ></v-text-field>
-                    </v-col>
-                    <v-col cols=6 class="pt-0">
-                      <v-text-field
-                        outlined
-                        dense
-                        placeholder="Size"
-                        background-color="grey lighten-5"
-                        hide-details="true"
-                        disabled
-                        ></v-text-field>
-                    </v-col>
-                    
-                    <v-col cols=6 class="pt-0">
-                      <v-text-field
-                        outlined
-                        dense
-                        placeholder="Price"
-                        background-color="grey lighten-5"
-                        hide-details="true"
-                      ></v-text-field>
-                    </v-col>
-                    <v-col cols=6 class="pt-0">
-                      <v-text-field
-                        outlined
-                        dense
-                        placeholder="Qty"
-                        background-color="grey lighten-5"
-                        hide-details="true"
-                        ></v-text-field>
-                    </v-col>
-                  </v-row>
-              </v-sheet>
-            <!-- </v-carousel-item>
-          </v-carousel> -->
-        </v-sheet>
-
-        <v-sheet
-          id="discount"
-          elevation="0"
-          rounded="lg"
-          color="bg_grey"
-          class="mt-5 pa-5"
-        >
-          <div>
-            <p
-            style="text-align: left; color: #69747E; font-weight: 600;"
+              style="text-align: left; color: #69747E; font-weight: 600; position: relative;"
             >Add discount 
               <span class="switch">
                 <v-switch
-                class="float-right mt-0 pt-0"
+                class="mt-0 pt-0"
                 color="success"
-                style="position: relative; right: -12px;"
+                style="position: absolute; right: -12px; top: 0;"
                 id="switch"
-                v-model="currentProduct.has_discount"
+                v-model="has_discount"
                 inset
               >
               </v-switch>
               </span>
             </p>
           </div>
-          <!-- <v-slide-y-transition> -->
-            <v-row
-              class="mt-5"
-            >
-              <v-col cols=6 class="pa-0 mb-4">
-                <v-text-field
-                  outlined
-                  dense
-                  placeholder="Type"
-                  background-color="grey lighten-5"
-                  hide-details="true"
+          <p v-if="has_variant" class="describe">Apply a uniform discount across all variants.</p>          
+          <v-row v-if="has_discount" class="mt-2">
+            <v-col cols=6>
+              <v-select
+                label="Mode"
+                dense
+                single-line
+                hide-details="true"
+                v-model="discount_type" 
+                outlined 
+                item-text="type"
+                item-value="value"
+                :items="discount_types"
+                item-color="success"
+                background-color="grey lighten-5"
+              ></v-select>
+            </v-col>
+            <v-spacer></v-spacer>
+            <v-col cols=6>
+              <v-text-field
+                outlined
+                dense
+                placeholder="Amount"
+                background-color="grey lighten-5"
+                hide-details="true"
+                v-model="discount"
                 ></v-text-field>
-              </v-col>
-              <v-spacer></v-spacer>
-              <v-col cols=6 class="pa-0 mb-4">
-                <v-text-field
-                  outlined
-                  dense
-                  placeholder="Amount"
-                  background-color="grey lighten-5"
-                  hide-details="true"
-                  ></v-text-field>
-              </v-col>
-            </v-row>
-          <!-- </v-slide-y-transition> -->
+            </v-col>
+          </v-row>
         </v-sheet>
         
         <v-sheet
@@ -225,13 +181,14 @@
                 color="success"
                 style="position: relative; right: -12px;"
                 id="switch"
-                v-model="currentProduct.display"
+                v-model="display"
                 inset
               >
                 </v-switch>
               </span>
             </p>
-            <p class="describe ">Make product available for purchase</p>
+            <p class="describe ">Products displayed in your gallery are available 
+              for purchase. Set display to "off" to make them unavailable.</p>
           </div>
         </v-sheet>
 
@@ -241,7 +198,7 @@
           <v-btn 
             class="main_blue ma-3 ml-5"
             depressed
-            @click="save()"
+            @click="finishCreation()"
           >
             Add product
           </v-btn>
@@ -253,12 +210,12 @@
 
 <script>
   import { mapGetters } from "vuex"
-  import * as mutationTypes from "@/store/mutationTypes";
+  import * as mutationTypes from "@/store/mutationTypes"
   import {
     createProduct,
-    // fethcStoreInventory,
-    // updateProduct,
-  } from "@/services/apiServices";
+    fethcStoreInventory,
+    updateProduct,
+  } from "@/services/apiServices"
   import { EventBus } from "@/services/eventBus"
 
   import AddVariant from "@/components/AddVariant"
@@ -272,25 +229,96 @@
 			return {
         variant_pairs: 25, // should be an array
         description: "",
-        discount: true,
+        discount: "",
+        discount_type: "0",
+        discount_types: [
+          // get this from API (not built yet)
+          // {value: "0", type: 0}, doesn't recognise as true
+          {value: 1, type: "Percentage"}, 
+          {value: 2, type: "Amount"},
+        ],
+        display: true,
+        hasDiscountError: false, // change casing
+        has_discount: false,
         has_variant: false,
         image_preview: null,
         preview: null,
+        price: "",
         product_id: null,
         product_name: "",
         product_image: "",
+        loading: false,
+        total_stock: "",
         uploading_image: false, // implement loading icon
         variants: null,
         variant_index: 1, // not zero indexed
       }
     },
     methods: {
-      addVariant() {
-        this.variant_index += 1
+      composePayload() {
+        // let variant_options = this.generatePairs.reduce((acc, curr) => {
+        //   acc += `${curr.text},${curr.qty},`;
+        //   return acc;
+        // }, "");
+        let data = {
+          product_name: this.product_name,
+          description: this.description,
+          has_discount: this.has_discount,
+          has_variant: this.has_variant,
+          price: parseFloat(this.price) * 100,
+          total_stock: this.total_stock,
+          discount_type: this.discount_type,
+          discount: this.discount,
+          display: this.display,
+          store: this.store.store_name,
+          // has_discount: this.addDiscount,
+          // variant_options,
+
+          // first_variant_name: this.variants[0] ? this.variants[0].key : "",
+          // first_variant: this.variants[0]
+          //   ? this.variants[0].values.reduce(
+          //       (cumm, curr) => (cumm += `${curr.value},`),
+          //       ""
+          //     )
+          //   : "",
+          // second_variant_name: this.variants[1] ? this.variants[1].key : "",
+          // second_variant: this.variants[1]
+          //   ? this.variants[1].values.reduce(
+          //       (cumm, curr) => (cumm += `${curr.value},`),
+          //       ""
+          //     )
+          //   : "",
+        }
+        return data
       },
       close() {
         this.$emit("close")
         this.$store.commit(mutationTypes.SET_PRODUCT_TO_BE_EDITTED, {});
+      },
+      finishCreation() {
+        let data = this.composePayload()
+        if (this.hasDiscountError) {
+          return;
+        }
+        this.loading = true;
+        updateProduct(data, this.product_id)
+          .then(() => {
+            EventBus.$emit(
+              "open_alert",
+              "success",
+              this.currentItem
+                ? "Product updated successfully"
+                : "Product created successfully"
+            );
+            EventBus.$emit("close_drawer");
+            fethcStoreInventory(this.store.slug)
+          })
+          .catch(() => {
+            // console.log(err);
+          })
+          .finally(() => {
+            this.loading = false
+          });
       },
       unsavedChangeMade() {
         this.$store.commit(mutationTypes.UNSAVED_CHANGE, true);

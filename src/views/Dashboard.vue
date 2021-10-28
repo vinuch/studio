@@ -5,7 +5,8 @@
     <h2 class="title" style="margin-top: 1em">Welcome to {{ store.store_name }} &#128526;</h2>
   </div>
 
-  <v-container 
+  <v-container
+    v-if="setup_steps < 4"
     class="rounded-xl" 
     style="border: 1px solid #E2E8F0; overflow: hidden" 
     fluid 

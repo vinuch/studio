@@ -7,10 +7,10 @@
       max-width="600"
     >
       <VerifyID v-if="propModal == 'verify'" />
-      <SetBankAcc v-if="propModal == 'set_bank'" />
+      <BankDetails v-if="propModal == 'set_bank'" />
       <BusinessHours v-if="propModal == 'business_hours'" />
       <StoreDetails v-if="propModal == 'store_details'"  />
-      <SetShipping v-if="propModal == 'shipping'"  />
+      <Shipping v-if="propModal == 'shipping'"  />
     </v-dialog>
   </v-row>
 </div>
@@ -20,19 +20,19 @@
 // import { EventBus } from "@/services/eventBus"
 
 import VerifyID from '@/components/VerifyID'
-import SetBankAcc from '@/components/SetBankAcc'
+import BankDetails from '@/components/BankDetails'
 import BusinessHours from '@/components/BusinessHours'
 import StoreDetails from '@/components/StoreDetails'
-import SetShipping from '@/components/SetShipping'
+import Shipping from '@/components/Shipping'
 
 export default {
     name: 'Dialog',
     components: {
       VerifyID,
-      SetBankAcc,
+      BankDetails,
       BusinessHours,
       StoreDetails,
-      SetShipping,
+      Shipping,
     },
     props: [
       'modal',

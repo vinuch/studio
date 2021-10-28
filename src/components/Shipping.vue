@@ -132,7 +132,7 @@
   import ShippingPrices from '@/components/ShippingPrices'
 
   export default {
-    name: 'SetShipping',
+    name: 'Shipping',
     components: {
       setupFooter,
       ShippingPrices,
@@ -142,13 +142,8 @@
       delivery_opt: "delivery",
       shipping_mode: "in_house",
       stringify: false,
-      // stringified_locations: "",
     }),
     methods: {
-      // getLocations(locations) {
-      //   console.log("from getLocation", locations)
-      //   this.stringified_locations=locations
-      // },
       resetStringify() {
         this.stringify = false
       },
@@ -156,7 +151,6 @@
         let data = {
           default_shipping: locations,
         }
-        console.log("save", locations)
         updateStore(data, this.store.id)
         .then(res => {
           let store = res.data
@@ -164,7 +158,6 @@
         })
         .catch(err => EventBus.$emit("open_alert", "error", "there was an error setting locations" + err))
         .finally(() => {
-          // this.stringified_locations = ""
           // this.$router.push("/dash");
         });
       },

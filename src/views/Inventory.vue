@@ -1,8 +1,13 @@
 <template>
   <div class="pa-5">
     <topNav>Inventory</topNav>
-		<v-container v-if="!inventory">
-			<p>You have no orders yet</p>
+		<v-container v-if="inventory.length < 1">
+			<p>This is where your products will be.</p>
+      <v-btn
+        depressed 
+        color="success" 
+        @click="product_drawer=true"
+      >Add your first product</v-btn>
 		</v-container>
 
 		<v-container
