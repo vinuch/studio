@@ -11,10 +11,6 @@
 
 <script>
   export default {
-    name: 'xsTop',
-
-    data: () => ({
-   
-    }),
+    name: 'MobileBanner',
   }
 </script>

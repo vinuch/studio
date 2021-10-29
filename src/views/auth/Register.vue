@@ -1,6 +1,6 @@
 <template>
 <div class="pa-0">
-  <xsTop />
+  <MobileBanner />
 
   <div class="" fluid fill-height no-gutters>
     <v-row pa-0 ma-0>
@@ -103,13 +103,13 @@
   import { EventBus } from "@/services/eventBus"
 
   import About from '@/components/About'
-  import xsTop from '@/components/xsTop'
+  import MobileBanner from '@/components/MobileBanner'
 
   export default {
     name: 'Login',
     components: {
       About,
-      xsTop,
+      MobileBanner,
     },
     data: () => ({
       color1: "#F62873",
