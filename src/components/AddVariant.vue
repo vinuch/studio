@@ -28,7 +28,7 @@
           style="border: 1px solid lightgrey; border-radius: 8px; padding: 16px; text-align: left;"
         >
           <p
-            v-for="(option, i) in options_1" :key="'loc_' + i"
+            v-for="(option, i) in options_1" :key="'opt_' + i"
             style="display: inline-block; border: 1px solid grey; padding: 5px; margin: 0 5px 5px 0; border-radius: 8px;"
           >
             {{option}} <v-icon small @click="deleteOption(i, 'options_1')">mdi-delete-outline</v-icon>
@@ -73,7 +73,7 @@
             style="border: 1px solid lightgrey; border-radius: 8px; padding: 16px; text-align: left;"
           >
             <p
-              v-for="(option, i) in options_2" :key="'loc_' + i"
+              v-for="(option, i) in options_2" :key="'opt_' + i"
               style="display: inline-block; border: 1px solid grey; padding: 5px; margin: 0 5px 5px 0; border-radius: 8px;"
             >
               {{option}} <v-icon small @click="deleteOption(i, 'options_2')">mdi-delete-outline</v-icon>
@@ -120,7 +120,7 @@
             style="border: 1px solid lightgrey; border-radius: 8px; padding: 16px; text-align: left;"
           >
             <p
-              v-for="(option, i) in options_3" :key="'loc_' + i"
+              v-for="(option, i) in options_3" :key="'opt_' + i"
               style="display: inline-block; border: 1px solid grey; padding: 5px; margin: 0 5px 5px 0; border-radius: 8px;"
             >
               {{option}} <v-icon small @click="deleteOption(i, 'options_3')">mdi-delete-outline</v-icon>
@@ -181,10 +181,10 @@
           >
             <td class="pr-0 text-left">{{ vars.name }}</td>
             <td class="pl-0">
-              <input placeholder="0" v-model="vars.qty" style="max-width: 30px;" type="text">
+              <input placeholder="0" v-model="vars.qty" style="max-width: 30px;" type="number">
             </td>
             <td class="pl-0 pr-0">
-              <input placeholder="0" v-model="vars.price" style="max-width: 60px;" type="text">
+              <input placeholder="0" v-model="vars.price" style="max-width: 60px;" type="number">
             </td>
           </tr>
         </tbody>
@@ -204,7 +204,6 @@
     ],
     data: () => ({
       activeBorderColor: '#3A50D5',
-      variants: [],
       search: "",
       option_1: null,
       option_2: null,
@@ -215,10 +214,11 @@
       option: null,
       price: "",
       qty: "",
+      variants: [],
       variant_count: 1,
-      variant_1: null,
-      variant_2: null,
-      variant_3: null,
+      variant_1: "",
+      variant_2: "",
+      variant_3: "",
     }),
     methods: {
       addVariant() {
@@ -263,6 +263,7 @@
           value.slice(-1) !== "," ? value += "," : ''
           value = value.replace(",", "")
 
+          // prevent duplicate variant options - it causes an error
           option_1 ? this.options_1.push(this.capitalise(value)) : ""
           option_2 ? this.options_2.push(this.capitalise(value)) : ""
           option_3 ? this.options_3.push(this.capitalise(value)) : ""
@@ -331,7 +332,52 @@
     },
     watch: {
       send_variants() {
-        this.send_variants ? this.$emit("getVariants", this.variants) : ""
+        if (this.send_variants == true) {
+          // convert options to string
+          // var variant_1_options = this.options_1.reduce((acc, curr) => {
+          //   acc += `${curr},`
+          //   return acc
+          // })
+          let variant_1_options
+          let variant_2_options
+          let variant_3_options
+
+          for (let option in this.options_1) {
+            variant_1_options += `${option},`
+          }
+          try {
+            for (let option in this.options_2) {
+              variant_2_options += `${option},`
+            }
+          } catch {variant_2_options = ""}
+
+          try {
+            for (let option in this.options_3) {
+              variant_3_options += `${option},`
+            }
+          } catch {variant_3_options = ""}
+
+          let variant_options = ""
+          for(let i=0;  i<this.variants.length; i++) {
+            let qty
+            let price
+            this.variants[i].qty ? qty = this.variants[i].qty : qty = 0
+            this.variants[i].price ? price = this.variants[i].price : price = 0
+            variant_options += `${i} , ${qty} , ${price},`
+          }
+
+          let variants_data = {
+            variant_1_options: variant_1_options,
+            variant_2_options: variant_2_options,
+            variant_3_options: variant_3_options,
+            variant_name_1: this.variant_1,
+            variant_name_2: this.variant_2,
+            variant_name_3: this.variant_3,
+            variant_options: variant_options,
+          }
+          
+          this.$emit("sendVariants", variants_data)
+        }
       },
       // currentItem(newValue) {
       //   if (newValue) {

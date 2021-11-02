@@ -69,7 +69,10 @@
             v-for="i in variant_index"
             :key="i"
           >
-            <AddVariant v-if="has_variant" />
+            <AddVariant v-if="has_variant"
+              :send_variants="get_variants"
+              @sendVariants="getVariants($event)"
+            />
           </div>
         </v-sheet>
 
@@ -90,7 +93,7 @@
               <v-text-field
                 outlined
                 dense
-                :placeholder="!currentProduct ? 'Price' : currentProduct.price"
+                :placeholder="!currentProduct ? 'Price' : onePrice"
                 background-color="grey lighten-5"
                 hide-details="true"
                 v-model="price"
@@ -100,7 +103,7 @@
               <v-text-field
                 outlined
                 dense
-                :placeholder="!currentProduct ? 'Qty' : currentProduct.total_stock"
+                :placeholder="!currentProduct ? 'Qty' : oneQty"
                 background-color="grey lighten-5"
                 hide-details="true"
                 v-model="total_stock"
@@ -164,6 +167,7 @@
           </v-row>
         </v-sheet>
         
+        <!-- Display -->
         <v-sheet
           id="variants"
           elevation="0"
@@ -238,6 +242,7 @@
           {value: 2, type: "Amount"},
         ],
         display: true,
+        get_variants: false,
         hasDiscountError: false, // change casing
         has_discount: false,
         has_variant: false,
@@ -250,21 +255,43 @@
         loading: false,
         total_stock: "",
         uploading_image: false, // implement loading icon
-        variants: null,
+        variants_with_options: [],
         variant_index: 1, // not zero indexed
       }
     },
     methods: {
+      close() {
+        this.$emit("close")
+        this.$store.commit(mutationTypes.SET_PRODUCT_TO_BE_EDITTED, {});
+      },
       composePayload() {
+        this.get_variants = true
+        // var variant_1_options = this.variants_with_options.variant_1_options.reduce((acc, curr) => {
+        //   acc += `${curr},`
+        //   return acc
+        // })
+        // try {
+        //   var variant_2_options = this.variants_with_options.variant_2_options.reduce((acc, curr) => {
+        //     acc += `${curr},`
+        //     return acc
+        //   })
+        // } catch {variant_2_options = ""}
+
         // let variant_options = this.generatePairs.reduce((acc, curr) => {
         //   acc += `${curr.text},${curr.qty},`;
         //   return acc;
         // }, "");
+
         let data = {
           product_name: this.product_name,
           description: this.description,
           has_discount: this.has_discount,
           has_variant: this.has_variant,
+          first_variant_name: this.variants_with_options.variant_name_1,
+          second_variant_name: this.variants_with_options.variant_name_2,
+          first_variant: this.variants_with_options.variant_1_options,
+          second_variant: this.variants_with_options.variant_2_options,
+          variant_options: this.variants_with_options.variant_options,
           price: parseFloat(this.price) * 100,
           total_stock: this.total_stock,
           discount_type: this.discount_type,
@@ -272,7 +299,6 @@
           display: this.display,
           store: this.store.store_name,
           // has_discount: this.addDiscount,
-          // variant_options,
 
           // first_variant_name: this.variants[0] ? this.variants[0].key : "",
           // first_variant: this.variants[0]
@@ -290,10 +316,6 @@
           //   : "",
         }
         return data
-      },
-      close() {
-        this.$emit("close")
-        this.$store.commit(mutationTypes.SET_PRODUCT_TO_BE_EDITTED, {});
       },
       finishCreation() {
         let data = this.composePayload()
@@ -313,12 +335,21 @@
             EventBus.$emit("close_drawer");
             fethcStoreInventory(this.store.slug)
           })
-          .catch(() => {
-            // console.log(err);
+          .catch((err) => {
+            console.log(err);
           })
           .finally(() => {
             this.loading = false
           });
+      },
+      getVariants(variant_data) {
+        this.variants_with_options = variant_data
+        this.total_stock += 1
+        this.price += 1
+
+        // this.$nextTick(function(){
+        //   this.get_variants = false
+        // })
       },
       unsavedChangeMade() {
         this.$store.commit(mutationTypes.UNSAVED_CHANGE, true);
@@ -349,9 +380,25 @@
         currentProduct: "getProductToBeEditted",
         unsavedChange: "getUnsavedChange",
       }),
+      onePrice() {
+        try {
+          return this.currentProduct.price.toString()
+        } catch {
+          return null
+        }
+      },
+      oneQty() {
+        try {
+          return this.currentProduct.total_stock.toString()
+        } catch {
+          return null
+        }
+      },
       // has_variant = this.currentProduct.has_variant
     },
     mounted() {
+        // this.currentProduct.one_price ? this.generalPrice = currentProduct.total_stock
+
       // console.log(this.has_variant)
       // this.$nextTick(function(){
       //   this.has_variant = this.currentProduct.has_variant
