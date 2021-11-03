@@ -213,7 +213,7 @@
       options_3: [],
       option: null,
       price: "",
-      qty: "",
+      qty: 0,
       variants: [],
       variant_count: 1,
       variant_1: "",
@@ -272,7 +272,7 @@
           this.option_2 = ""
           this.option_3 = ""
 
-          this.prepVariantQty()
+          this.setVarQtyAndPrice()
         }
       },
       capitalise(value) {
@@ -293,11 +293,11 @@
         options == "options_1" ? this.options_1.splice(i, 1) : ""
         options == "options_2" ? this.options_2.splice(i, 1) : ""
         options == "options_3" ? this.options_3.splice(i, 1) : ""
-        this.prepVariantQty()
+        this.setVarQtyAndPrice()
       },
-      prepVariantQty() {
+      setVarQtyAndPrice() {
         this.variants = []
-        if (this.options_1.length && this.options_2.length && this.options_3.length) {
+        if (this.options_1.length && this.options_2.length && this.options_3.length) { // three variants
           for (let i=0; i<this.options_1.length; i++) {
             for (let j=0; j<this.options_2.length; j++) {
               for (let k=0; k<this.options_3.length; k++) {
@@ -306,14 +306,14 @@
               }
             }
           }
-        } else if (this.options_1.length && this.options_2.length) {
+        } else if (this.options_1.length && this.options_2.length) { // two variants
           for (let i=0; i<this.options_1.length; i++) {
             for (let j=0; j<this.options_2.length; j++) {
               let object = {name: this.options_1[i] + " / " + this.options_2[j]}
               this.variants.push(object)
             }
           }
-        } else if (this.options_1.length) {
+        } else if (this.options_1.length) { // one variant
           for (let i=0; i < this.options_1.length; i++) {
             this.variants.push({name: this.options_1[i]})
           }
@@ -338,22 +338,23 @@
           //   acc += `${curr},`
           //   return acc
           // })
-          let variant_1_options
-          let variant_2_options
-          let variant_3_options
+          let variant_1_options = ""
+          let variant_2_options = ""
+          let variant_3_options = ""
 
           for (let option in this.options_1) {
-            variant_1_options += `${option},`
+            variant_1_options += `${this.options_1[option]},`
           }
+
           try {
             for (let option in this.options_2) {
-              variant_2_options += `${option},`
+              variant_2_options += `${this.options_2[option]},`
             }
           } catch {variant_2_options = ""}
 
           try {
             for (let option in this.options_3) {
-              variant_3_options += `${option},`
+              variant_3_options += `${this.options_3[option]},`
             }
           } catch {variant_3_options = ""}
 
@@ -361,9 +362,10 @@
           for(let i=0;  i<this.variants.length; i++) {
             let qty
             let price
-            this.variants[i].qty ? qty = this.variants[i].qty : qty = 0
-            this.variants[i].price ? price = this.variants[i].price : price = 0
-            variant_options += `${i} , ${qty} , ${price},`
+            this.variants[i].qty > 0? this.qty += parseInt(this.variants[i].qty) : qty = 0
+            this.variants[i].qty > 0? qty = this.variants[i].qty : qty = 0
+            this.variants[i].price > 0? price = this.variants[i].price : price = 0
+            variant_options += `${i},${qty},${price};`
           }
 
           let variants_data = {
@@ -373,6 +375,7 @@
             variant_name_1: this.variant_1,
             variant_name_2: this.variant_2,
             variant_name_3: this.variant_3,
+            total_stock: this.qty,
             variant_options: variant_options,
           }
           

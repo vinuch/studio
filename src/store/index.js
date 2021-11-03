@@ -23,6 +23,7 @@ export default new Vuex.Store({
     to_be_editted: null,
     unregistered_email: "",
     unsaved_change: false,
+    visitor_inventory: {},
   },
   mutations: {
     [mutationTypes.EMAIL_VERIFIED](state, data) {
@@ -51,6 +52,9 @@ export default new Vuex.Store({
     },
     [mutationTypes.SAVE_INVENTORY](state, data) {
       state.inventory = data;
+    },
+    [mutationTypes.SAVE_VISITOR_INVENTORY](state, data) {
+      state.visitor_inventory = data;
     },
     [mutationTypes.SAVE_ORDERS](state, data) {
       state.orders = data;

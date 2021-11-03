@@ -265,7 +265,7 @@
         this.$store.commit(mutationTypes.SET_PRODUCT_TO_BE_EDITTED, {});
       },
       composePayload() {
-        this.get_variants = true
+        this.has_variant ? this.get_variants = true : ""
         // var variant_1_options = this.variants_with_options.variant_1_options.reduce((acc, curr) => {
         //   acc += `${curr},`
         //   return acc
@@ -283,6 +283,7 @@
         // }, "");
 
         let data = {
+          // only add parameters that have values/new values so not to overwite the existing stuff with empty values
           product_name: this.product_name,
           description: this.description,
           has_discount: this.has_discount,
@@ -344,7 +345,7 @@
       },
       getVariants(variant_data) {
         this.variants_with_options = variant_data
-        this.total_stock += 1
+        this.total_stock = variant_data.total_stock
         this.price += 1
 
         // this.$nextTick(function(){
