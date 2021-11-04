@@ -80,14 +80,14 @@
 
 <script>  
   import * as mutationTypes from "@/store/mutationTypes"
-  import { EventBus } from '../services/eventBus'
+  import { EventBus } from '@/services/eventBus'
   import {
     fethcStoreInventory,
     updateProduct,
   } from "@/services/apiServices"
 
   export default {
-    name: 'Products',
+    name: 'Product',
     props: [
       "product",
     ],
@@ -119,11 +119,8 @@
           });
       },
       viewProduct(product) {
-        this.$store.commit(mutationTypes.UNSAVED_CHANGE, false);
         this.$store.commit(mutationTypes.SET_PRODUCT_TO_BE_EDITTED, product);
-        this.visible = true;
         this.$emit('viewProduct')
-        // this.emitOpen();
       },
     },
     mounted() {

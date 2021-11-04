@@ -6,7 +6,7 @@
       <v-btn
         depressed 
         color="success" 
-        @click="product_drawer=true"
+        @click="edit_product_drawer=true"
       >Add your first product</v-btn>
 		</v-container>
 
@@ -30,13 +30,13 @@
             color="primary"
             height="55"
             depressed
-            @click="product_drawer=true"
+            @click="edit_product_drawer=true"
           ><v-icon>mdi-plus</v-icon></v-btn>
         </v-col>
       </v-row>
 
 			<v-row class="ma-0">
-        <Products
+        <Product
           v-for="(product, i) in inventory"
           :key="i"
           class="mb-5"
@@ -49,9 +49,24 @@
       app
       right
       :width="400"
-      v-model="product_drawer"
+      v-model="edit_product_drawer"
     >
-      <AddOrEditProduct @close="close()" />
+      <AddOrEditProduct
+        @back="backToEdit()"
+        @close="closeAddEditDrawer()"
+      />
+    </v-navigation-drawer>
+    <v-navigation-drawer
+      app
+      right
+      :width="400"
+      v-model="view_product_drawer"
+    >
+      <ProductView
+        @back="backToInventory()"
+        @editProduct="editProduct()"
+        @close="closeProductViewDrawer()" 
+      />
     </v-navigation-drawer>
     <menu-spacer></menu-spacer>
   </div>
@@ -64,27 +79,38 @@
   // import { EventBus } from "@/services/eventBus";
   
   import topNav from "@/components/TopNav"
-  import Products from "@/components/Products"
+  import Product from "@/components/Product"
+  import ProductView from "@/components/ProductView"
   import AddOrEditProduct from "@/components/AddOrEditProduct"
-  import MenuSpacer from '../components/MenuSpacer.vue'
+  import MenuSpacer from '@/components/MenuSpacer.vue'
 
   export default {
     name: 'Inventory',
     components: {
       topNav,
-      Products,
+      Product,
+      ProductView,
       AddOrEditProduct,
       MenuSpacer,
     },
     data: () => {
 			return {
         display: true,
-        product_drawer: null,
+        edit_product_drawer: null,
+        view_product_drawer: null,
       }
     },
     methods: {
-      close() {
-        this.product_drawer = false
+      backToInventory() {
+        this.view_product_drawer=false
+      },
+      backToEdit() {
+        this.view_product_drawer=true
+        this.edit_product_drawer=false
+      },
+      editProduct() {
+        this.view_product_drawer=false
+        this.edit_product_drawer=true
       },
       showConfirm() {
         this.$confirm({
@@ -97,13 +123,17 @@
           onCancel() {},
         });
       },
-      closeDrawer() {
-        if (this.currentProduct && this.unsavedChange) {
-          this.showConfirm();
-        } else {
-          this.visible = false;
-          this.$store.commit(mutationTypes.SET_PRODUCT_TO_BE_EDITTED, {});
-        }
+      closeAddEditDrawer() {
+        this.edit_product_drawer = false
+        // if (this.currentProduct && this.unsavedChange) {
+        //   this.showConfirm();
+        // } else {
+        //   this.visible = false;
+        //   this.$store.commit(mutationTypes.SET_PRODUCT_TO_BE_EDITTED, {});
+        // }
+      },
+      closeProductViewDrawer() {
+        this.view_product_drawer = false
       },
       openAdd() {
         this.$store.commit(mutationTypes.SET_PRODUCT_TO_BE_EDITTED, null);
@@ -114,7 +144,7 @@
       //   EventBus.$emit("openDrawer");
       // },
       viewProduct() {
-        this.product_drawer=true
+        this.view_product_drawer=true
       },
     },
     computed: {

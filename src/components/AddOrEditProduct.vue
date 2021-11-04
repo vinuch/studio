@@ -1,12 +1,14 @@
 <template>
   <div>
-    <h2 class="text-left text-h6 ma-5">Add a product</h2>
+    <h2 class="text-left text-h6 ma-5" @click="back()">
+      <v-icon>mdi-chevron-left</v-icon> Add product
+    </h2>
     <v-icon
       class="mr-5" 
       style="float: right; top: -47px;"
       @click="close"
     >mdi-close-thick</v-icon>
-    <v-divider></v-divider>
+
     <div class="pa-5">
       <v-container
         fluid
@@ -260,6 +262,9 @@
       }
     },
     methods: {
+      back() {
+        this.$emit("back")
+      },
       close() {
         this.$emit("close")
         this.$store.commit(mutationTypes.SET_PRODUCT_TO_BE_EDITTED, {});

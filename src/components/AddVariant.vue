@@ -145,8 +145,8 @@
   >+ Add another variant</p>
 
   <!-- qty and pricing -->
-  <!-- v-if="options_1.length" -->
   <v-sheet
+    v-if="options_1.length"
     elevation="0"
     rounded="lg"
     color="bg_grey"
@@ -164,7 +164,7 @@
         <thead>
           <tr>
             <th class="text-left">
-              Name
+              Options
             </th>
             <th class="text-left pl-0">
               Qty
