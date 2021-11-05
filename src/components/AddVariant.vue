@@ -196,11 +196,13 @@
 </template>
 
 <script>
+  import { mapGetters } from "vuex"
 
   export default {
     name: 'AddVariants',
     props: [
       "send_variants",
+      "variant_payload",
     ],
     data: () => ({
       activeBorderColor: '#3A50D5',
@@ -321,11 +323,11 @@
       },
     },
     computed: {
-      // ...mapGetters({
-      //   store: "getStore",
-      //   currentItem: "getItemToBeEditted",
-      //   unsavedChange: "getUnsavedChange",
-      // }),
+      ...mapGetters({
+        store: "getStore",
+        currentProduct: "getProductToBeEditted",
+        unsavedChange: "getUnsavedChange",
+      }),
       // drawerWidth() {
       //   return window.innerWidth > 640 ? 590 : window.innerWidth - 50;
       // },
@@ -416,32 +418,27 @@
       //   deep: true,
       // }
     },
-    created() {
-      // if (this.currentItem) {
-      //   let options = [];
-      //   if (this.currentItem.first_variant_name) {
-      //     let obj = {
-      //       key: this.currentItem.first_variant_name,
-      //       values: this.currentItem.first_variant
-      //         .split(",")
-      //         .filter((v) => v)
-      //         .map((val) => {
-      //           return {
-      //             value: val,
-      //           };
-      //         }),
-      //     };
-      //     options.push(obj);
-      //   }
-      //   this.options = options;
-      // } else {
-      //   this.options = [
-      //     {
-      //       key: "",
-      //       values: [],
-      //     },
-      //   ];
-      // }
+    mounted() {
+      if (this.variant_payload) {
+        this.options_1 = this.variant_payload.options_1
+        this.options_2 = this.variant_payload.options_2
+        this.options_3 = this.variant_payload.options_3
+        this.variants = this.variant_payload.variants
+      }
+
+      if (this.currentProduct) {
+        this.variant_1 = this.currentProduct.first_variant_name
+
+        if (this.currentProduct.second_variant_name) {
+          this.variant_2 = this.currentProduct.second_variant_name
+          this.variant_count = 2
+        }
+          
+        if (this.currentProduct.third_variant_name) {
+          this.variant_3 = this.currentProduct.third_variant_name
+          this.variant_count = 3
+        }
+      }
     },
   }
 </script>

@@ -52,6 +52,7 @@
       v-model="edit_product_drawer"
     >
       <AddOrEditProduct
+        :variant_payload="variant_payload"
         @back="backToEdit()"
         @close="closeAddEditDrawer()"
       />
@@ -64,7 +65,7 @@
     >
       <ProductView
         @back="backToInventory()"
-        @editProduct="editProduct()"
+        @editProduct="editProduct($event)"
         @close="closeProductViewDrawer()" 
       />
     </v-navigation-drawer>
@@ -98,6 +99,7 @@
         display: true,
         edit_product_drawer: null,
         view_product_drawer: null,
+        variant_payload: null,
       }
     },
     methods: {
@@ -108,7 +110,8 @@
         this.view_product_drawer=true
         this.edit_product_drawer=false
       },
-      editProduct() {
+      editProduct(variant_payload) {
+        this.variant_payload = variant_payload
         this.view_product_drawer=false
         this.edit_product_drawer=true
       },

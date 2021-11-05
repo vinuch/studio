@@ -209,12 +209,15 @@
   import { EventBus } from "@/services/eventBus"
 
   export default {
-    name: 'AddOrViewProduct',
+    name: 'ProductView',
     components: {
     },
     data: () => {
 			return {
         display: true,
+        options_1: [],
+        options_2: [],
+        options_3: [],
         variants: [],
       }
     },
@@ -226,8 +229,14 @@
         this.$emit("close")
       },
       edit() { // already has product_to_be_edited
+        let variant_payload = {
+          options_1: this.options_1,
+          options_2: this.options_2,
+          options_3: this.options_3,
+          variants: this.variants,
+        }
         this.$store.commit(mutationTypes.UNSAVED_CHANGE, false);
-        this.$emit('editProduct')
+        this.$emit('editProduct', variant_payload)
       },
       toggleDisplay () {
         let data = {display: this.display}
@@ -261,17 +270,26 @@
 
       if (this.currentProduct.has_variant) {
         let options_1 = this.currentProduct.first_variant.split(",")
+        options_1.slice(-1)[0] == "" ? options_1.splice(-1) : ""
         let options_2
         let options_3
 
         this.currentProduct.second_variant
           ? options_2 = this.currentProduct.second_variant.split(",")
           : options_2 = []
+        options_2.slice(-1)[0] == "" ? options_2.splice(-1) : ""
+
         this.currentProduct.third_variant
           ? options_3 = this.currentProduct.third_variant.split(",")
           : options_3 = []
+        options_3.slice(-1)[0] == "" ? options_3.splice(-1) : ""
+
         let variant_options = this.currentProduct.variant_options.split(";")
         let split_ops = []
+
+        this.options_1 = options_1
+        this.options_2 = options_2
+        this.options_3 = options_3
 
         variant_options.forEach(var_options => {
           split_ops.push(var_options.split(","))

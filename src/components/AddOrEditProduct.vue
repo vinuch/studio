@@ -1,7 +1,9 @@
 <template>
   <div>
     <h2 class="text-left text-h6 ma-5" @click="back()">
-      <v-icon>mdi-chevron-left</v-icon> Add product
+      <v-icon>mdi-chevron-left</v-icon>
+      <span v-if="currentProduct.id">{{ currentProduct.product_name }}</span>
+      <span v-else>Add product</span>
     </h2>
     <v-icon
       class="mr-5" 
@@ -28,17 +30,21 @@
           v-model="product_name"
           :placeholder="!currentProduct ? '' : currentProduct.product_name"
         ></v-text-field>
-        <v-card-text class="text-left text-body-2 pt-0 mt-1 mb-5 describe">Give your product a short and clear name.</v-card-text>
+        <v-card-text
+          v-if="!currentProduct"
+          class="text-left text-body-2 pt-0 mt-1 mb-5 describe"
+        >Give your product a short and clear name.</v-card-text>
 
         <v-card-text class="text-left pb-0 mt-5 describe">Description</v-card-text>
-        <v-text-field
+
+        <v-textarea
           outlined
           hide-details
           class="mt-2 mb-0"
           @keyup="unsavedChangeMade()"
           v-model="description"
           :placeholder="!currentProduct ? '' : currentProduct.description"
-        ></v-text-field>
+        ></v-textarea>
         <v-card-text class="text-left pt-0 mt-1 mb-5 describe">Provide a clear description for your customers.</v-card-text>
 
         <v-sheet
@@ -73,6 +79,7 @@
           >
             <AddVariant v-if="has_variant"
               :send_variants="get_variants"
+              :variant_payload="variant_payload"
               @sendVariants="getVariants($event)"
             />
           </div>
@@ -227,10 +234,13 @@
   import AddVariant from "@/components/AddVariant"
 
   export default {
-    name: 'AddOrViewProduct',
+    name: 'AddOrEditProduct',
     components: {
       AddVariant,
     },
+    props: [
+      "variant_payload",
+    ],
     data: () => {
 			return {
         variant_pairs: 25, // should be an array
@@ -402,7 +412,8 @@
       },
       // has_variant = this.currentProduct.has_variant
     },
-    mounted() {
+    created() {
+      this.has_variant = this.currentProduct.has_variant
         // this.currentProduct.one_price ? this.generalPrice = currentProduct.total_stock
 
       // console.log(this.has_variant)
