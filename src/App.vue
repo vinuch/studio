@@ -51,6 +51,9 @@ export default {
     }),
   },
   created() {
+    EventBus.$on("get_variants", () => {
+      console.log("get variants activated from edit product")
+    })
     EventBus.$on("open_alert", (type, message, action) => {
       // console.log("receiving emit")
       this.show_alert = true

@@ -2,7 +2,7 @@
   <div>
     <h2 class="text-left text-h6 ma-5" @click="back()">
       <v-icon>mdi-chevron-left</v-icon>
-      <span v-if="currentProduct.id">{{ currentProduct.product_name }}</span>
+      <span v-if="currentProduct.id">Edit {{ currentProduct.product_name }}</span>
       <span v-else>Add product</span>
     </h2>
     <v-icon
@@ -16,10 +16,19 @@
         fluid
         class="pa-0"
       >
-        <v-card-text class="text-left text-body-2 pb-2 mt-5 ">Upload up to five product images</v-card-text>
+        <v-card-text v-if="!currentProduct" class="text-left text-body-2 pb-2 mt-5 ">Upload up to five product images</v-card-text>
 
-        <input type=file accept="image/*" @change="uploadImage">
-        <v-img v-if="image_preview" :src="image_preview"></v-img>
+        <input v-if="!currentProduct" type=file accept="image/*" @change="uploadImage">
+        
+        <span v-if="currentProduct">
+          <v-img v-if="image_preview" :src="image_preview"></v-img>
+          <v-img v-else :src="currentProduct.product_image"></v-img>
+        </span>
+        <span v-else>
+          <v-img v-if="image_preview" :src="image_preview"></v-img>
+        </span>
+
+        <input v-if="currentProduct" class="mt-5" type=file accept="image/*" @change="uploadImage">
 
         <v-card-text class="text-left text-body-2 pb-0 mt-5 ">Product name</v-card-text>
         <v-text-field
@@ -79,7 +88,6 @@
           >
             <AddVariant v-if="has_variant"
               :send_variants="get_variants"
-              :variant_payload="variant_payload"
               @sendVariants="getVariants($event)"
             />
           </div>
@@ -137,7 +145,6 @@
                 class="mt-0 pt-0"
                 color="success"
                 style="position: absolute; right: -12px; top: 0;"
-                id="switch"
                 v-model="has_discount"
                 inset
               >
@@ -193,7 +200,6 @@
                 class="float-right mt-0 pt-0"
                 color="success"
                 style="position: relative; right: -12px;"
-                id="switch"
                 v-model="display"
                 inset
               >
@@ -238,9 +244,6 @@
     components: {
       AddVariant,
     },
-    props: [
-      "variant_payload",
-    ],
     data: () => {
 			return {
         variant_pairs: 25, // should be an array
@@ -273,11 +276,11 @@
     },
     methods: {
       back() {
-        this.$emit("back")
+        this.currentProduct.id ? this.$emit("back") : this.close()
       },
       close() {
         this.$emit("close")
-        this.$store.commit(mutationTypes.SET_PRODUCT_TO_BE_EDITTED, {});
+        // this.$store.commit(mutationTypes.SET_PRODUCT_TO_BE_EDITTED, {});
       },
       composePayload() {
         this.has_variant ? this.get_variants = true : ""
@@ -344,7 +347,7 @@
             EventBus.$emit(
               "open_alert",
               "success",
-              this.currentItem
+              this.currentProduct
                 ? "Product updated successfully"
                 : "Product created successfully"
             );
@@ -412,9 +415,30 @@
       },
       // has_variant = this.currentProduct.has_variant
     },
+    mounted() {
+      EventBus.$on("get_variants", () => {
+        console.log("get variants activated from edit product")
+      })
+    },
     created() {
       this.has_variant = this.currentProduct.has_variant
-        // this.currentProduct.one_price ? this.generalPrice = currentProduct.total_stock
+      if (this.currentProduct) {
+        this.product_image = this.currentProduct.product_image
+        this.product_name = this.currentProduct.product_name
+        this.description = this.currentProduct.description
+        this.has_discount = this.currentProduct.has_discount
+        this.has_variant = this.currentProduct.has_variant
+        this.discount_type = this.currentProduct.discount_type
+        this.discount = this.currentProduct.discount
+        this.product_id = this.currentProduct.id
+        this.price = this.currentProduct.price
+        this.total_stock = this.currentProduct.total_stock
+        this.display = this.currentProduct.display
+
+      //   let variants = [];
+      //   this.variants = variants;
+      }
+      // this.currentProduct.one_price ? this.generalPrice = currentProduct.total_stock
 
       // console.log(this.has_variant)
       // this.$nextTick(function(){

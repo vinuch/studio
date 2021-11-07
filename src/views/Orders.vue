@@ -30,38 +30,24 @@
         </v-col>
       </v-row>
 			
-			<v-row class="pa-5">
-				<OrderItem 
-					v-for="(order, i) in orders"
-					:key="'order' + i"
-					:order="order"
-				/>
-			</v-row>
-			
-			<v-row class="ma-0">
-        <Products
-          v-for="(product, i) in inventory"
-          :key="i"
-          class="mb-5"
-          :product="product"
-        />
-			</v-row>
+		<v-row class="pa-5">
+			<OrderItem 
+				v-for="(order, i) in orders"
+				:key="'order' + i"
+				:order="order"
+			/>
+		</v-row>
 
     </v-container>
-		<menu-spacer></menu-spacer>
+		<MenuSpacer />
   </div>
 </template>
 
 <script>
 	import { mapGetters } from "vuex";
-	// import {
-	//   fetchOrderItems,
-	//   updateOrderStatus,
-	//   fetchOrders,
-	// } from "@/services/apiServices";
 	import topNav from "@/components/TopNav"
 	import OrderItem from "@/components/OrderItem";
-  import MenuSpacer from '../components/MenuSpacer.vue'
+  import MenuSpacer from '@/components/MenuSpacer.vue'
 
 	export default {
 		components: {
@@ -127,10 +113,6 @@
 			//     ? (this.pageWidth = true)
 			//     : (this.pageWidth_ = false);
 			// },
-		},
-		mounted() {
-			// console.log(this.orders);
-			// this.pageWidth = window.innerWidth > 767;
 		},
 	};
 </script>

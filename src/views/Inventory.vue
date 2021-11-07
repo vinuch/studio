@@ -53,7 +53,7 @@
     >
       <AddOrEditProduct
         :variant_payload="variant_payload"
-        @back="backToEdit()"
+        @back="backToProductView()"
         @close="closeAddEditDrawer()"
       />
     </v-navigation-drawer>
@@ -63,10 +63,11 @@
       :width="400"
       v-model="view_product_drawer"
     >
+        <!-- @close="closeProductViewDrawer()"  -->
+        <!-- :clear_variants="clear_variants" -->
       <ProductView
         @back="backToInventory()"
         @editProduct="editProduct($event)"
-        @close="closeProductViewDrawer()" 
       />
     </v-navigation-drawer>
     <menu-spacer></menu-spacer>
@@ -96,24 +97,52 @@
     },
     data: () => {
 			return {
+        // clear_variants: false,
         display: true,
         edit_product_drawer: null,
         view_product_drawer: null,
-        variant_payload: null,
+        variant_payload: {},
       }
     },
     methods: {
       backToInventory() {
+        // this.clear_variants=true
         this.view_product_drawer=false
+        this.$store.commit(mutationTypes.SET_PRODUCT_TO_BE_EDITTED, {})
       },
-      backToEdit() {
+      backToProductView() {
         this.view_product_drawer=true
         this.edit_product_drawer=false
+      },
+      closeAddEditDrawer() {
+        this.edit_product_drawer = false
+        // this.variant_payload = {
+        //   options_1: [],
+        //   options_2: [],
+        //   options_3: [],
+        //   variants: [],
+        // }
+
+
+        // if (this.currentProduct && this.unsavedChange) {
+        //   this.showConfirm();
+        // } else {
+        //   this.visible = false;
+          this.$store.commit(mutationTypes.SET_PRODUCT_TO_BE_EDITTED, {})
+        // }
+      },
+      closeProductViewDrawer() {
+        // this.view_product_drawer = false
       },
       editProduct(variant_payload) {
         this.variant_payload = variant_payload
         this.view_product_drawer=false
         this.edit_product_drawer=true
+      },
+      openAdd() {
+        this.$store.commit(mutationTypes.SET_PRODUCT_TO_BE_EDITTED, null);
+        this.visible = true;
+        this.emitOpen();
       },
       showConfirm() {
         this.$confirm({
@@ -126,26 +155,6 @@
           onCancel() {},
         });
       },
-      closeAddEditDrawer() {
-        this.edit_product_drawer = false
-        // if (this.currentProduct && this.unsavedChange) {
-        //   this.showConfirm();
-        // } else {
-        //   this.visible = false;
-        //   this.$store.commit(mutationTypes.SET_PRODUCT_TO_BE_EDITTED, {});
-        // }
-      },
-      closeProductViewDrawer() {
-        this.view_product_drawer = false
-      },
-      openAdd() {
-        this.$store.commit(mutationTypes.SET_PRODUCT_TO_BE_EDITTED, null);
-        this.visible = true;
-        this.emitOpen();
-      },
-      // emitOpen() {
-      //   EventBus.$emit("openDrawer");
-      // },
       viewProduct() {
         this.view_product_drawer=true
       },

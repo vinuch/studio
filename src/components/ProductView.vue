@@ -1,7 +1,8 @@
 <template>
   <div>
     <h2 class="text-left text-h6 ma-5" @click="back()">
-      <v-icon>mdi-chevron-left</v-icon> Inventory
+      <v-icon>mdi-chevron-left</v-icon>
+      {{ currentProduct.product_name }}
     </h2>
     <!-- <v-icon
       class="mr-5" 
@@ -75,8 +76,8 @@
             <v-card-text class="text-left text-body-2 pb-0">Discount</v-card-text>
           </v-col>
           <v-col cols=7 class="pa-0">
-            <v-card-text class="text-right text-body-2 pb-0">Type: {{ currentProduct.discount_type }}</v-card-text>
-            <v-card-text class="text-right text-body-2 pb-0">Off: {{ currentProduct.discount }}</v-card-text>
+            <v-card-text class="text-right text-body-2 pb-0">Type: {{ discount_type }}</v-card-text>
+            <v-card-text class="text-right text-body-2 pb-0">Amount taken off: {{ currentProduct.discount }}</v-card-text>
             <v-card-text class="text-right text-body-2 pb-0">New price {{ currentProduct.discount_type }}</v-card-text>
           </v-col>
         </v-row>
@@ -138,7 +139,7 @@
             <v-card-text class="text-right text-body-2 pb-0">{{ currentProduct.third_variant }}</v-card-text>
           </v-col>
         </v-row>
-        <v-simple-table>
+        <v-simple-table v-if="currentProduct.has_variant">
           <template v-slot:default>
             <thead>
               <tr>
@@ -158,7 +159,7 @@
 
               </div>
               <tr
-                v-for="vars in variants"
+                v-for="vars in variants.variants"
                 :key="vars.name"
               >
                 <td class="pr-0 text-left">{{ vars.name }}</td>
@@ -189,7 +190,7 @@
             class="ml-5"
             outlined
             color="main_blue"
-            @click="edit()"
+            @click="editProduct()"
           >
             Edit
           </v-btn>
@@ -206,37 +207,35 @@
     fethcStoreInventory,
     updateProduct,
   } from "@/services/apiServices"
-  import { EventBus } from "@/services/eventBus"
+  import EventBus from "@/services/eventBus"
 
   export default {
     name: 'ProductView',
-    components: {
-    },
+    props: [
+      "clear_variants",
+    ],
     data: () => {
 			return {
-        display: true,
-        options_1: [],
-        options_2: [],
-        options_3: [],
-        variants: [],
+        display: null,
+        variants: {
+          options_1: [],
+          options_2: [],
+          options_3: [],
+          variants: [],
+        },
+        // options_1: [],
+        // options_2: [],
+        // options_3: [],
+        // variants: [],
       }
     },
     methods: {
       back() {
         this.$emit("back")
       },
-      close() {
-        this.$emit("close")
-      },
-      edit() { // already has product_to_be_edited
-        let variant_payload = {
-          options_1: this.options_1,
-          options_2: this.options_2,
-          options_3: this.options_3,
-          variants: this.variants,
-        }
-        this.$store.commit(mutationTypes.UNSAVED_CHANGE, false);
-        this.$emit('editProduct', variant_payload)
+      editProduct() { // already has product_to_be_edited
+        this.$store.commit(mutationTypes.UNSAVED_CHANGE, false)
+        this.$emit('editProduct', this.variants)
       },
       toggleDisplay () {
         let data = {display: this.display}
@@ -246,7 +245,7 @@
             EventBus.$emit(
               "open_alert",
               "success",
-              this.currentItem
+              this.currentProduct
                 ? "Product displayed in gallery"
                 : "Removed from gallery"
             )
@@ -264,77 +263,88 @@
       ...mapGetters({
         currentProduct: "getProductToBeEditted",
       }),
+      discount_type() {
+        let type
+        this.currentProduct.discount_type == 0 ? type= "None" : ""
+        this.currentProduct.discount_type == 1 ? type= "Percentage" : ""
+        this.currentProduct.discount_type == 2 ? type= "Amount" : ""
+        return type
+      },
     },
     mounted() {
       this.display = this.currentProduct.display
 
-      if (this.currentProduct.has_variant) {
-        let options_1 = this.currentProduct.first_variant.split(",")
-        options_1.slice(-1)[0] == "" ? options_1.splice(-1) : ""
-        let options_2
-        let options_3
+      this.$nextTick(function(){
+        if (this.currentProduct.has_variant) {
+          // extracts options for each existing variant
+          // as well as their prices and quantities
+          let options_1 = this.currentProduct.first_variant.split(",")
+          options_1.slice(-1)[0] == "" ? options_1.splice(-1) : ""
+          let options_2
+          let options_3
 
-        this.currentProduct.second_variant
-          ? options_2 = this.currentProduct.second_variant.split(",")
-          : options_2 = []
-        options_2.slice(-1)[0] == "" ? options_2.splice(-1) : ""
+          this.currentProduct.second_variant
+            ? options_2 = this.currentProduct.second_variant.split(",")
+            : options_2 = []
+          options_2.slice(-1)[0] == "" ? options_2.splice(-1) : ""
 
-        this.currentProduct.third_variant
-          ? options_3 = this.currentProduct.third_variant.split(",")
-          : options_3 = []
-        options_3.slice(-1)[0] == "" ? options_3.splice(-1) : ""
+          this.currentProduct.third_variant
+            ? options_3 = this.currentProduct.third_variant.split(",")
+            : options_3 = []
+          options_3.slice(-1)[0] == "" ? options_3.splice(-1) : console
 
-        let variant_options = this.currentProduct.variant_options.split(";")
-        let split_ops = []
+          let variant_options = this.currentProduct.variant_options.split(";")
+          let split_ops = []
 
-        this.options_1 = options_1
-        this.options_2 = options_2
-        this.options_3 = options_3
+          this.variants.options_1 = options_1
+          this.variants.options_2 = options_2
+          this.variants.options_3 = options_3
 
-        variant_options.forEach(var_options => {
-          split_ops.push(var_options.split(","))
-        })
+          variant_options.forEach(var_options => {
+            split_ops.push(var_options.split(","))
+          })
 
-        if (options_1.length && options_2.length && options_3.length) { // three variants
-          let x=0
-          for (let i=0; i<options_1.length; i++) {
-            for (let j=0; j<options_2.length; j++) {
-              for (let k=0; k<options_3.length; k++) {
+          if (options_1.length && options_2.length && options_3.length) { // three variants
+            let x=0
+            for (let i=0; i<options_1.length; i++) {
+              for (let j=0; j<options_2.length; j++) {
+                for (let k=0; k<options_3.length; k++) {
+                  let object = {
+                    name: options_1[i] + " / " + options_2[j] +" / "+ options_3[k],
+                    qty: split_ops[x][1],
+                    price: split_ops[x][2]
+                  }
+                  this.variants.variants.push(object)
+                  x++
+                }
+              }
+            }
+          } else if (options_1.length && options_2.length) { // two variants
+            let x=0
+            for (let i=0; i<options_1.length; i++) {
+              for (let j=0; j<options_2.length; j++) {
                 let object = {
-                  name: options_1[i] + " / " + options_2[j] +" / "+ options_3[k],
+                  name: options_1[i] + " / " + options_2[j],
                   qty: split_ops[x][1],
                   price: split_ops[x][2]
                 }
-                this.variants.push(object)
+                this.variants.variants.push(object)
                 x++
               }
             }
-          }
-        } else if (options_1.length && options_2.length) { // two variants
-          let x=0
-          for (let i=0; i<options_1.length; i++) {
-            for (let j=0; j<options_2.length; j++) {
-              let object = {
-                name: options_1[i] + " / " + options_2[j],
+          } else if (options_1.length) { // one variant
+            let x=0
+            for (let i=0; i < options_1.length; i++) {
+              this.variants.variants.push({
+                name: options_1[i],
                 qty: split_ops[x][1],
                 price: split_ops[x][2]
-              }
-              this.variants.push(object)
+              })
               x++
             }
           }
-        } else if (options_1.length) { // one variant
-          let x=0
-          for (let i=0; i < options_1.length; i++) {
-            this.variants.push({
-              name: options_1[i],
-              qty: split_ops[x][1],
-              price: split_ops[x][2]
-            })
-            x++
-          }
         }
-      }
+      })   
     },
   }
 </script>
