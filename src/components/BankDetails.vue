@@ -1,24 +1,30 @@
 <template>
 <div>
-  <v-card class="rounded-xl">
-    <v-card-title class="title justify-center">
-    Settlement Account
-    </v-card-title>
-    <v-card
-      v-if="acc_set == true"
-
-    >
-      <p class="sub-title">Payments from orders will be settled in this account:</p>
-      <ul>
-        <li>{{ settlement.acc_name }}</li>
-        <li>{{ settlement.acc_no }}</li>
-        <li>{{ settlement.bank }}</li>
-      </ul>
-    </v-card>
-    <v-card-text v-else>
+  <div v-if="manage" class="pa-5 pt-0">
+    <div v-if="acc_set">
+      <div class="pa-3 rounded-xl" style="border: 1px solid black;">
+        <p @click="addAccount()">+ <br />Change bank account</p>
+      </div>
+      <v-card
+        class="mt-5 pa-5 rounded-xl"
+        flat
+      >
+        <p class="text-left font-weight-bold">{{ settlement.acc_name }}</p>
+        <div class="pb-5">
+          <p class="text-left" style="float: left">{{ settlement.acc_no }}</p>
+          <p class="text-right" style="float: right">{{ settlement.bank }}</p>
+        </div>
+      </v-card>
+    </div>
+  </div>
+  <v-card v-else class="rounded-xl">
+    <v-card-text>
+      <v-card-title class="title justify-center">
+        Settlement Account
+      </v-card-title>
       Payments from your orders will be settled in this account:
     </v-card-text>
-    <div v-if="!acc_set">
+    <div>
       <v-col
         class="d-flex pa-5 pt-0 pb-0"
       >
@@ -53,6 +59,7 @@
       Save Bank Details
     </setupFooter>
   </v-card>
+    <div style="height: 50px"></div>
 </div>
 </template>
 
@@ -65,8 +72,7 @@
     createSubAcc,
     saveMerchSettlement,
   } from "@/services/apiServices";
-  // import * as mutationTypes from "@/store/mutationTypes"
-
+  import * as mutationTypes from "@/store/mutationTypes"
   import setupFooter from "@/components/setupFooter"
 
   export default {
@@ -75,7 +81,6 @@
       setupFooter,
     },
     data: () => ({
-      // dialog: true,
       acc_name: "",
       acc_no: "",
       acc_resolved: false,
@@ -85,6 +90,9 @@
       bank_name: "",
     }),
     methods: {
+      addAccount() {
+        this.$store.commit(mutationTypes.SET_MANAGE_STATE, false)
+      },
       save(){
         let trans_data = {
           business_name: this.store.store_name, // should be business name - model not implemented
@@ -120,7 +128,8 @@
     computed: {
       ...mapGetters({
         store: "getStore",
-        settlement: "getSettlement"
+        settlement: "getSettlement",
+        manage: "getManageState",
       }),
     },
     created(){

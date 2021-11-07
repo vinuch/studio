@@ -17,6 +17,8 @@
 </template>
 
 <script>
+import * as mutationTypes from "@/store/mutationTypes"
+
 export default {
     name: 'BottomNav',
     components: {
@@ -35,6 +37,9 @@ export default {
     methods: {
       goTo(i) {
         let name = this.navigation[i].name
+        name == "Manage"
+          ? this.$store.commit(mutationTypes.SET_MANAGE_STATE, true)
+          : ""
         this.$router.push({name: `${name}`});
       },
     },

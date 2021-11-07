@@ -17,6 +17,7 @@ export default new Vuex.Store({
     email_verified: false,
     inventory: [],
     logged_in: false,
+    manage: false, // view manage menu
     orders: [],
     settlement: {},
     store: {},
@@ -62,6 +63,9 @@ export default new Vuex.Store({
     [mutationTypes.SET_PRODUCT_TO_BE_EDITTED](state, data) {
       state.to_be_editted = data;
     },
+    [mutationTypes.SET_MANAGE_STATE](state, data) {
+      state.manage = data;
+    },
   },
   getters: {
     getEmail: (state) => state.unregistered_email,
@@ -69,6 +73,7 @@ export default new Vuex.Store({
     getSettlement: (state) => state.settlement,
     getInventory: (state) => state.inventory,
     getLoggedIn: (state) => state.logged_in,
+    getManageState: (state) => state.manage,
     getOrders: (state) => state.orders,
     getProductToBeEditted: (state) => state.to_be_editted,
     getUnsavedChange: (state) => state.unsaved_change,

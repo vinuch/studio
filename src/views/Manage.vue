@@ -6,7 +6,7 @@
       Manage
     </topNav>
     <v-card 
-      class="pa-0 rounded-lg" 
+      class="pa-0 rounded-xl" 
       outlined
     >
       <v-tabs
@@ -32,10 +32,10 @@
             flat
           >
             <v-sheet
-              class="mt-5 pa-5 rounded-t-xl"
+              class="mt-5 rounded-t-xl"
               color="#F6F8FA"
             >
-              <h2 style="text-align: left; font-size: 18px; color: #94A3B8">{{link.name}}</h2>
+              <h2 class="mb-3 pt-5 pl-5" style="text-align: left; font-size: 16px; color: #94A3B8">{{link.name}}</h2>
               <BankDetails v-if="i == 0" />
               <StoreDetails v-if="i == 1" />
               <BusinessHours v-if="i == 2" />

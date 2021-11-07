@@ -49,6 +49,39 @@
       </v-row>
     </div>
   </v-container>
+  <v-container
+    v-if="setup_steps > 3"
+    class="rounded-lg pa-4" 
+    style="border: 1px solid #E2E8F0; background: lightgrey; overflow: hidden" 
+    fluid 
+    fill-height
+    pa-0
+  >
+    <v-card
+      v-for="(data, i) in analytics"
+      :key=i
+      class="pa-5 mb-5 "
+      outlined
+      width=100%
+    >
+      <v-row>
+        <v-col cols=3>
+          <v-card class="pa-2" outlined>
+            <v-icon>{{data.icon}}</v-icon>
+          </v-card>
+        </v-col>
+        <v-col cols=9>
+          <h5 class="text-left">{{data.title}}</h5>
+          <p class="text-left mb-0">{{data.data}}
+            <span>
+              <v-icon>mdi-chevron-up</v-icon>
+              {{data.performance}}
+            </span>
+          </p>
+        </v-col>
+      </v-row>
+    </v-card>
+  </v-container>
   <menu-spacer></menu-spacer>
 </div>
 </template>
@@ -69,6 +102,12 @@
       MenuSpacer,
     },
     data: () => ({
+      analytics: [
+        {title: "Total sales", data: "20,000", performance: "5%", icon: "mdi-basket"},
+        {title: "Number of transactions", data: "20,000", performance: "5%", icon: "mdi-chart-box"},
+        {title: "Store visits", data: "20,000", performance: "5%", icon: "mdi-account-arrow-left"},
+        {title: "Return visits", data: "20,000", performance: "5%", icon: "mdi-account-sync"},
+      ],
       dashboard: [
         {status: 0, title: "Payments", text: "Get paid by customers", btn_title: "Setup payment account", modal: "set_bank"},
         {status: 0, title: "Store details", text: "Store contacts, etc", btn_title: "Add store details", modal: "store_details"},
@@ -83,6 +122,7 @@
     }),
     methods: {
       openDialog(setup) {
+        this.$store.commit(mutationTypes.SET_MANAGE_STATE, false)
         EventBus.$emit("dialog", "open", setup)
       },
     },

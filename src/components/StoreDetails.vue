@@ -2,14 +2,10 @@
 <div>
   <v-card class="rounded-xl">
     <div style="padding: 16px;">
-      <v-card-title class="title justify-center">
+      <v-card-title v-if="!manage" class="title justify-center">
       Store Details
       </v-card-title>
-      <v-card-text class="pa-0">
-        Enter your store details so your customers can know more about you.
-      </v-card-text>
 
-      <v-card-text class="text-left pa-0 mt-5">Share your store</v-card-text>
       <v-sheet
         elevation="0"
         rounded="lg"
@@ -25,16 +21,12 @@
             readonly
           >
             <template slot="append-outer">
-              <!-- <div style="border: 1px solid blue; padding: 5px;" class="mr-3 ml-3"> -->
-                <v-icon class="mr-2 ml-1 cursor" @click="copyUrl()">mdi-content-copy</v-icon>
-              <!-- </div> -->
-              <!-- <div style="border: 1px solid blue; height: 100%" class=""> -->
-                <v-icon class="cursor" @click="openTab()">mdi-open-in-new</v-icon>
-              <!-- </div> -->
+              <v-icon class="cursor" @click="openTab()">mdi-open-in-new</v-icon>
+              <v-icon class="mr-2 ml-1 cursor" @click="copyUrl()">mdi-content-copy</v-icon>
             </template>
           </v-text-field>
         </div>
-        <p class="describe">Share your store link with your customers.</p>
+        <p class="describe">Your store link</p>
       </v-sheet>
 
       <v-card-text class="text-left pa-0">Store front image (max size: 1mb)</v-card-text>
@@ -173,6 +165,7 @@
     computed: {
       ...mapGetters({
         store: "getStore",
+        manage: "getManageState",
       }),
     },
   }
