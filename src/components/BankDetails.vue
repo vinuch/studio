@@ -1,6 +1,6 @@
 <template>
 <div>
-  <div v-if="manage" class="pa-5 pt-0">
+  <div v-if="settings" class="pa-5 pt-0">
     <div v-if="acc_set">
       <div class="pa-3 rounded-xl" style="border: 1px solid black;">
         <p @click="addAccount()">+ <br />Change bank account</p>
@@ -129,7 +129,7 @@
       ...mapGetters({
         store: "getStore",
         settlement: "getSettlement",
-        manage: "getManageState",
+        settings: "getManageState",
       }),
     },
     created(){

@@ -22,7 +22,6 @@
 </template>
 
 <script>
-  import { mapGetters } from "vuex"
   import { EventBus } from "@/services/eventBus"
   import * as mutationTypes from "@/store/mutationTypes"
 
@@ -32,9 +31,6 @@
     }),
     methods: {
       closeDialog() {
-        // !this.manage
-        //   ? this.$emit("backToManage")
-        //   : EventBus.$emit( "dialog", "close", "")
         this.$store.commit(mutationTypes.SET_MANAGE_STATE, true)
         EventBus.$emit( "dialog", "close", "")
       },
@@ -42,10 +38,5 @@
         this.$emit('saveSetUp')
       }
     },
-    computed: {
-      ...mapGetters({
-        manage: "getManageState",
-      })
-    }
   }
 </script>

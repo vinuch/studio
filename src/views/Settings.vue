@@ -57,7 +57,7 @@
   import StoreDetails from "@/components/StoreDetails"
 
   export default {
-    name: 'Manage',
+    name: 'Settings',
     components: {
       topNav,
       BankDetails,

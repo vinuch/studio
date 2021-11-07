@@ -31,7 +31,7 @@ export default {
         {name: "Dashboard", value: "", icon: "mdi-view-dashboard-outline"},
         {name: "Inventory", value: "", icon: "mdi-clipboard-list-outline"},
         {name: "Orders", value: "", icon: "mdi-cart-outline"},
-        {name: "Manage", value: "", icon: "mdi-cog-outline"},
+        {name: "Settings", value: "", icon: "mdi-cog-outline"},
       ]
     }),
     methods: {
