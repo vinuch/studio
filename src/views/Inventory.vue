@@ -36,15 +36,6 @@
       </v-row>
 
 			<v-row class="ma-0">
-        <OrderItem
-          v-for="(order, i) in orders"
-          :key="i"
-          class="mb-5"
-          :order="order"
-          @viewProduct="viewProduct()"
-        />
-			</v-row>
-			<!-- <v-row class="ma-0">
         <Product
           v-for="(product, i) in inventory"
           :key="i"
@@ -52,7 +43,7 @@
           :product="product"
           @viewProduct="viewProduct()"
         />
-			</v-row> -->
+			</v-row>
     </v-container>
     <v-navigation-drawer
       app
@@ -90,8 +81,7 @@
   // import { EventBus } from "@/services/eventBus";
   
   import topNav from "@/components/TopNav"
-  // import Product from "@/components/Product"
-  import OrderItem from "@/components/OrderItem"
+  import Product from "@/components/Product"
   import ProductView from "@/components/ProductView"
   import AddOrEditProduct from "@/components/AddOrEditProduct"
   import MenuSpacer from '@/components/MenuSpacer.vue'
@@ -100,8 +90,7 @@
     name: 'Inventory',
     components: {
       topNav,
-      // Product,
-      OrderItem,
+      Product,
       ProductView,
       AddOrEditProduct,
       MenuSpacer,
@@ -177,7 +166,6 @@
       ...mapGetters({
         inventory: "getInventory",
         store: "getStore",
-        orders: "getOrders",
         // currentProduct: "getProductToBeEditted",
         // unsavedChange: "getUnsavedChange",
       }),

@@ -31,15 +31,10 @@
       </v-row>
 			
 		<v-row class="pa-5">
-			<!-- <OrderItem 
+			<OrderItem 
 				v-for="(order, i) in orders"
 				:key="'order' + i"
 				:order="order"
-			/> -->
-			<Product 
-				v-for="(product, i) in inventory"
-				:key="'order' + i"
-				:product="product"
 			/>
 		</v-row>
 
@@ -51,15 +46,13 @@
 <script>
 	import { mapGetters } from "vuex";
 	import topNav from "@/components/TopNav"
-	// import OrderItem from "@/components/OrderItem";
-	import Product from "@/components/Product";
+	import OrderItem from "@/components/OrderItem";
 	import MenuSpacer from '@/components/MenuSpacer.vue'
 
 	export default {
 		components: {
 			topNav,
-			// OrderItem,
-			Product,
+			OrderItem,
 			MenuSpacer,
 		},
 		data: () => {
@@ -112,7 +105,6 @@
 		computed: {
 			...mapGetters({
 				orders: "getOrders",
-				inventory: "getInventory",
 			}),
 		},
 		watch: {
