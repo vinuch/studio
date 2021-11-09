@@ -45,7 +45,7 @@
         />
 			</v-row>
     </v-container>
-    <v-navigation-drawer
+    <!-- <v-navigation-drawer
       app
       right
       :width="400"
@@ -56,20 +56,20 @@
         @back="backToProductView()"
         @close="closeAddEditDrawer()"
       />
-    </v-navigation-drawer>
-    <v-navigation-drawer
+    </v-navigation-drawer> -->
+    <!-- <v-navigation-drawer
       app
       right
       :width="400"
       v-model="view_product_drawer"
-    >
+    > -->
         <!-- @close="closeProductViewDrawer()"  -->
         <!-- :clear_variants="clear_variants" -->
-      <ProductView
+      <!-- <ProductView
         @back="backToInventory()"
         @editProduct="editProduct($event)"
       />
-    </v-navigation-drawer>
+    </v-navigation-drawer> -->
     <menu-spacer></menu-spacer>
   </div>
 </template>
@@ -82,8 +82,8 @@
   
   import topNav from "@/components/TopNav"
   import Product from "@/components/Product"
-  import ProductView from "@/components/ProductView"
-  import AddOrEditProduct from "@/components/AddOrEditProduct"
+  // import ProductView from "@/components/ProductView"
+  // import AddOrEditProduct from "@/components/AddOrEditProduct"
   import MenuSpacer from '@/components/MenuSpacer.vue'
 
   export default {
@@ -91,8 +91,8 @@
     components: {
       topNav,
       Product,
-      ProductView,
-      AddOrEditProduct,
+      // ProductView,
+      // AddOrEditProduct,
       MenuSpacer,
     },
     data: () => {
