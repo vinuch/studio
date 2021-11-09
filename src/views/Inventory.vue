@@ -6,7 +6,7 @@
       <v-btn
         depressed 
         color="success" 
-        @click="edit_product_drawer=true"
+        @click="addProduct()"
       >Add your first product</v-btn>
 		</v-container>
 
@@ -99,12 +99,15 @@
 			return {
         // clear_variants: false,
         display: true,
-        edit_product_drawer: null,
-        view_product_drawer: null,
+        edit_product_drawer: false,
+        view_product_drawer: false,
         variant_payload: {},
       }
     },
     methods: {
+      addProduct() {
+        this.edit_product_drawer=true
+      },
       backToInventory() {
         // this.clear_variants=true
         this.view_product_drawer=false
