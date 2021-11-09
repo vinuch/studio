@@ -2,7 +2,7 @@
 <div class="pa-5">
   <topNav>Dashboard</topNav>
   <div style="width: 100%; height: 6em">
-    <h2 class="title" style="margin-top: 1em">Welcome to {{ store.store_name }} &#128526;</h2>
+    <h2 class="title" style="margin-top: 1em">Good {{ time }} {{ store.store_name }} &#128526;</h2>
   </div>
 
   <v-container
@@ -52,30 +52,34 @@
   <v-container
     v-if="setup_steps > 3"
     class="rounded-lg pa-4" 
-    style="border: 1px solid #E2E8F0; background: lightgrey; overflow: hidden" 
+    style="border: 1px solid #E2E8F0; background: #F1EDFF; overflow: hidden" 
     fluid 
     fill-height
     pa-0
   >
     <v-card
-      v-for="(data, i) in analytics"
+      v-for="(data, i) in metrics"
       :key=i
-      class="pa-5 mb-5 "
+      class="pa-5 mb-5 rounded-lg"
       outlined
       width=100%
     >
       <v-row>
         <v-col cols=3>
-          <v-card class="pa-2" outlined>
-            <v-icon>{{data.icon}}</v-icon>
+          <v-card
+            class="pa-2 rounded-lg"
+            outlined
+            color="#FFC35014"
+          >
+            <v-icon class="data_icon">{{data.icon}}</v-icon>
           </v-card>
         </v-col>
         <v-col cols=9>
           <h5 class="text-left">{{data.title}}</h5>
-          <p class="text-left mb-0">{{data.data}}
-            <span>
-              <v-icon>mdi-chevron-up</v-icon>
-              {{data.performance}}
+          <p class="text-left mb-0 medium h1">{{data.currency}}{{data.data}}
+            <span class="gain body1">
+              <v-icon class="gain">mdi-chevron-up</v-icon>
+              <span>+</span>{{data.percent}}
             </span>
           </p>
         </v-col>
@@ -87,10 +91,10 @@
 </template>
 
 <script>
-  import { mapGetters } from "vuex";
-  import * as mutationTypes from "@/store/mutationTypes";
+  import { mapGetters } from "vuex"
+  import * as mutationTypes from "@/store/mutationTypes"
   import { EventBus } from "@/services/eventBus"
-  // import * as dayjs from "dayjs";
+  import * as dayjs from "dayjs"
 
   import topNav from "@/components/TopNav"
   import MenuSpacer from '@/components/MenuSpacer.vue'
@@ -103,16 +107,17 @@
     },
     data: () => ({
       analytics: [
-        {title: "Total sales", data: "20,000", performance: "5%", icon: "mdi-basket"},
-        {title: "Number of transactions", data: "20,000", performance: "5%", icon: "mdi-chart-box"},
-        {title: "Store visits", data: "20,000", performance: "5%", icon: "mdi-account-arrow-left"},
-        {title: "Return visits", data: "20,000", performance: "5%", icon: "mdi-account-sync"},
+        // {title: "Total sales", data: "20,000", performance: "5%", icon: "mdi-basket", colour: "#FFC35014", currency: ""},
+        // {title: "Number of transactions", data: "20,000", performance: "5%", icon: "mdi-chart-box", colour: "#FFC35014"},
+        // {title: "Average checkout", data: "5,000", performance: "5%", icon: "mdi-chart-box", colour: "#FFC35014", currency: ""},
+        // {title: "Store visits", data: "20,000", performance: "5%", icon: "mdi-account-arrow-left", colour: "#FFC35014"},
+        // {title: "Return visits", data: "20,000", performance: "5%", icon: "mdi-account-sync", colour: "#FFC35014"},
       ],
       dashboard: [
         {status: 0, title: "Payments", text: "Get paid by customers", btn_title: "Setup payment account", modal: "set_bank"},
         {status: 0, title: "Store details", text: "Store contacts, etc", btn_title: "Add store details", modal: "store_details"},
         {status: 0, title: "Business hours", text: "Opening & closing hours", btn_title: "Set hours", modal: "business_hours"},
-        {status: 0, title: "Shipping", text: "Delivery & pick-up arrangements", btn_title: "Set shipping", modal: "shipping"}
+        {status: 0, title: "Shipping", text: "Delivery & pick-up arrangements", btn_title: "Set shipping", modal: "shipping"},
       ],
       dialog: false,
       // dialog: false, default is false
@@ -131,104 +136,112 @@
         store: "getStore",
         orders: "getOrders",
       }),
-      // time() {
-      //   let hrs = dayjs().get("hours");
-      //   return hrs < 12
-      //     ? "morning"
-      //     : hrs >= 12 && hrs < 6
-      //     ? "afternoon"
-      //     : "evening";
-      // },
-      // today() {
-      //   return dayjs().format("DD MMM YYYY");
-      // },
-      // yesterday() {
-      //   return dayjs()
-      //     .subtract(1, "days")
-      //     .format("DD MMM YYYY");
-      // },
-      // reshapedOrders() {
-      //   return this.orders.map((order) => {
-      //     let date = dayjs(order.created).format("DD MMM YYYY");
-      //     return {
-      //       ...order,
-      //       date,
-      //       isToday: date === this.today,
-      //       isYesterday: date === this.yesterday,
-      //     };
-      //   });
-      // },
-      // metrics() {
-        // let todayOrders = this.reshapedOrders.filter((order) => order.isToday);
-        // let yesterdayOrders = this.reshapedOrders.filter(
-        //   (order) => order.isYesterday
-        // );
+      time() {
+        let hrs = dayjs().get("hours");
+        return hrs < 12
+          ? "morning"
+          : hrs >= 12 && hrs < 6
+          ? "afternoon"
+          : "evening";
+      },
+      today() {
+        return dayjs().format("DD MMM YYYY");
+      },
+      yesterday() {
+        return dayjs()
+          .subtract(1, "days")
+          .format("DD MMM YYYY");
+      },
+      reshapedOrders() {
+        return this.orders.map((order) => {
+          let date = dayjs(order.created).format("DD MMM YYYY");
+          return {
+            ...order,
+            date,
+            isToday: date === this.today,
+            isYesterday: date === this.yesterday,
+          };
+        });
+      },
+      metrics() {
+        let todayOrders = this.reshapedOrders.filter((order) => order.isToday);
+        let yesterdayOrders = this.reshapedOrders.filter(
+          (order) => order.isYesterday
+        );
 
         // let ordersCount = this.reshapedOrders.length;
-        // let todaySalesCount = this.reshapedOrders.filter((order) => order.isToday)
-        //   .length;
-        // let yesterdaySalesCount = this.reshapedOrders.filter(
-        //   (order) => order.isYesterday
-        // ).length;
+        let todaySalesCount = this.reshapedOrders.filter((order) => order.isToday)
+          .length;
+        let yesterdaySalesCount = this.reshapedOrders.filter(
+          (order) => order.isYesterday
+        ).length;
 
         // let totalSales = this.reshapedOrders.reduce((agg, curr) => {
         //   agg += curr.total_amount / 100;
         //   return agg;
         // }, 0);
-        // let todaySalesTotal = todayOrders.length
-        //   ? todayOrders.reduce((agg, curr) => {
-        //       agg += curr.total_amount / 100;
-        //       return agg;
-        //     }, 0)
-        //   : 0;
-        // let yesterdaySalesTotal = yesterdayOrders.length
-        //   ? yesterdayOrders.reduce((agg, curr) => {
-        //       agg += curr.total_amount / 100;
-        //       return agg;
-        //     }, 0)
-        //   : 0;
+        let todaySalesTotal = todayOrders.length
+          ? todayOrders.reduce((agg, curr) => {
+              agg += curr.total_amount / 100;
+              return agg;
+            }, 0)
+          : 0;
+        let yesterdaySalesTotal = yesterdayOrders.length
+          ? yesterdayOrders.reduce((agg, curr) => {
+              agg += curr.total_amount / 100;
+              return agg;
+            }, 0)
+          : 0;
 
-        // let changeInSales = todaySalesTotal - yesterdaySalesTotal;
-        // let changeInSalesCount = todaySalesCount - yesterdaySalesCount;
+        let changeInSales = todaySalesTotal - yesterdaySalesTotal;
+        let changeInSalesCount = todaySalesCount - yesterdaySalesCount;
 
         // let avgCheckoutSize = totalSales / ordersCount;
-        // let todayAvgCheckoutSize = todaySalesCount
-        //   ? todaySalesTotal / todaySalesCount
-        //   : 0;
-        // let yesterdayAvgCheckoutSize = yesterdaySalesTotal / yesterdaySalesCount;
-        // let changeInAvgCheckoutSize =
-        //   todayAvgCheckoutSize - yesterdayAvgCheckoutSize;
+        let todayAvgCheckoutSize = todaySalesCount
+          ? todaySalesTotal / todaySalesCount
+          : 0;
+        let yesterdayAvgCheckoutSize = yesterdaySalesTotal / yesterdaySalesCount;
+        let changeInAvgCheckoutSize =
+          todayAvgCheckoutSize - yesterdayAvgCheckoutSize;
 
-        // return [
-        //   {
-        //     title: "Total sales",
-        //     // count: `NGN ${numeral(totalSales).format("0,0")}`,
-        //     percent: `${Math.abs(changeInSales / yesterdaySalesTotal) * 100}%`,
-        //     up: changeInSales > 0,
-        //   },
-        //   {
-        //     title: "Number of transactions",
-        //     count: this.reshapedOrders.length,
-        //     percent: `${Math.abs(changeInSalesCount / yesterdaySalesCount) *
-        //       100}%`,
-        //     up: changeInSalesCount > 0,
-        //   },
-        //   {
-        //     title: "Average checkout size",
-        //     // count: `NGN ${numeral(avgCheckoutSize).format("0,0")}`,
-        //     percent: `${Math.abs(
-        //       changeInAvgCheckoutSize / yesterdayAvgCheckoutSize
-        //     ) * 100}`,
-        //     up: changeInAvgCheckoutSize > 0,
-        //   },
-        //   {
-        //     title: "Number of store visits",
-        //     count: "0",
-        //     percent: "0%",
-        //     up: true,
-        //   },
-        // ];
-      // },
+        return [
+          {
+            title: "Total sales", 
+            data: "20,000", 
+            percent: `${Math.abs(changeInSales / yesterdaySalesTotal) * 100}%`, 
+            icon: "mdi-basket", 
+            colour: "#FFC35014", 
+            currency: "",
+            up: changeInSales > 0,
+          },
+          {
+            title: "Number of transactions", 
+            data: this.reshapedOrders.length,
+            percent: `${Math.abs(changeInSalesCount / yesterdaySalesCount) * 100}%`,
+            icon: "mdi-chart-box", 
+            colour: "#FFC35014",
+            up: changeInSales > 0,
+          },
+          {
+            title: "Average checkout", 
+            percent: `${Math.abs(changeInAvgCheckoutSize / yesterdayAvgCheckoutSize) * 100}`,
+            icon: "mdi-chart-box", colour: "#FFC35014", currency: "",
+            up: changeInSales > 0,
+          },
+          {
+            title: "Store visits", 
+            data: "0", 
+            percent: "0%", 
+            icon: "mdi-account-arrow-left", 
+            colour: "#FFC35014",
+            up: true,  
+          },
+          {
+            title: "Return visits", data: "20,000", performance: "5%", icon: "mdi-account-sync", colour: "#FFC35014",
+            up: changeInSales > 0,
+          },
+        ];
+      },
     },
     created() {
       this.verified = this.store.verified
@@ -251,3 +264,12 @@
     },
   }
 </script>
+
+<style scoped>
+  .data_icon {
+    color: #FFC350
+  }
+  .gain {
+    color: green;
+  }
+</style>

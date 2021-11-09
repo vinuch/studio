@@ -76,26 +76,43 @@ export default {
 </script>
 
 <style lang="scss">
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600&display=swap');
+
 #app {
-  // font-family: untitled-sans-regular;
-  font-family: "Comfortaa", Helvetica, Arial, sans-serif;
+  font-family: "Poppins", Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
   height: 100vh;
 }
+h1, .h1 {
+  font-size: 20px;
+}
+h2, .h2 {
+  font-size: 16px;
+}
+h3 {
+  font-size: 14px;
+}
+.body1 {
+  font-size: 14px;
+}
+.body2 {
+  font-size: 12px;
+}
+.medium {
+  font-weight: 500;
+}
+.semibold {
+  font-weight: 600;
+}
+.regular {
+  font-weight: 400;
+}
 .v-btn {
   text-transform: none !important;
   color: #FFF !important;
-}
-.auth h1 {
-  // font-size: 32px;
-  // color: #19212C;
-}
-.auth_form_xs h1 {
-  // font-size: 24px;
-  // color: #19212C;
 }
 .note {
   font-size: 18px;
@@ -110,25 +127,11 @@ export default {
   width: 100%;
   height:25px;
 }
-.auth .container {
-  // width: 500px;
-  // padding: 0;
-}
-.auth_form_xs .container {
-  // width: 100%;
-}
 .form_lg {
   background: #FFF;
   width: 100%;
   padding-top: 30px;
   padding-bottom: 0;
-}
-.auth .form_lg {
-  // height: 715px;
-  // padding: 90px;
-  // padding-top: 30px;
-  // padding-bottom: 0;
-  // border-radius: 40px 40px 0 0;
 }
 .auth .form_lg .v-btn {
   margin-bottom: 20px;
