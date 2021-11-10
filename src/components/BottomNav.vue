@@ -40,7 +40,14 @@ export default {
         name == "Manage"
           ? this.$store.commit(mutationTypes.SET_MANAGE_STATE, true)
           : ""
-        this.$router.push({name: `${name}`});
+        this.$router.push({name: `${name}`})
+        .catch((err)=>{
+          if (err.name !== 'NavigationDuplicated' &&
+            !err.message.includes('Avoided redundant navigation to current location')
+          ) {
+            console.log(err);
+          }
+        })
       },
     },
     computed: {

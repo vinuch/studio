@@ -1,7 +1,7 @@
 <template>
 <div class="pa-5">
   <topNav>Dashboard</topNav>
-  <div style="width: 100%; height: 6em">
+  <div style="width: 100%; height: 4em">
     <h2 class="title" style="margin-top: 1em">Good {{ time }} {{ store.store_name }} &#128526;</h2>
   </div>
 
@@ -75,11 +75,16 @@
           </v-card>
         </v-col>
         <v-col cols=9>
-          <h5 class="text-left">{{data.title}}</h5>
-          <p class="text-left mb-0 medium h1">{{data.currency}}{{data.data}}
-            <span class="gain body1">
-              <v-icon class="gain">mdi-chevron-up</v-icon>
-              <span>+</span>{{data.percent}}
+          <h5 class="text-left" style="color: #9C9C9C">{{data.title}}</h5>
+          <p class="text-left mb-0 medium h1">
+            {{data.currency}}{{data.data}}
+            <span
+              :class="data.up ? 'gain' : 'loss'" class="body1"
+              style="letter-spacing: -5px"
+            >
+              <v-icon :class="data.up ? 'gain' : 'loss'" v-if="data.up">mdi-menu-up</v-icon>
+              <v-icon :class="data.up ? 'gain' : 'loss'" v-else>mdi-menu-down</v-icon>
+              {{ isNaN(data.percent) ? 0 : data.percent }}
             </span>
           </p>
         </v-col>
@@ -106,13 +111,6 @@
       MenuSpacer,
     },
     data: () => ({
-      analytics: [
-        // {title: "Total sales", data: "20,000", performance: "5%", icon: "mdi-basket", colour: "#FFC35014", currency: ""},
-        // {title: "Number of transactions", data: "20,000", performance: "5%", icon: "mdi-chart-box", colour: "#FFC35014"},
-        // {title: "Average checkout", data: "5,000", performance: "5%", icon: "mdi-chart-box", colour: "#FFC35014", currency: ""},
-        // {title: "Store visits", data: "20,000", performance: "5%", icon: "mdi-account-arrow-left", colour: "#FFC35014"},
-        // {title: "Return visits", data: "20,000", performance: "5%", icon: "mdi-account-sync", colour: "#FFC35014"},
-      ],
       dashboard: [
         {status: 0, title: "Payments", text: "Get paid by customers", btn_title: "Setup payment account", modal: "set_bank"},
         {status: 0, title: "Store details", text: "Store contacts, etc", btn_title: "Add store details", modal: "store_details"},
@@ -164,22 +162,23 @@
         });
       },
       metrics() {
-        let todayOrders = this.reshapedOrders.filter((order) => order.isToday);
+        // let todayOrders = this.reshapedOrders.filter((order) => order.isToday);
+        let todayOrders = this.reshapedOrders; // all time not today only
         let yesterdayOrders = this.reshapedOrders.filter(
           (order) => order.isYesterday
         );
 
-        // let ordersCount = this.reshapedOrders.length;
+        let ordersCount = this.reshapedOrders.length;
         let todaySalesCount = this.reshapedOrders.filter((order) => order.isToday)
           .length;
         let yesterdaySalesCount = this.reshapedOrders.filter(
           (order) => order.isYesterday
         ).length;
 
-        // let totalSales = this.reshapedOrders.reduce((agg, curr) => {
-        //   agg += curr.total_amount / 100;
-        //   return agg;
-        // }, 0);
+        let totalSales = this.reshapedOrders.reduce((agg, curr) => {
+          agg += curr.total_amount / 100;
+          return agg;
+        }, 0);
         let todaySalesTotal = todayOrders.length
           ? todayOrders.reduce((agg, curr) => {
               agg += curr.total_amount / 100;
@@ -196,7 +195,7 @@
         let changeInSales = todaySalesTotal - yesterdaySalesTotal;
         let changeInSalesCount = todaySalesCount - yesterdaySalesCount;
 
-        // let avgCheckoutSize = totalSales / ordersCount;
+        let avgCheckoutSize = totalSales / ordersCount;
         let todayAvgCheckoutSize = todaySalesCount
           ? todaySalesTotal / todaySalesCount
           : 0;
@@ -206,39 +205,46 @@
 
         return [
           {
-            title: "Total sales", 
-            data: "20,000", 
+            title: "Total sales",
+            // data: `NGN ${numeral(totalSales).format("0,0")}`,
+            data: Math.round(totalSales),
             percent: `${Math.abs(changeInSales / yesterdaySalesTotal) * 100}%`, 
-            icon: "mdi-basket", 
+            icon: "mdi-chart-box", 
             colour: "#FFC35014", 
             currency: "",
-            up: changeInSales > 0,
+            // up: changeInSales > 0,
+            up: true,
           },
           {
-            title: "Number of transactions", 
+            title: "Number of baskets", 
             data: this.reshapedOrders.length,
             percent: `${Math.abs(changeInSalesCount / yesterdaySalesCount) * 100}%`,
-            icon: "mdi-chart-box", 
+            icon: "mdi-basket", 
             colour: "#FFC35014",
-            up: changeInSales > 0,
+            // up: changeInSales > 0,
+            up: false,
           },
           {
-            title: "Average checkout", 
-            percent: `${Math.abs(changeInAvgCheckoutSize / yesterdayAvgCheckoutSize) * 100}`,
-            icon: "mdi-chart-box", colour: "#FFC35014", currency: "",
-            up: changeInSales > 0,
+            title: "Average checkout",
+            // data: `NGN ${numeral(avgCheckoutSize).format("0,0")}`,
+            data: Math.round(avgCheckoutSize),
+            percent: `${Math.abs(changeInAvgCheckoutSize / yesterdayAvgCheckoutSize) * 100}%`,
+            icon: "mdi-cash-register", colour: "#FFC35014", currency: "",
+            // up: changeInSales > 0,
+            up: true,
           },
           {
             title: "Store visits", 
-            data: "0", 
-            percent: "0%", 
+            data: 0,
+            percent: "4%", 
             icon: "mdi-account-arrow-left", 
             colour: "#FFC35014",
-            up: true,  
+            up: true,
           },
           {
-            title: "Return visits", data: "20,000", performance: "5%", icon: "mdi-account-sync", colour: "#FFC35014",
-            up: changeInSales > 0,
+            title: "Return visits", data: "18", percent: "5%", icon: "mdi-account-sync", colour: "#FFC35014",
+            up: false,
+            // up: changeInSales > 0,
           },
         ];
       },
@@ -271,5 +277,8 @@
   }
   .gain {
     color: green;
+  }
+  .loss {
+    color: red;
   }
 </style>
