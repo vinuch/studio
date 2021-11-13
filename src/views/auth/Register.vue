@@ -161,7 +161,6 @@
                 "Authorization"
               ] = `Token ${res.data.token}`;
 
-              // create store
               let data = {
                 store_name: this.store_name,
                 slug: this.store_slug,
@@ -194,7 +193,7 @@
             // .replace(/\-\-+/g, '-') //collapse multiple dashes
             .replace(/^-+/, '') //trim starting dash
 
-          this.store_link_url = this.store_link + ".leyyow.com"
+          this.store_link_url = this.store_slug + ".leyyow.com"
 
           if (blur == 'blur'){
             this.store_slug = this.store_slug.replace(/-+$/, ''); //trim ending dash

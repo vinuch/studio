@@ -11,7 +11,8 @@ export const verifyEmailPhoneUrl = `${baseUrl}api/account/verify_email_phone/`;
 export const verifyPasswordResetTokenUrl = `${baseUrl}api/account/password_reset/verify_token/`;
 
 // Store particulars
-export const createStoreUrl = `${baseUrl}api/account/store/create/`;
+// export const createStoreUrl = `${baseUrl}api/account/store/create/`;
+export const createStoreUrl = `${baseUrl}user/api_create_store/`;
 export const updateStoreUrl = `${baseUrl}api/account/store/update/`;
 
 // Paystack
