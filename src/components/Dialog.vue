@@ -6,7 +6,7 @@
       persistent
       max-width="600"
     >
-      <VerifyID v-if="propModal == 'verify'" />
+      <VerifyID v-if="propModal == 'verify_auth'" />
       <BankDetails v-if="propModal == 'set_bank'" />
       <BusinessHours v-if="propModal == 'business_hours'" />
       <StoreDetails v-if="propModal == 'store_details'"  />

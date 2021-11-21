@@ -14,6 +14,7 @@
           <v-btn
             dark
             icon
+            dense
             v-bind="attrs"
             v-on="on"
           >
@@ -22,6 +23,11 @@
         </template>
 
         <v-list>
+          <v-list-item>
+            <v-list-item-title @click="openDialog('verify_auth')">
+              <v-icon style="color: grey">mdi-at</v-icon>Verify email
+            </v-list-item-title>
+          </v-list-item>
           <v-list-item>
             <v-list-item-title @click="logout()">
               <v-icon style="color: grey">mdi-logout</v-icon>Logout
@@ -34,6 +40,7 @@
 </template>
 
 <script>
+  import { EventBus } from "@/services/eventBus"
   import * as mutationTypes from "@/store/mutationTypes"
 
   export default {    
@@ -49,6 +56,10 @@
         this.$store.commit(mutationTypes.LOGGED_IN, false);
         this.$store.commit(mutationTypes.LOGOUT, store); // this should be the whole state not just store
         this.$router.push("/login");
+      },
+      openDialog(setup) {
+        this.$store.commit(mutationTypes.SET_SETTINGS_STATE, false)
+        EventBus.$emit("dialog", "open", setup)
       },
     }
   }

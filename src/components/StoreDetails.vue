@@ -2,7 +2,7 @@
 <div>
   <v-card class="rounded-xl">
     <div style="padding: 16px;">
-      <v-card-title v-if="!manage" class="title justify-center">
+      <v-card-title v-if="!settings" class="title justify-center">
       Store Details
       </v-card-title>
 
@@ -165,7 +165,7 @@
     computed: {
       ...mapGetters({
         store: "getStore",
-        manage: "getManageState",
+        settings: "getSettingsState",
       }),
     },
   }

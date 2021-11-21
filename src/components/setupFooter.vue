@@ -31,7 +31,7 @@
     }),
     methods: {
       closeDialog() {
-        this.$store.commit(mutationTypes.SET_MANAGE_STATE, true)
+        this.$store.commit(mutationTypes.SET_SETTINGS_STATE, true)
         EventBus.$emit( "dialog", "close", "")
       },
       save() {

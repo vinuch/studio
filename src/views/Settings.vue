@@ -3,7 +3,7 @@
     class="pa-5"
   >
     <topNav>
-      Manage
+      Settings
     </topNav>
     <v-card 
       class="pa-0 rounded-xl" 

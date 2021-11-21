@@ -21,10 +21,6 @@ import * as mutationTypes from "@/store/mutationTypes"
 
 export default {
     name: 'BottomNav',
-    components: {
-    },
-    props: [
-    ],
     data: () => ({
       navigation: [
         // Note the name is also used as the route name so change with caution
@@ -37,8 +33,8 @@ export default {
     methods: {
       goTo(i) {
         let name = this.navigation[i].name
-        name == "Manage"
-          ? this.$store.commit(mutationTypes.SET_MANAGE_STATE, true)
+        name == "Settings"
+          ? this.$store.commit(mutationTypes.SET_SETTINGS_STATE, true)
           : ""
         this.$router.push({name: `${name}`})
         .catch((err)=>{
@@ -50,11 +46,5 @@ export default {
         })
       },
     },
-    computed: {
-    },
   }
 </script>
-
-<style scoped>
-
-</style>

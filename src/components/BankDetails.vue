@@ -91,7 +91,7 @@
     }),
     methods: {
       addAccount() {
-        this.$store.commit(mutationTypes.SET_MANAGE_STATE, false)
+        this.$store.commit(mutationTypes.SET_SETTINGS_STATE, false)
       },
       save(){
         let trans_data = {
@@ -129,7 +129,7 @@
       ...mapGetters({
         store: "getStore",
         settlement: "getSettlement",
-        settings: "getManageState",
+        settings: "getSettingsState",
       }),
     },
     created(){

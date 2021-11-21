@@ -2,9 +2,10 @@
 <div class="pa-5">
   <topNav>Dashboard</topNav>
   <div style="width: 100%; height: 4em">
-    <h2 class="title" style="margin-top: 1em">Good {{ time }} {{ store.store_name }} &#128526;</h2>
+    <h2 class="title" style="margin-top: 1em">Good {{ time }} {{ store.store_name }}</h2>
   </div>
 
+  <!-- store setup -->
   <v-container
     v-if="setup_steps < 4"
     class="rounded-xl" 
@@ -49,6 +50,8 @@
       </v-row>
     </div>
   </v-container>
+
+  <!-- metrics -->
   <v-container
     v-if="setup_steps > 3"
     class="rounded-lg pa-4" 
@@ -117,7 +120,7 @@
         {status: 0, title: "Business hours", text: "Opening & closing hours", btn_title: "Set hours", modal: "business_hours"},
         {status: 0, title: "Shipping", text: "Delivery & pick-up arrangements", btn_title: "Set shipping", modal: "shipping"},
       ],
-      dialog: false,
+      dialog: true,
       // dialog: false, default is false
       modal: null,
       setup_steps: 0,
@@ -125,7 +128,7 @@
     }),
     methods: {
       openDialog(setup) {
-        this.$store.commit(mutationTypes.SET_MANAGE_STATE, false)
+        this.$store.commit(mutationTypes.SET_SETTINGS_STATE, false)
         EventBus.$emit("dialog", "open", setup)
       },
     },
@@ -251,18 +254,16 @@
     },
     created() {
       this.verified = this.store.verified
-      if (this.verified[0] == 0) {
-        EventBus.$emit("open_alert", "warning", "email not verified", "Verify Email")
-      }
-
+  
       for (var i=1; i < this.verified.length; i++) { // starting loop from 1 not 0
-        this.dashboard[i-1].status = parseInt(this.verified[i]) // the first i is the email status
+        this.dashboard[i-1].status = parseInt(this.verified[i]) // the i==0 is the email status
         if (this.store.verified[i] == 1) {
           this.setup_steps += 1
         }
       }
 
       if (this.verified[0] == 0) {
+        EventBus.$emit("open_alert", "warning", "email not verified", "Verify Email")
         this.$store.commit(mutationTypes.EMAIL_VERIFIED, false);
       } else {
         this.$store.commit(mutationTypes.EMAIL_VERIFIED, true);
