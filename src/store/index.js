@@ -66,9 +66,13 @@ export default new Vuex.Store({
     [mutationTypes.SET_SETTINGS_STATE](state, data) {
       state.settings = data;
     },
+    [mutationTypes.UPDATE_EMAIL_VERIFIED](state, data) {
+      state.email_verified = data;
+    },
   },
   getters: {
     getEmail: (state) => state.unregistered_email,
+    getEmailStatus: (state) => state.email_verified,
     getStore: (state) => state.store,
     getSettlement: (state) => state.settlement,
     getInventory: (state) => state.inventory,

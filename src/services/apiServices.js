@@ -196,7 +196,6 @@ export const verifyEmailPhone = (otp, email_or_phone) => {
   return axios({
     method: "get",
     url: `${urls.verifyEmailPhoneUrl}${email_or_phone}/${otp}/`,
-    // data,
   });
 };
 

@@ -136,6 +136,7 @@
       ...mapGetters({
         store: "getStore",
         orders: "getOrders",
+        email_verified: "getEmailStatus"
       }),
       time() {
         let hrs = dayjs().get("hours");
@@ -263,8 +264,9 @@
       }
 
       if (this.verified[0] == 0) {
-        EventBus.$emit("open_alert", "warning", "email not verified", "Verify Email")
-        this.$store.commit(mutationTypes.EMAIL_VERIFIED, false);
+        !this.email_verified
+          ? EventBus.$emit("open_alert", "warning", "email not verified. You can verify from here if you close this", "Verify Email")
+          : ""
       } else {
         this.$store.commit(mutationTypes.EMAIL_VERIFIED, true);
       }
