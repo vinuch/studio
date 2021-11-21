@@ -16,15 +16,17 @@
       <li><v-text-field id="otp_5" v-model="otp_5" outlined hide-details type="number" dense @keyup="nextDigit($event)"/></li>
       <li><v-text-field id="otp_6" v-model="otp_6" outlined hide-details type="number" dense @keyup="nextDigit($event)"/></li>
     </ul>
+    <v-btn
+      class="main_blue ma-3"
+      depressed
+      @click="clearOTP"
+    >
+      <span v-if="!otp_check">Verify</span>
+      <span v-else>Clear</span>
+    </v-btn>
     <v-card-text>
       Did not receive OTP? <span class="pointer" @click="resendEmail()">Resend</span>
     </v-card-text>
-
-    <setupFooter
-      @saveSetUp="save()"
-    >
-      Verify
-    </setupFooter>
   </v-card>
 </div>
 </template>
@@ -36,13 +38,9 @@
     verifyEmailPhone,
   } from "@/services/apiServices";
   import * as mutationTypes from "@/store/mutationTypes"
-  import setupFooter from "@/components/setupFooter"
 
   export default {
     name: 'VerifyID',
-    components: {
-      setupFooter,
-    },
     data: () => ({
       otp: "",
       otp_1: "",
@@ -51,9 +49,18 @@
       otp_4: "",
       otp_5: "",
       otp_6: "",
+      otp_check: false,
     }),
     methods: {
       clearOTP() {
+        this.otp = ""
+        this.otp_1=""
+        this.otp_2=""
+        this.otp_3=""
+        this.otp_4=""
+        this.otp_5=""
+        this.otp_6=""
+        this.otp_check = false
       },
       nextDigit(e) {
         if (this.otp.length < 5) {
@@ -92,15 +99,19 @@
       resolveOTP() {
         verifyEmailPhone(this.otp, this.store.email) // modify to use account email not store email
           .then(res => {
-            res.data.status == "Success" 
-              ? this.$store.commit(mutationTypes.UPDATE_EMAIL_VERIFIED, true)
-              : EventBus.$emit("open_alert", "danger", "Incorrect OTP ", res.data.staus)
+            if (res.data.status == "Success") {
+              this.otp = ""
+              this.$store.commit(mutationTypes.UPDATE_EMAIL_VERIFIED, true)
+              this.$store.commit(mutationTypes.SET_SETTINGS_STATE, true) // confirm what this is
+              EventBus.$emit("open_alert", "success", "Email verified.")
+              EventBus.$emit( "dialog", "close", "")
+            } else {
+              EventBus.$emit("open_alert", "danger", "Incorrect OTP ", res.data.staus)
+              this.otp_check = true
+            }
           })
           .finally(() =>{
-            this.otp = ""
-            this.$store.commit(mutationTypes.SET_SETTINGS_STATE, true)
-            EventBus.$emit("open_alert", "success", "Email verified.")
-            EventBus.$emit( "dialog", "close", "")
+            
           })
       },
     },

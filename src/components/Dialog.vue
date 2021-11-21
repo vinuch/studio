@@ -5,6 +5,7 @@
       v-model="dialog"
       persistent
       max-width="600"
+      @click:outside="closeDialog"
     >
       <VerifyID v-if="propModal == 'verify_auth'" />
       <BankDetails v-if="propModal == 'set_bank'" />
@@ -17,7 +18,8 @@
 </template>
 
 <script>
-// import { EventBus } from "@/services/eventBus"
+import { EventBus } from "@/services/eventBus"
+import * as mutationTypes from "@/store/mutationTypes"
 
 import VerifyID from '@/components/VerifyID'
 import BankDetails from '@/components/BankDetails'
@@ -42,6 +44,10 @@ export default {
       // propModal: "shipping",
     }),
     methods: {
+      closeDialog() {
+        this.$store.commit(mutationTypes.SET_SETTINGS_STATE, true)
+        EventBus.$emit( "dialog", "close", "")
+      },
     },
     computed: {
       propModal() {
