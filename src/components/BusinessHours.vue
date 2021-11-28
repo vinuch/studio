@@ -155,13 +155,14 @@
         updateStore(data, this.store.id)
         .then(res => {
           let store = res.data
-          this.$store.commit(mutationTypes.SAVE_STORE, store);
+          this.$store.commit(mutationTypes.SAVE_STORE, store)
+          EventBus.$emit("open_alert", "success", "Business hours updated")
+          this.$router.go(0)
         })
         .catch(err => {
           EventBus.$emit("open_alert", "error", "Error saving business hours" + err) 
         })
         .finally(() => {
-          EventBus.$emit("open_alert", "success", "Business hours saved")
         })
       },
       setCloseTime(time){

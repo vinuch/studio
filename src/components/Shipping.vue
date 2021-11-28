@@ -127,7 +127,7 @@
   import * as mutationTypes from "@/store/mutationTypes"
   import { mapGetters } from 'vuex'
   import { EventBus } from '@/services/eventBus'
-    
+  
   import setupFooter from '@/components/setupFooter'
   import ShippingPrices from '@/components/ShippingPrices'
 
@@ -154,13 +154,15 @@
         updateStore(data, this.store.id)
         .then(res => {
           let store = res.data
-          this.$store.commit(mutationTypes.SAVE_STORE, store);
+          this.$store.commit(mutationTypes.SAVE_STORE, store)
+          this.feedback=true
+          EventBus.$emit("open_alert", "success", "Shipping details updated")
+          this.$router.go(0)
         })
         .catch(err => {
-          EventBus.$emit("open_alert", "error", "Error creating shipping locations" + err) 
+          EventBus.$emit("settings_feedback", "error", "Error creating shipping locations" + err) 
         })
         .finally(() => {
-          EventBus.$emit("open_alert", "success", "Shipping details updated")
         });
       },
       setDeliveryOption(option) {

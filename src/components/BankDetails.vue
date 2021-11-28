@@ -112,15 +112,16 @@
             store: this.store.store_name
           }
           saveMerchSettlement(save_data)
-          // .then(response => (
-          //   this.$store.commit(mutationTypes.SAVE_STORE, response)
-          // ))
+          .then(() => {
+            // this.$store.commit(mutationTypes.SAVE_STORE, response)
+            EventBus.$emit("open_alert", "success", "Bank details added")
+            this.$router.go(0);
+          })
         })
         .catch(err => {
           EventBus.$emit("open_alert", "error", "Error saving account details" + err) 
         })
         .finally(() => {
-          EventBus.$emit("open_alert", "success", "Bank details saved")
         })
       }
     },

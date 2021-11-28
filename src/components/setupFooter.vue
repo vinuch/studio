@@ -22,6 +22,7 @@
 </template>
 
 <script>
+  import { EventBus } from "@/services/eventBus"
   import * as mutationTypes from "@/store/mutationTypes"
 
   export default {
@@ -31,7 +32,7 @@
     methods: {
       closeDialog() {
         this.$store.commit(mutationTypes.SET_SETTINGS_STATE, true)
-        this.$router.go(0) // going this route so dashboard refreshes
+        EventBus.$emit( "dialog", "close", "")
       },
       save() {
         this.$emit('saveSetUp')

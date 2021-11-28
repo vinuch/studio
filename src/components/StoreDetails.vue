@@ -154,11 +154,12 @@
         updateStore(data, this.store.id)
           .then(res => {
             let store = res.data
-            this.$store.commit(mutationTypes.SAVE_STORE, store);
+            this.$store.commit(mutationTypes.SAVE_STORE, store)
+            EventBus.$emit("open_alert", "success", "Store info updated")
+            this.$router.go(0)
           })
           .catch(err => EventBus.$emit("open_alert", "error", "there was an error updating store" + err))
           .finally(() => {
-            EventBus.$emit("open_alert", "success", "Store info updated")
           })
       },
     },
