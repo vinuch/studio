@@ -117,12 +117,11 @@
           // ))
         })
         .catch(err => {
-          EventBus.$emit("open_alert", "error", "Error creating subaccount or saving settlement" + err) 
+          EventBus.$emit("open_alert", "error", "Error saving account details" + err) 
         })
         .finally(() => {
-          EventBus.$emit("open_alert", "success", "Settlement bank details added")
-          EventBus.$emit("dialog", "close", "")
-        });
+          EventBus.$emit("open_alert", "success", "Bank details saved")
+        })
       }
     },
     computed: {

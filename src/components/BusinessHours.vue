@@ -157,11 +157,12 @@
           let store = res.data
           this.$store.commit(mutationTypes.SAVE_STORE, store);
         })
-        .catch(err => console.log(err))
+        .catch(err => {
+          EventBus.$emit("open_alert", "error", "Error saving business hours" + err) 
+        })
         .finally(() => {
           EventBus.$emit("open_alert", "success", "Business hours saved")
-          // this.$router.push("/dash");
-        });
+        })
       },
       setCloseTime(time){
         this.close = time

@@ -156,7 +156,7 @@
             let store = res.data
             this.$store.commit(mutationTypes.SAVE_STORE, store);
           })
-          .catch(err => EventBus.$emit("open_alert", "error", "there was an error saving" + err))
+          .catch(err => EventBus.$emit("open_alert", "error", "there was an error updating store" + err))
           .finally(() => {
             EventBus.$emit("open_alert", "success", "Store info updated")
           })

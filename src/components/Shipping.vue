@@ -156,9 +156,11 @@
           let store = res.data
           this.$store.commit(mutationTypes.SAVE_STORE, store);
         })
-        .catch(err => EventBus.$emit("open_alert", "error", "there was an error setting locations" + err))
+        .catch(err => {
+          EventBus.$emit("open_alert", "error", "Error creating shipping locations" + err) 
+        })
         .finally(() => {
-          // this.$router.push("/dash");
+          EventBus.$emit("open_alert", "success", "Shipping details updated")
         });
       },
       setDeliveryOption(option) {

@@ -18,7 +18,6 @@ export const apiLogin = (data) => {
 };
 
 export const bankList = () => {
-  console.log("Bearer " + auth)
   return axios({
     method: "get",
     url: urls.bankListUrl,
@@ -88,7 +87,6 @@ export const fetchOrders = () => {
       store.commit(mutationTypes.SAVE_ORDERS, res.data);
     })
     .catch(() => {
-      // console.log({ err });
     });
 };
 
@@ -103,7 +101,6 @@ export const fethcStoreInventory = (slug, n) => {
         : store.commit(mutationTypes.SAVE_INVENTORY, res.data);
     })
     .catch(() => {
-      // console.log(err);
     });
 };
 
