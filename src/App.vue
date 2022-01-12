@@ -7,28 +7,23 @@
       :action="action"
     />
 
-    <Dialog
-      v-if="dialog == true" 
-      :modal="modal" 
-      @closeDialog = closeDialog()
-    />
+    <Dialog v-if="dialog == true" :modal="modal" @closeDialog="closeDialog()" />
 
     <v-main>
-      <router-view/>
+      <router-view />
     </v-main>
 
-    <BottomNav v-if="this.logged_in"/>
-
+    <BottomNav v-if="this.logged_in" />
   </v-app>
 </template>
 
 <script>
-import { mapGetters } from "vuex"
+import { mapGetters } from "vuex";
 import { EventBus } from "@/services/eventBus";
 
-import Dialog from "@/components/Dialog"
-import Snackbar from "@/components/Snackbar"
-import BottomNav from "@/components/BottomNav"
+import Dialog from "@/components/Dialog";
+import Snackbar from "@/components/Snackbar";
+import BottomNav from "@/components/BottomNav";
 
 export default {
   name: "App",
@@ -42,7 +37,7 @@ export default {
     alert_type: "", // colour theme e.g. success, etc
     dialog: false,
     message: "",
-    modal:"",
+    modal: "",
     show_alert: false,
   }),
   computed: {
@@ -52,44 +47,114 @@ export default {
   },
   created() {
     EventBus.$on("get_variants", () => {
-      console.log("get variants activated from edit product")
-    })
+      console.log("get variants activated from edit product");
+    });
     EventBus.$on("open_alert", (type, message, action) => {
       // console.log("receiving emit")
-      this.show_alert = true
-      this.alert_type = type
-      this.message = message
-      this.action = action
+      this.show_alert = true;
+      this.alert_type = type;
+      this.message = message;
+      this.action = action;
       setTimeout(() => {
-        this.show_alert = false
-        this.action = ""
-        this.alert_type = ""
-        this.message = ""
-      }, 6000)
+        this.show_alert = false;
+        this.action = "";
+        this.alert_type = "";
+        this.message = "";
+      }, 6000);
     }),
-    EventBus.$on("dialog", (state, modal) => {
-      state == "open" ? this.dialog = true : this.dialog = false
-      modal == "" ? this.modal = "" : this.modal = modal
-    })
-  }
+      EventBus.$on("dialog", (state, modal) => {
+        state == "open" ? (this.dialog = true) : (this.dialog = false);
+        modal == "" ? (this.modal = "") : (this.modal = modal);
+      });
+  },
 };
 </script>
 
 <style lang="scss">
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600&display=swap");
 
+@font-face {
+  font-family: "graphik";
+  src: url("./assets/fonts/GraphikBold.woff") format('woff');
+  font-weight: 700;
+  font-style: normal;
+}
+@font-face {
+  font-family: "graphik";
+  src: url("./assets/fonts/GraphikBlack.woff") format('woff');
+  font-weight: 900;
+  font-style: normal;
+}
+@font-face {
+  font-family: "graphik";
+  src: url("./assets/fonts/GraphikMedium.woff") format('woff');
+  font-weight: 500;
+  font-style: normal;
+}
+@font-face {
+  font-family: "graphik";
+  src: url("./assets/fonts/GraphikLight.woff") format('woff');
+  font-weight: 300;
+  font-style: normal;
+}
+@font-face {
+  font-family: "graphik";
+  src: url("./assets/fonts/GraphikThin.woff");
+  font-weight: 100;
+  font-style: normal;
+} 
+ @font-face {
+  font-family: "graphik";
+  src: url("./assets/fonts/GraphikRegular.woff") format('woff');
+  font-weight: 400;
+  font-style: normal;
+}
+.v-application {
+  [class*="text-"] {
+    color: #36405a;
+    font-family: 'graphik', Helvetica, Arial, sans-serif !important;
+
+  }
+  font-family: 'graphik', Helvetica, Arial, sans-serif !important;
+
+}
 #app {
-  font-family: "Poppins", Helvetica, Arial, sans-serif;
+  font-family: "graphik", Helvetica, Arial, sans-serif !important;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
   height: 100vh;
 }
-h1, .h1 {
+
+:root {
+  --primary: #4CAF50;
+}
+
+  .v-stepper__header .v-stepper__step.v-stepper__step--active > span.v-stepper__step__step{
+background: none !important;
+    border: 1px solid var(--primary);
+    border-radius: 6px;
+    color: var(--primary);
+
+  }
+  .v-stepper__header .v-stepper__step.v-stepper__step--complete > span.v-stepper__step__step{
+  background: var(--primary) !important;
+  }
+  .v-stepper__header .v-stepper__step > span.v-stepper__step__step{
+background: none !important;
+    border: 1px solid #E5E9F2;
+    border-radius: 6px;
+    color: #E5E9F2;
+
+  }
+
+h1,
+.h1 {
   font-size: 20px;
 }
-h2, .h2 {
+h2,
+.h2 {
   font-size: 16px;
 }
 h3 {
@@ -112,11 +177,11 @@ h3 {
 }
 .v-btn {
   text-transform: none !important;
-  color: #FFF !important;
+  color: #fff !important;
 }
 .note {
   font-size: 18px;
-  color: #868B90;
+  color: #868b90;
 }
 .footnote {
   // font-size: 14px;
@@ -125,10 +190,10 @@ h3 {
   margin-top: 50px;
   margin-bottom: 50px;
   width: 100%;
-  height:25px;
+  height: 25px;
 }
 .form_lg {
-  background: #FFF;
+  background: #fff;
   width: 100%;
   padding-top: 30px;
   padding-bottom: 0;
@@ -142,7 +207,7 @@ h3 {
   border-radius: 8px !important;
 }
 .v-text-field--outlined fieldset {
-  border: 1px solid #E5E5E5 !important;
+  border: 1px solid #e5e5e5 !important;
 }
 .auth_float {
   width: 100%;
@@ -168,12 +233,35 @@ h3 {
 .light_grey {
   // background: #ECF0F4;
   // background: #F6F8FA;
-  background: #EAECEE;
+  background: #eaecee;
 }
 .blue_link {
-  color: #3A50D5;
+  color: #3a50d5;
 }
 .pink_link {
-  color: #F62873;
+  color: #f62873;
 }
+.primary_link {
+  color: var(--primary);
+}
+
+.button--primary {
+  color: white !important;
+  background: var(--primary) !important;
+}
+.button--secondary {
+  color: #333;
+  background-color: transparent;
+  /* box-shadow: rgba(0, 0, 0, 0.15) 0px 0px 0px 1px inset; */
+}
+
+.button--medium {
+  font-size: 14px;
+  padding: 11px 20px;
+}
+.button--large {
+  font-size: 16px;
+  padding: 18px 24px;
+}
+
 </style>

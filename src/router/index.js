@@ -64,6 +64,7 @@ const router = new VueRouter({
 
 router.beforeEach((to, from, next) => {
   let token = window.sessionStorage.getItem("leyyow_token");
+
   let whitelist = [
     "/", "/login", "/register", "/forgot_password" // "/set-new-password/"
   ];
