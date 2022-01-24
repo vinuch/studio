@@ -420,12 +420,12 @@
       // }
     },
     created() {
-      EventBus.$on("get_variants", (payload) => {
-        this.options_1 = payload.options_1
-        this.options_2 = payload.options_2
-        this.options_3 = payload.options_3
-        this.variants = payload.variants
-      })
+      // EventBus.$on("get_variants", (payload) => {
+      //   this.options_1 = payload.options_1
+      //   this.options_2 = payload.options_2
+      //   this.options_3 = payload.options_3
+      //   this.variants = payload.variants
+      // })
     },
     mounted() {
       // if (this.variant_payload) {
@@ -435,6 +435,7 @@
         // this.options_3 = this.variant_payload.options_3
         // this.variants = this.variant_payload.variants
       // }
+      
 
       if (this.currentProduct) {
         this.variant_1 = this.currentProduct.first_variant_name

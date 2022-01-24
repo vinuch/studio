@@ -9,11 +9,13 @@
 
     <Dialog v-if="dialog == true" :modal="modal" @closeDialog="closeDialog()" />
 
-    <v-main>
-      <router-view />
-    </v-main>
+    <div class="mb-5">
+      <v-main>
+        <router-view />
+      </v-main>
+    </div>
 
-    <BottomNav v-if="this.logged_in" />
+    <BottomNav v-if="logged_in" />
   </v-app>
 </template>
 
@@ -24,6 +26,7 @@ import { EventBus } from "@/services/eventBus";
 import Dialog from "@/components/Dialog";
 import Snackbar from "@/components/Snackbar";
 import BottomNav from "@/components/BottomNav";
+import * as mutationTypes from "@/store/mutationTypes";
 
 export default {
   name: "App",
@@ -46,6 +49,13 @@ export default {
     }),
   },
   created() {
+    let token = window.sessionStorage.getItem("leyyow_token");
+    if (token) {
+      this.$store.commit(mutationTypes.LOGGED_IN, true);
+    } else {
+      this.$store.commit(mutationTypes.LOGGED_IN, false);
+    }
+
     EventBus.$on("get_variants", () => {
       console.log("get variants activated from edit product");
     });
@@ -75,25 +85,25 @@ export default {
 
 @font-face {
   font-family: "graphik";
-  src: url("./assets/fonts/GraphikBold.woff") format('woff');
+  src: url("./assets/fonts/GraphikBold.woff") format("woff");
   font-weight: 700;
   font-style: normal;
 }
 @font-face {
   font-family: "graphik";
-  src: url("./assets/fonts/GraphikBlack.woff") format('woff');
+  src: url("./assets/fonts/GraphikBlack.woff") format("woff");
   font-weight: 900;
   font-style: normal;
 }
 @font-face {
   font-family: "graphik";
-  src: url("./assets/fonts/GraphikMedium.woff") format('woff');
+  src: url("./assets/fonts/GraphikMedium.woff") format("woff");
   font-weight: 500;
   font-style: normal;
 }
 @font-face {
   font-family: "graphik";
-  src: url("./assets/fonts/GraphikLight.woff") format('woff');
+  src: url("./assets/fonts/GraphikLight.woff") format("woff");
   font-weight: 300;
   font-style: normal;
 }
@@ -102,21 +112,19 @@ export default {
   src: url("./assets/fonts/GraphikThin.woff");
   font-weight: 100;
   font-style: normal;
-} 
- @font-face {
+}
+@font-face {
   font-family: "graphik";
-  src: url("./assets/fonts/GraphikRegular.woff") format('woff');
+  src: url("./assets/fonts/GraphikRegular.woff") format("woff");
   font-weight: 400;
   font-style: normal;
 }
 .v-application {
   [class*="text-"] {
     color: #36405a;
-    font-family: 'graphik', Helvetica, Arial, sans-serif !important;
-
+    font-family: "graphik", Helvetica, Arial, sans-serif !important;
   }
-  font-family: 'graphik', Helvetica, Arial, sans-serif !important;
-
+  font-family: "graphik", Helvetica, Arial, sans-serif !important;
 }
 #app {
   font-family: "graphik", Helvetica, Arial, sans-serif !important;
@@ -128,26 +136,32 @@ export default {
 }
 
 :root {
-  --primary: #4CAF50;
+  --primary: #4caf50;
 }
 
-  .v-stepper__header .v-stepper__step.v-stepper__step--active > span.v-stepper__step__step{
-background: none !important;
-    border: 1px solid var(--primary);
-    border-radius: 6px;
-    color: var(--primary);
-
-  }
-  .v-stepper__header .v-stepper__step.v-stepper__step--complete > span.v-stepper__step__step{
+.v-stepper__header
+  .v-stepper__step.v-stepper__step--active
+  > span.v-stepper__step__step {
+  background: none !important;
+  border: 1px solid var(--primary);
+  border-radius: 6px;
+  color: var(--primary);
+}
+.v-stepper__header
+  .v-stepper__step.v-stepper__step--complete
+  > span.v-stepper__step__step {
   background: var(--primary) !important;
-  }
-  .v-stepper__header .v-stepper__step > span.v-stepper__step__step{
-background: none !important;
-    border: 1px solid #E5E9F2;
-    border-radius: 6px;
-    color: #E5E9F2;
+}
+.v-stepper__header .v-stepper__step > span.v-stepper__step__step {
+  background: none !important;
+  border: 1px solid #e5e9f2;
+  border-radius: 6px;
+  color: #e5e9f2;
+}
 
-  }
+.v-dialog {
+  border-radius: 32px;
+}
 
 h1,
 .h1 {
@@ -263,5 +277,4 @@ h3 {
   font-size: 16px;
   padding: 18px 24px;
 }
-
 </style>

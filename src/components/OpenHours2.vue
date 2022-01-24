@@ -1,11 +1,13 @@
 <template>
   <v-sheet elevation="0" rounded="lg" color="bg_grey" class="ma-5 pa-5">
     <div class="top">
+    
+
       <li
       class="day"
-      v-for="(day, i) in days"
+      v-for="(day, i) in allDays"
       :key="i"
-      :class="{bcg: day.selected}"
+      
       @click="toggleDay(day)">
         {{day.day}}
       </li>
@@ -51,22 +53,13 @@
 export default {
   props: [
     'isset_status',
-    'set_indexes',
-    'disable_set_days',
+    'allDays',
   ],
   data() {
     return {
       close: null,
       close_time: null,
-      days: [
-        {day: 'Mon', open:'', close: '', selected: false, isset: false},
-        {day: 'Tue', open:'', close: '', selected: false, isset: false},
-        {day: 'Wed', open:'', close: '', selected: false, isset: false},
-        {day: 'Thu', open:'', close: '', selected: false, isset: false},
-        {day: 'Fri', open:'', close: '', selected: false, isset: false},
-        {day: 'Sat', open:'', close: '', selected: false, isset: false},
-        {day: 'Sun', open:'', close: '', selected: false, isset: false}
-      ],
+      days: [],
       open: null,
       open_time: null,
       loading: false,
@@ -77,12 +70,15 @@ export default {
   },
   methods: {
     toggleDay(day){
-      if (day.selected == true && day.isset == false){ // can't undo already set day
-        day.selected = false
-      } else if (day.selected == false && day.isset == false) {
-        day.selected = true
+      if (day.selected == false){
+        this.$emit('addDay', {day: day.day, open:'', close: '', selected: true})
       }
-      this.$emit('setSelectedDay', this.days)
+      // if (day.selected == true && day.isset == false){ // can't undo already set day
+      //   day.selected = false
+      // } else if (day.selected == false && day.isset == false) {
+      //   day.selected = true
+      // }
+      // this.$emit('setSelectedDay', this.days)
     },
   },
   watch: {
@@ -106,7 +102,10 @@ export default {
         }
       }
     }
-  }
+  },
+  // mounted() {
+  //   this.days = 
+  // }
 };
 </script>
 <style lang="scss">

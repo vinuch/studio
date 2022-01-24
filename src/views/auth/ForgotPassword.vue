@@ -64,6 +64,7 @@
                 </template>
               </TextInput>
               <Button
+                :block="true"
                 label="Request reset password"
                 :primary="true"
                 size="large"

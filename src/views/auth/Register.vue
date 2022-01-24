@@ -204,6 +204,7 @@
 
               <Button
                 v-if="step === 1"
+                :block="true"
                 label="Continue"
                 :primary="true"
                 size="large"
@@ -211,6 +212,7 @@
                 @onClick="createAccount()"
               />
               <Button
+                :block="true"
                 v-if="step === 2"
                 label="Create store"
                 :primary="true"

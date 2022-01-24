@@ -15,6 +15,10 @@
   color: white !important;
   background: var(--primary) !important;
 }
+.v-btn.button--primary-light {
+  color: #4CAF50 !important;
+  background: var(--primary-light) !important;
+}
 .v-btn.button--secondary {
   color: #333;
   background-color: transparent;

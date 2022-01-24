@@ -9,7 +9,7 @@ try {
   var auth = store.getters.getSettlement.keys.paystack_secret_key
 } catch {null}
 
-axios.defaults.headers.common['Access-Control-Allow-Origin'] = '*'
+// axios.defaults.headers.common['Access-Control-Allow-Origin'] = '*'
 
 const Axios = axios.create({
   timeout: 1000,

@@ -34,7 +34,7 @@
                   name="email"
 
                   :validations="validations.email"
-                  @update="(emailValue) => (email = emailValue)"
+                  @update="(emailValue) => (username = emailValue)"
                 >
                   <template v-slot:prepend-inner>
                     <svg
@@ -150,6 +150,7 @@
               <Button
                 size="large"
                 label="Login"
+                :block="true"
                 :primary="true"
                 @onClick="login()"
               />
@@ -210,6 +211,7 @@ export default {
       this.$router.push("/reset-password");
     },
     login() {
+      console.log(this.username, this.password)
       let data = {
         username: this.username,
         password: this.password,

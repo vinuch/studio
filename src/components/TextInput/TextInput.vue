@@ -4,6 +4,8 @@
     :rules="[catchValidations()]"
     :type="type"
     :label="label"
+    :style="inputStyles"
+    :placeholder="placeholder"
     v-model="form[name]"
     @blur="v$.form[name].$touch"
     outlined
@@ -37,7 +39,6 @@ export default {
   props: {
     label: {
       type: String,
-      required: true,
     },
     type: {
       type: String,
@@ -46,6 +47,14 @@ export default {
     name: {
       type: String,
       required: true,
+    },
+    placeholder: {
+      type: String,
+    
+    },
+    inputStyles: {
+      type: String,
+    
     },
 
     validations: {

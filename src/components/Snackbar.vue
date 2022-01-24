@@ -1,16 +1,15 @@
 <template>
-<div>
+<div style="z-index: 300">
   <v-snackbar
     :timeout="-1"
     :value="true"
-    absolute
+    fixed
     centered
     top
     outlined
     :color="alert_type"
   >
     {{ this.message }}
-    {{ alert_type }}
     <v-btn v-if="action" depressed :color="alert_type">{{ action }}</v-btn>
   </v-snackbar>
 </div>
