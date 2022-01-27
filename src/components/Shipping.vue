@@ -13,44 +13,44 @@
           >How will your customers get their products?</v-card-text
         >
         <!-- <v-sheet class="mb-4"> -->
-          <ul class="del_ops">
-            <li
-              @click="setDeliveryOption('pick_up')"
-              :style="
-                delivery_opt == 'pick_up'
-                  ? { borderColor: activeBorderColor }
-                  : ''
-              "
-            >
-              <!-- <v-icon class="">mdi-store-outline</v-icon> -->
-              <img src="../assets/pickup.png" alt="">
-              <p>Pickup</p>
-            </li>
-            <li
-              @click="setDeliveryOption('delivery')"
-              :style="
-                delivery_opt == 'delivery'
-                  ? { borderColor: activeBorderColor }
-                  : ''
-              "
-            >
-              <!-- <v-icon class="">mdi-moped-outline</v-icon> -->
-              <img src="../assets/delivery.png" alt="">
+        <ul class="del_ops">
+          <li
+            @click="setDeliveryOption('pick_up')"
+            :style="
+              delivery_opt == 'pick_up'
+                ? { borderColor: activeBorderColor }
+                : ''
+            "
+          >
+            <!-- <v-icon class="">mdi-store-outline</v-icon> -->
+            <img src="../assets/pickup.png" alt="" />
+            <p>Pickup</p>
+          </li>
+          <li
+            @click="setDeliveryOption('delivery')"
+            :style="
+              delivery_opt == 'delivery'
+                ? { borderColor: activeBorderColor }
+                : ''
+            "
+          >
+            <!-- <v-icon class="">mdi-moped-outline</v-icon> -->
+            <img src="../assets/delivery.png" alt="" />
 
-              <p>Delivery</p>
-            </li>
-            <li
-              @click="setDeliveryOption('both')"
-              :style="
-                delivery_opt == 'both' ? { borderColor: activeBorderColor } : ''
-              "
-              style="margin-right: 0; position: relative;"
-            >
-              <img src="../assets/bike.png" alt="">
+            <p>Delivery</p>
+          </li>
+          <li
+            @click="setDeliveryOption('both')"
+            :style="
+              delivery_opt == 'both' ? { borderColor: activeBorderColor } : ''
+            "
+            style="margin-right: 0; position: relative;"
+          >
+            <img src="../assets/bike.png" alt="" />
 
-              <p>Both</p>
-            </li>
-          </ul>
+            <p>Both</p>
+          </li>
+        </ul>
         <!-- </v-sheet> -->
 
         <div v-if="delivery_opt == 'pick_up'">
@@ -111,11 +111,7 @@
                   background-color="grey lighten-5"
                 ></v-select>
                 <v-card-text class="text-left pa-0 my-3">Price</v-card-text>
-                <v-text-field
-                type="number"
-                  outlined
-                >
-                </v-text-field>
+                <v-text-field type="number" outlined> </v-text-field>
               </template>
               <p class="delete text-left my-3">
                 <v-icon class="delete">
@@ -123,7 +119,6 @@
                 </v-icon>
                 Remove
               </p>
-            
             </div>
 
             <p
@@ -145,8 +140,9 @@
             style="text-align: left; color: #69747E; font-weight: 600; display: flex; justify-content: space-between; align-items: center"
           >
             <div>
-              Third party
+               In-house
               <p class="caption">I have a way of getting orders to customers</p>
+              
             </div>
             <span class="switch">
               <v-switch
@@ -159,7 +155,7 @@
               </v-switch>
             </span>
             <div style="text-align: right;">
-              In house
+             Help me deliver
               <p class="caption">Let us handle shipping for you</p>
             </div>
           </div>

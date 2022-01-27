@@ -1,15 +1,18 @@
 <template>
   <div class="pa-5 mb-5">
     <topNav>Dashboard</topNav>
-    <div style="width: 100%; height: 4em;marginTop:4rem">
+    <div style="width: 100%; height: 4em;marginTop:4rem;marginBottom: .8rem">
       <h2 class="title" style="margin-top: 1em">
         <!-- Good {{ time }} {{ store.store_name }} -->
         Welcome, Abdulraheem 😎
       </h2>
+      <p class="body-2" v-if="setup_steps < 4">Let’s get you started with Leyyow</p>
+      <p class="body-2" v-else>Here’s how your bussiness is doing</p>
     </div>
 
     <!-- <div class="d-flex justify-end"> -->
     <v-select
+    v-if="setup_steps > 3"
       style="float: right; width: 10rem;"
       class="d-inline-block right"
       :items="['This week', 'This month', 'This year']"
@@ -27,7 +30,7 @@
       fill-height
       pa-0
     >
-      <div>
+      <div style="width: 100%">
         <p class="text-left pa-5 ma-0">
           Setup progress: <span>{{ setup_steps }}/4</span>
         </p>
