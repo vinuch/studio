@@ -170,6 +170,9 @@ export default {
     };
   },
   methods: {
+    search() {
+      
+    },
     addProduct() {
       this.edit_product_drawer = true;
     },

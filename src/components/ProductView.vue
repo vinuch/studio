@@ -197,10 +197,10 @@
 
         <v-card-actions class="pa-0">
           <v-spacer></v-spacer>
-          <v-btn class="mr-5" color="error" text @click="deleteProduct()">
+          <v-btn class="mr-5 font-weight-bold body-1" color="error" text @click="deleteProduct()">
             Delete
           </v-btn>
-          <v-btn class="ml-5" outlined color="main_blue" @click="editProduct()">
+          <v-btn class="ml-5" outlined color="primary" @click="editProduct()">
             Edit
           </v-btn>
         </v-card-actions>

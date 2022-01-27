@@ -54,7 +54,7 @@
       <p
         v-if="always_open != true && ( set_indexes.length <= days.length)"
         class="text-left mb-5 pl-5 pointer describe"
-        style="color: blue"
+        style="color: #4CAF50"
         @click="addPeriod()"
       >
         + specify more days and times
