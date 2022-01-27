@@ -9,6 +9,12 @@ try {
   var auth = store.getters.getSettlement.keys.paystack_secret_key
 } catch {null}
 
+// axios.defaults.headers.common['Access-Control-Allow-Origin'] = '*'
+
+const Axios = axios.create({
+  timeout: 1000,
+});
+
 export const apiLogin = (data) => {
   return axios({
     method: "post",
@@ -148,11 +154,8 @@ export const saveMerchSettlement = (data) => {
 };
 
 export const signUp = (data) => {
-  return axios({
-    method: "post",
-    url: urls.signUpUrl,
-    data,
-  });
+  return Axios.post(urls.signUpUrl, data)
+ 
 };
 
 export const updatePassword = (data) => {

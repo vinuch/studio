@@ -148,8 +148,9 @@ export default {
     cursor: pointer;
   }
   .bcg {
-    background-color: #10102C;
-    color: #FFF;
+    background-color: #fff;
+    border: 1px solid #4CAF50;
+    color: #4CAF50;
   }
 }
 .time input {

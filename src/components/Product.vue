@@ -93,7 +93,7 @@
     ],
     data: () => {
 			return {
-        display: true,
+        display: false
       }
     },
     methods: {
@@ -105,9 +105,9 @@
             EventBus.$emit(
               "open_alert",
               "success",
-              this.currentItem
-                ? "Product displayed in gallery"
-                : "Removed from gallery"
+              !this.product.display
+                ? "This product has been added to your gallery. Your visitors will now see it when they visit."
+                : "This product has been removed from your gallery. Your visitors will no longer see it."
             )
             fethcStoreInventory(this.product.slug) // perhaps fetch only this item and update it
           })
@@ -125,6 +125,7 @@
     },
     mounted() {
       this.display = this.product.display
+      // console.log(this.product)
     }
   }
 </script>

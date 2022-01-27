@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-if="currentProduct">
     <h2 class="text-left text-h6 ma-5" @click="back()">
       <v-icon>mdi-chevron-left</v-icon>
       <span v-if="currentProduct.id">Edit {{ currentProduct.product_name }}</span>
@@ -421,7 +421,7 @@
       })
     },
     created() {
-      this.has_variant = this.currentProduct.has_variant
+      this.has_variant = this.currentProduct?.has_variant
       if (this.currentProduct) {
         this.product_image = this.currentProduct.product_image
         this.product_name = this.currentProduct.product_name

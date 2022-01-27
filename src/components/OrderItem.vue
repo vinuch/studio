@@ -1,11 +1,9 @@
 <template>
-	<v-row
-		class="mb-2"
-	>
+
 		<v-card
 			rounded="lg"
 			outlined
-			class="pa-5 pb-0"
+			class="pa-5 pb-0 mb-4"
 			style="width: 100%"
 		>
 			<v-sheet
@@ -168,14 +166,13 @@
 			</v-card>
 			<div v-if="open" class="pb-5"></div> <!-- serves as spacer -->
 		</v-card>
-	</v-row> 
 </template>
 
 <script>
 import {
   updateOrderStatus,
   fetchOrders,
-  fetchOrderItems,
+//   fetchOrderItems,
 } from "@/services/apiServices";
 export default {
   data() {
@@ -185,30 +182,32 @@ export default {
       loading: false,
 			mark_all: false,
       open: false,
-      orderItems: [],
+      orderItems:  [{product_name: 'Unisex shoe(1) & 2 0ther items'}],
     };
   },
   props: ["order"],
   methods: {
-    openCollapse(toggle) {
-      if (this.open && toggle) {
-        this.open = false;
-        return;
-      } else if (!this.open && this.orderItems.length) {
-        this.open = true;
-      } else {
-        this.loading = true;
-        fetchOrderItems(this.order.order_ref)
-          .then((res) => {
-            this.orderItems = res.data;
-            this.open = true;
-          })
-          .catch(() => {
-            // console.log({ err });
-            this.orderItems = [];
-          })
-          .finally(() => (this.loading = false));
-      }
+    openCollapse() {
+            this.open = !this.open;
+
+    //   if (this.open && toggle) {
+    //     this.open = false;
+    //     return;
+    //   } else if (!this.open && this.orderItems.length) {
+    //     this.open = true;
+    //   } else {
+    //     this.loading = true;
+    //     fetchOrderItems(this.order.order_ref)
+    //       .then((res) => {
+    //         this.orderItems = res.data;
+    //         this.open = true;
+    //       })
+    //       .catch(() => {
+    //         // console.log({ err });
+    //         this.orderItems = [];
+    //       })
+    //       .finally(() => (this.loading = false));
+    //   }
     },
     markAsCompleted(item) {
       updateOrderStatus(item.id, item.status ? 0 : 1)
@@ -227,53 +226,53 @@ export default {
     },
   },
   computed: {
-    order_date () {
-      const ms_per_day = 1000 * 60 * 60 * 24
-      let months = [
-        'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec',
-      ]
-      const days = [
-        'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday',
-      ]
-      const ty = ['Today', 'Yesterday']
+    // order_date () {
+    //   const ms_per_day = 1000 * 60 * 60 * 24
+    //   let months = [
+    //     'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec',
+    //   ]
+    //   const days = [
+    //     'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday',
+    //   ]
+    //   const ty = ['Today', 'Yesterday']
 
-      let order_year = parseInt(this.order.created.substring(0,4))
-      let order_month = parseInt(this.order.created.substring(5,7)) - 1
-      let order_date = parseInt(this.order.created.substring(8,10))
-      const today = new Date()
-      const this_day = today.getDay() // position in week
+    //   let order_year = parseInt(this.order.created.substring(0,4))
+    //   let order_month = parseInt(this.order.created.substring(5,7)) - 1
+    //   let order_date = parseInt(this.order.created.substring(8,10))
+    //   const today = new Date()
+    //   const this_day = today.getDay() // position in week
 
-      const utc1 = Date.UTC(today.getFullYear(), today.getMonth(), today.getDate())
-      const utc2 = Date.UTC(order_year, order_month, order_date)
+    //   const utc1 = Date.UTC(today.getFullYear(), today.getMonth(), today.getDate())
+    //   const utc2 = Date.UTC(order_year, order_month, order_date)
 
-      let difference = Math.floor((utc1 - utc2) / ms_per_day)
+    //   let difference = Math.floor((utc1 - utc2) / ms_per_day)
 
-      if (difference > 6) {
-        return months[order_month] + " " + order_date
-      } else if (difference > 1) {
-        if (this_day - difference < 0) {
-          return days[7 + this_day - difference] + " - " + order_date
-        }
-        return days[this_day - difference] + " - " + order_date
-      } else {
-        return ty[difference] + " - " + order_date
-      }
-    },
-    ordinal_suffix() {
-      let order_date = parseInt(this.order.created.substring(8,10))
-      var j = order_date % 10,
-          k = order_date % 100;
-      if (j == 1 && k != 11) {
-          return "st";
-      }
-      if (j == 2 && k != 12) {
-          return "nd";
-      }
-      if (j == 3 && k != 13) {
-          return "rd";
-      }
-      return "th";
-    },
+    //   if (difference > 6) {
+    //     return months[order_month] + " " + order_date
+    //   } else if (difference > 1) {
+    //     if (this_day - difference < 0) {
+    //       return days[7 + this_day - difference] + " - " + order_date
+    //     }
+    //     return days[this_day - difference] + " - " + order_date
+    //   } else {
+    //     return ty[difference] + " - " + order_date
+    //   }
+    // },
+    // ordinal_suffix() {
+    //   let order_date = parseInt(this.order.created.substring(8,10))
+    //   var j = order_date % 10,
+    //       k = order_date % 100;
+    //   if (j == 1 && k != 11) {
+    //       return "st";
+    //   }
+    //   if (j == 2 && k != 12) {
+    //       return "nd";
+    //   }
+    //   if (j == 3 && k != 13) {
+    //       return "rd";
+    //   }
+    //   return "th";
+    // },
   }
 };
 </script>

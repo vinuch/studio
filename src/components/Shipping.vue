@@ -1,75 +1,169 @@
 <template>
-  <div>
-    <v-card class="rounded-xl">
+  <div class="rounded-xl">
+    <v-card class="elevation-0 overflow-hidden">
       <div style="padding: 16px;">
         <v-card-title class="title justify-center pb-2">
-        Shipping
+          Shipping
         </v-card-title>
         <v-card-text class="pa-0">
           Create your store fulfillment plan.
         </v-card-text>
 
-        <v-card-text class="text-left pa-0 mt-5">How will your customers get their products?</v-card-text>
-        <v-sheet>
+        <v-card-text class="text-left pa-0 mt-5"
+          >How will your customers get their products?</v-card-text
+        >
+        <!-- <v-sheet class="mb-4"> -->
           <ul class="del_ops">
             <li
               @click="setDeliveryOption('pick_up')"
-              :style="delivery_opt == 'pick_up' ? {borderColor: activeBorderColor} : ''"
+              :style="
+                delivery_opt == 'pick_up'
+                  ? { borderColor: activeBorderColor }
+                  : ''
+              "
             >
-              <v-icon class="">mdi-store-outline</v-icon>
-              <p>Pick up only</p>
+              <!-- <v-icon class="">mdi-store-outline</v-icon> -->
+              <img src="../assets/pickup.png" alt="">
+              <p>Pickup</p>
             </li>
             <li
               @click="setDeliveryOption('delivery')"
-              :style="delivery_opt == 'delivery' ? {borderColor: activeBorderColor} : ''"
+              :style="
+                delivery_opt == 'delivery'
+                  ? { borderColor: activeBorderColor }
+                  : ''
+              "
             >
-              <v-icon class="">mdi-moped-outline</v-icon>
-              <p>Delivery only</p>
+              <!-- <v-icon class="">mdi-moped-outline</v-icon> -->
+              <img src="../assets/delivery.png" alt="">
+
+              <p>Delivery</p>
             </li>
             <li
               @click="setDeliveryOption('both')"
-              :style="delivery_opt == 'both' ? {borderColor: activeBorderColor} : ''"
-              style="margin-right: 0; position: relative; top: -23px"
+              :style="
+                delivery_opt == 'both' ? { borderColor: activeBorderColor } : ''
+              "
+              style="margin-right: 0; position: relative;"
             >
-              <p style="padding-top: 17px;">Both</p>
+              <img src="../assets/bike.png" alt="">
+
+              <p>Both</p>
             </li>
           </ul>
-        </v-sheet>
+        <!-- </v-sheet> -->
 
         <div v-if="delivery_opt == 'pick_up'">
           <v-card-text class="text-left pa-0 pt-5 mt-5">
             Enter your pick-up address
             <v-tooltip bottom>
               <template v-slot:activator="{ on, attrs }">
-                <v-icon
-                  v-bind="attrs"
-                  v-on="on"
-                >mdi-help-circle-outline
+                <v-icon v-bind="attrs" v-on="on"
+                  >mdi-help-circle-outline
                 </v-icon>
               </template>
-              <span>What address should your customers go to pick up their products?</span>
+              <span
+                >What address should your customers go to pick up their
+                products?</span
+              >
             </v-tooltip>
           </v-card-text>
-          
+
           <v-sheet
             elevation="0"
             rounded="lg"
             color="bg_grey"
-            class="mt-2 mb-5 pa-5 pb-0"
+            class="mt-2 mb-5 pa-5 "
           >
-            <div>
-              <v-card-text class="text-left pa-0 mb-1">State</v-card-text>
-              <v-text-field outlined prepend-inner-icon="mdi-map-marker-outline"></v-text-field>
-              <v-card-text class="text-left pa-0 mb-1">Area / Local Govt</v-card-text>
-              <v-text-field outlined prepend-inner-icon="mdi-map-marker-outline">
-              </v-text-field>
+            <div
+              class="my-5"
+              v-for="location in locations"
+              :key="location.state"
+            >
+              <v-card-text class="text-left pa-0 my-3">State</v-card-text>
+              <v-select
+                dense
+                single-line
+                hide-details="true"
+                v-model="location.state"
+                outlined
+                item-text="type"
+                :items="NaijaStates.states()"
+                item-color="success"
+                background-color="grey lighten-5"
+                @change="changer"
+              ></v-select>
+
+              <template v-if="location.state">
+                <v-card-text class="text-left pa-0 my-3"
+                  >Area / Local Govt</v-card-text
+                >
+                <v-select
+                  dense
+                  multiple
+                  single-line
+                  hide-details="true"
+                  v-model="location.lga"
+                  outlined
+                  item-text="type"
+                  :items="NaijaStates.lgas(location.state).lgas"
+                  item-color="success"
+                  background-color="grey lighten-5"
+                ></v-select>
+                <v-card-text class="text-left pa-0 my-3">Price</v-card-text>
+                <v-text-field
+                type="number"
+                  outlined
+                >
+                </v-text-field>
+              </template>
+              <p class="delete text-left my-3">
+                <v-icon class="delete">
+                  mdi-delete-outline
+                </v-icon>
+                Remove
+              </p>
+            
             </div>
+
+            <p
+              class="text-left text-primary my-5 pointer describe"
+              style="c"
+              @click="locations.push({ state: '', lga: '' })"
+            >
+              + Add more location
+            </p>
           </v-sheet>
         </div>
 
         <div v-if="delivery_opt != 'pick_up'">
-          <v-card-text class="text-left pa-0 pt-5 mt-5">What delivery service will you use?</v-card-text>
-          <v-sheet
+          <v-card-text class="text-left pa-0 pt-5 mt-5"
+            >What delivery service will you use?</v-card-text
+          >
+          <div
+            class="my-4"
+            style="text-align: left; color: #69747E; font-weight: 600; display: flex; justify-content: space-between; align-items: center"
+          >
+            <div>
+              Third party
+              <p class="caption">I have a way of getting orders to customers</p>
+            </div>
+            <span class="switch">
+              <v-switch
+                class=" mt-0 pt-0"
+                style="position: relative; right: -12px;"
+                id="switch"
+                v-model="shipping_mode_in_house"
+                inset
+              >
+              </v-switch>
+            </span>
+            <div style="text-align: right;">
+              In house
+              <p class="caption">Let us handle shipping for you</p>
+            </div>
+          </div>
+          <!-- <v-sheet
             :style="shipping_mode == 'in_house' ? {borderColor: activeBorderColor} : ''"
             outlined
             elevation="0"
@@ -98,22 +192,21 @@
             >
             </v-checkbox>
             <v-card-text class="describe hint pt-0 pb-0">Use our shipping partners</v-card-text>
-          </v-sheet>
+          </v-sheet> -->
         </div>
 
-        <div v-if="shipping_mode == 'in_house' && delivery_opt != 'pick_up'">
-          <v-card-text class="text-left pa-0 pt-5 mt-5">Set delivery fees</v-card-text>
-            <ShippingPrices
-              @getLocations="saveLocations($event)"
-              @resetStringify="resetStringify()"
-              :stringify = stringify
-            />
+        <div v-if="shipping_mode_in_house && delivery_opt != 'pick_up'">
+          <v-card-text class="text-left pa-0 pt-5 mt-5"
+            >Set delivery fees</v-card-text
+          >
+          <ShippingPrices
+            @getLocations="saveLocations($event)"
+            @resetStringify="resetStringify()"
+            :stringify="stringify"
+          />
         </div>
-
       </div>
-      <setupFooter
-        @saveSetUp="stringifyLocations()"
-      >
+      <setupFooter @saveSetUp="stringifyLocations()">
         Save Shipping
       </setupFooter>
     </v-card>
@@ -121,108 +214,127 @@
 </template>
 
 <script>
-  import {
-    updateStore,
-  } from "@/services/apiServices"
-  import * as mutationTypes from "@/store/mutationTypes"
-  import { mapGetters } from 'vuex'
-  import { EventBus } from '@/services/eventBus'
-  
-  import setupFooter from '@/components/setupFooter'
-  import ShippingPrices from '@/components/ShippingPrices'
+import NaijaStates from "naija-state-local-government";
 
-  export default {
-    name: 'Shipping',
-    components: {
-      setupFooter,
-      ShippingPrices,
+import { updateStore } from "@/services/apiServices";
+import * as mutationTypes from "@/store/mutationTypes";
+import { mapGetters } from "vuex";
+import { EventBus } from "@/services/eventBus";
+
+import setupFooter from "@/components/setupFooter";
+import ShippingPrices from "@/components/ShippingPrices";
+
+export default {
+  name: "Shipping",
+  components: {
+    setupFooter,
+    ShippingPrices,
+  },
+  data: () => ({
+    NaijaStates,
+    activeBorderColor: "#3A50D5",
+    delivery_opt: "delivery",
+    shipping_mode: "in_house",
+    stringify: false,
+    shipping_mode_in_house: false,
+    locations: [{ state: "", lga: "" }],
+  }),
+  methods: {
+    changer() {
+      // console.log(this.state);
     },
-    data: () => ({
-      activeBorderColor: '#3A50D5',
-      delivery_opt: "delivery",
-      shipping_mode: "in_house",
-      stringify: false,
+    resetStringify() {
+      this.stringify = false;
+    },
+    saveLocations(locations) {
+      let data = {
+        default_shipping: locations,
+      };
+      updateStore(data, this.store.id)
+        .then((res) => {
+          let store = res.data;
+          this.$store.commit(mutationTypes.SAVE_STORE, store);
+          this.feedback = true;
+          EventBus.$emit("open_alert", "success", "Shipping details updated");
+          this.$router.go(0);
+        })
+        .catch((err) => {
+          EventBus.$emit(
+            "settings_feedback",
+            "error",
+            "Error creating shipping locations" + err
+          );
+        })
+        .finally(() => {});
+    },
+    setDeliveryOption(option) {
+      this.delivery_opt = option;
+    },
+    stringifyLocations() {
+      this.stringify = true;
+    },
+  },
+  computed: {
+    ...mapGetters({
+      store: "getStore",
     }),
-    methods: {
-      resetStringify() {
-        this.stringify = false
-      },
-      saveLocations(locations){
-        let data = {
-          default_shipping: locations,
-        }
-        updateStore(data, this.store.id)
-        .then(res => {
-          let store = res.data
-          this.$store.commit(mutationTypes.SAVE_STORE, store)
-          this.feedback=true
-          EventBus.$emit("open_alert", "success", "Shipping details updated")
-          this.$router.go(0)
-        })
-        .catch(err => {
-          EventBus.$emit("settings_feedback", "error", "Error creating shipping locations" + err) 
-        })
-        .finally(() => {
-        });
-      },
-      setDeliveryOption(option) {
-        this.delivery_opt = option
-      },
-      stringifyLocations() {
-        this.stringify = true
-      },
-    },
-    computed: {
-      ...mapGetters ({
-        store: "getStore",
-      }),
-    },
-  }
+  },
+  mounted() {
+    console.log(NaijaStates.lgas("lagos", "abia"));
+  },
+};
 </script>
 
 <style scoped>
-  ul {
-    /* margin: 0; */
-    margin-top: 5px;
-    padding: 0;
-    height: 86px;
-  }
-  .del_ops li {
-    display: inline-block;
-    list-style-type: none;
-    text-align: left;
-    font-size: 14px;
-    color: #848b91;
-    border: 1px solid #E2E8F0;
-    border-radius: 8px;
-    width: 85px;
-    margin-right: 20px;
-    padding: 15px;
-    height: 100%;
-    cursor: pointer;
-  }
-  .del_ops li p {
-    margin-bottom: 0;
-    line-height: normal;
-    text-align: center;
-  }
-  .del_ops i {
-    display: flex;
-  }
-  .describe {
-    font-size: 14px;
-    text-align: left;
-    color: #848b91;
-    margin-bottom: 0;
-  }
-  .hint {
-    margin-top: -20px;
-    padding-left: 32px;
-  }
-  .sel {
-    /* background: orange;
+.delete {
+  color: red;
+  cursor: pointer;
+}
+ul {
+  /* margin: 0; */
+  margin-top: 5px;
+  padding: 0;
+  height: 100%;
+}
+.del_ops {
+  margin-bottom: 1rem;
+}
+.del_ops li {
+  display: inline-block;
+  list-style-type: none;
+  text-align: left;
+  font-size: 14px;
+  color: #848b91;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  width: 85px;
+  margin-right: 20px;
+  padding: 15px;
+  /* height: 100%; */
+  cursor: pointer;
+}
+.del_ops li p {
+  margin-bottom: 0;
+  line-height: normal;
+  text-align: center;
+}
+.del_ops i {
+  display: flex;
+}
+.describe {
+  font-size: 14px;
+  text-align: left;
+  color: #848b91;
+  margin-bottom: 0;
+}
+.hint {
+  margin-top: -20px;
+  padding-left: 32px;
+}
+.sel {
+  /* background: orange;
     .v-sheet--outlined {
       border-color: blue;
     } */
-  }
+}
 </style>

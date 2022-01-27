@@ -31,12 +31,12 @@
         </p>
       </div>
       <div class="maillist">
-        <input
+        <!-- <input
           v-model="email"
           type="text"
           placeholder="Enter your email address"
           :class="hasError ? 'has-error' : ''"
-        />
+        /> -->
         <button :loading="loading" class="home-btn" @click="toRegister()">
           Get started
         </button>
@@ -59,8 +59,8 @@
 
 <script>
 // import { joinWaitlist } from "../services/apiServices";
-import { EventBus } from "../services/eventBus";
-import * as mutationTypes from "../store/mutationTypes";
+// import { EventBus } from "../services/eventBus";
+// import * as mutationTypes from "../store/mutationTypes";
 export default {
   data() {
     return {
@@ -82,16 +82,16 @@ export default {
       this.navOpen = false
     },
     toRegister() {
-      if (!this.email) {
-        this.hasError = true;
-        return;
-      }
-      let email = this.email
-      EventBus.$emit(
-        "getting_started",
-        "'" + this.email + "'",
-      );
-      this.$store.commit(mutationTypes.SAVE_EMAIL, email);
+      // if (!this.email) {
+      //   this.hasError = true;
+      //   return;
+      // }
+      // let email = this.email
+      // EventBus.$emit(
+      //   "getting_started",
+      //   "'" + this.email + "'",
+      // );
+      // this.$store.commit(mutationTypes.SAVE_EMAIL, email);
       this.$router.push("/register");
 
       // below for joining waitlist

@@ -1,5 +1,5 @@
 <template>
-<div>
+<div class="rounded-xl ">
   <div v-if="settings" class="pa-5 pt-0">
     <div v-if="acc_set">
       <div class="pa-3 rounded-xl" style="border: 1px solid black;">
@@ -9,7 +9,7 @@
         class="mt-5 pa-5 rounded-xl"
         flat
       >
-        <p class="text-left font-weight-bold">{{ settlement.acc_name }}</p>
+        <p class="text-left " >{{ settlement.acc_name }}</p>
         <div class="pb-5">
           <p class="text-left" style="float: left">{{ settlement.acc_no }}</p>
           <p class="text-right" style="float: right">{{ settlement.bank }}</p>
@@ -17,12 +17,12 @@
       </v-card>
     </div>
   </div>
-  <v-card v-else class="rounded-xl">
+  <v-card v-else class="elevation-0 overflow-hidden">
     <v-card-text>
-      <v-card-title class="title justify-center">
+      <v-card-title class=" justify-center" style="font-weight:600; font-size:1.3rem">
         Settlement Account
       </v-card-title>
-      Payments from your orders will be settled in this account:
+      Provide your bank account details so you can receive payments.
     </v-card-text>
     <div>
       <v-col
@@ -39,7 +39,7 @@
         ></v-select>
       </v-col>
       <v-col
-        class="d-flex pa-5 pt-0 pb-0 mb-5"
+        class="d-flex pa-5 pt-0 pb-0 mb-2"
       >
         <v-text-field
           label="Account number" 
@@ -55,11 +55,8 @@
     </div>
     <setupFooter
       @saveSetUp="save()"
-    >
-      Save Bank Details
-    </setupFooter>
+    />
   </v-card>
-    <div style="height: 50px"></div>
 </div>
 </template>
 
@@ -74,6 +71,7 @@
   } from "@/services/apiServices";
   import * as mutationTypes from "@/store/mutationTypes"
   import setupFooter from "@/components/setupFooter"
+
 
   export default {
     name: 'BankDetails',
@@ -94,6 +92,7 @@
         this.$store.commit(mutationTypes.SET_SETTINGS_STATE, false)
       },
       save(){
+         EventBus.$emit("dialog", "open", 'success');
         let trans_data = {
           business_name: this.store.store_name, // should be business name - model not implemented
           settlement_bank: this.bank_code,
