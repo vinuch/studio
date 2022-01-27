@@ -197,7 +197,7 @@
 
 <script>
   import { mapGetters } from "vuex"
-  import EventBus from "@/services/eventBus"
+  // import EventBus from "@/services/eventBus"
 
   export default {
     name: 'AddVariants',
