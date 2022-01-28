@@ -7,7 +7,7 @@
       :action="action"
     />
 
-    <Dialog v-if="dialog == true" :modal="modal" @closeDialog="closeDialog()" />
+    <Dialog v-if="dialog == true" :modal="modal" :phone="phone" @closeDialog="closeDialog()" />
 
     <div class="mb-5">
       <v-main>
@@ -39,6 +39,7 @@ export default {
     action: "",
     alert_type: "", // colour theme e.g. success, etc
     dialog: false,
+    phone: '',
     message: "",
     modal: "",
     show_alert: false,
@@ -72,9 +73,10 @@ export default {
         this.message = "";
       }, 6000);
     }),
-      EventBus.$on("dialog", (state, modal) => {
+      EventBus.$on("dialog", (state, modal, phone) => {
         state == "open" ? (this.dialog = true) : (this.dialog = false);
         modal == "" ? (this.modal = "") : (this.modal = modal);
+        phone ? this.phone = phone: null
       });
   },
 };

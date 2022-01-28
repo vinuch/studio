@@ -6,6 +6,7 @@
           <p class="text-left text-subtitle-1 font-weight-bold mb-0">
             {{ order.full_name }}
             <span
+            @click.stop="handleCall(order)"
               class="ml-2"
               style="
                 border-radius: 42px;
@@ -222,6 +223,8 @@ import {
   fetchOrderItems,
 } from "@/services/apiServices";
 import Button from "@/components/Button";
+import { EventBus } from "@/services/eventBus";
+import * as mutationTypes from "@/store/mutationTypes";
 
 export default {
   components: { Button },
@@ -251,6 +254,14 @@ export default {
   },
   props: ["order"],
   methods: {
+    handleCall(order) {
+      console.log(order)
+      this.openDialog('call_customer', order.phone);
+    },
+        openDialog(setup, phone) {
+      this.$store.commit(mutationTypes.SET_SETTINGS_STATE, false);
+      EventBus.$emit("dialog", "open", setup, phone);
+    },
     openCollapse() {
       if (this.open) {
         this.open = false;
