@@ -6,7 +6,7 @@
           <p class="text-left text-subtitle-1 font-weight-bold mb-0">
             {{ order.full_name }}
             <span
-            @click.stop="handleCall(order)"
+              @click.stop="handleCall(order)"
               class="ml-2"
               style="
                 border-radius: 42px;
@@ -50,8 +50,15 @@
           </p>
         </v-col>
       </v-row>
-      <p v-if="orderItems.length" class="text-left text-caption mb-0" style="color: #445b54">
-        {{orderItems[0].product_name}}({{orderItems[0].qty}}) {{orderItems.length > 1 ? `& ${orderItems.length - 1} 0ther items` : ''}}
+      <p
+        v-if="orderItems.length"
+        class="text-left text-caption mb-0"
+        style="color: #445b54"
+      >
+        {{ orderItems[0].product_name }}({{ orderItems[0].qty }})
+        {{
+          orderItems.length > 1 ? `& ${orderItems.length - 1} 0ther items` : ""
+        }}
       </p>
     </v-sheet>
 
@@ -68,7 +75,11 @@
           <p class="text-body-2 text-left" style="margin: 0">Products</p>
         </v-col>
         <v-col>
-          <p class="text-body-2 text-right" style="color: #4caf50; margin: 0">
+          <p
+            class="text-body-2 text-right"
+            style="color: #4caf50; margin: 0"
+            @click="markAll"
+          >
             Mark all
           </p>
         </v-col>
@@ -117,17 +128,27 @@
           <p class="text-right text-body-2 mb-2">
             &#8358;{{ orderItem.sub_total }}
           </p>
-          <p v-if="!orderItem.status" style="display: flex; justify-content: end; align-items: center;">
+          <p
+            v-if="!orderItem.status"
+            style="display: flex; justify-content: end; align-items: center;"
+          >
             <span class="caption" style="color: #4caf50; margin-right: 2px"
-              >Delivered</span
+              >Fulfilled</span
             >
-            <v-checkbox
-              class="check_box ma-0 pa-0 veri_check"
-              dense
-              color="success"
-              hide-details=""
+            <svg
+              width="14"
+              height="14"
+              viewBox="0 0 14 14"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
             >
-            </v-checkbox>
+              <path
+                d="M10.3333 1H3.66667C2.19391 1 1 2.19391 1 3.66667V10.3333C1 11.8061 2.19391 13 3.66667 13H10.3333C11.8061 13 13 11.8061 13 10.3333V3.66667C13 2.19391 11.8061 1 10.3333 1Z"
+                stroke="#CBD5E1"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
           </p>
 
           <p
@@ -135,24 +156,18 @@
             style="display: flex; justify-content: end; align-items: center;"
           >
             <span class="caption" style="color: #4caf50; margin-right: 2px"
-              >Delivered</span
+              >Fulfilled</span
             >
 
             <svg
-              width="16"
-              height="16"
-              viewBox="0 0 16 16"
+              width="25"
+              height="25"
+              viewBox="0 0 12 12"
               fill="none"
               xmlns="http://www.w3.org/2000/svg"
             >
               <path
-                d="M11.3333 2H4.66667C3.19391 2 2 3.19391 2 4.66667V11.3333C2 12.8061 3.19391 14 4.66667 14H11.3333C12.8061 14 14 12.8061 14 11.3333V4.66667C14 3.19391 12.8061 2 11.3333 2Z"
-                stroke="#67CE67"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              />
-              <path
-                d="M6 7.99935L7.5 9.33268L10 6.66602"
+                d="M4 6.0013L5.5 7.33464L8 4.66797"
                 stroke="#67CE67"
                 stroke-linecap="round"
                 stroke-linejoin="round"
@@ -212,6 +227,41 @@
       </v-row>
     </v-card>
     <div v-if="open" class="pb-5"></div>
+    <v-row v-if="showConfirm" justify="center">
+      <v-dialog v-model="showConfirm" persistent @click:outside="closeDialog">
+        <div class="white rounded-xl" style="position: relative">
+          <v-btn
+            @click="closeDialog"
+            fab
+            depressed
+            x-small
+            color="white"
+            absolute
+            style="top: 0.5rem; right: 1rem"
+          >
+            <svg
+              width="20"
+              height="20"
+              viewBox="0 0 20 20"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M10 0C4.47 0 0 4.47 0 10C0 15.53 4.47 20 10 20C15.53 20 20 15.53 20 10C20 4.47 15.53 0 10 0ZM15 13.59L13.59 15L10 11.41L6.41 15L5 13.59L8.59 10L5 6.41L6.41 5L10 8.59L13.59 5L15 6.41L11.41 10L15 13.59Z"
+                fill="#94A3B8"
+              />
+            </svg>
+          </v-btn>
+
+          <ConfirmDelivery
+            :all="all"
+            v-if="showConfirm"
+            @close="showConfirm = false"
+            @confirm="handleDeliveryConfirmed"
+          />
+        </div>
+      </v-dialog>
+    </v-row>
     <!-- serves as spacer -->
   </v-card>
 </template>
@@ -225,17 +275,22 @@ import {
 import Button from "@/components/Button";
 import { EventBus } from "@/services/eventBus";
 import * as mutationTypes from "@/store/mutationTypes";
+import ConfirmDelivery from "./ConfirmDelivery.vue";
 
 export default {
-  components: { Button },
+  components: { Button, ConfirmDelivery },
   data() {
     return {
+      all: false,
+      dialog: false,
+      showConfirm: false,
       check_all: false,
       fulfilled: false,
       loading: false,
       mark_all: false,
       open: false,
       orderItems: [],
+      activeItem: null,
       // orderItems: [
       //   {
       //     product_name: "Unisex shoe",
@@ -254,11 +309,17 @@ export default {
   },
   props: ["order"],
   methods: {
-    handleCall(order) {
-      console.log(order)
-      this.openDialog('call_customer', order.phone);
+    handleDeliveryConfirmed() {
+      this.complete();
     },
-        openDialog(setup, phone) {
+    closeDialog() {
+      this.showConfirm = false;
+    },
+    handleCall(order) {
+      console.log(order);
+      this.openDialog("call_customer", order.phone);
+    },
+    openDialog(setup, phone) {
       this.$store.commit(mutationTypes.SET_SETTINGS_STATE, false);
       EventBus.$emit("dialog", "open", setup, phone);
     },
@@ -284,26 +345,58 @@ export default {
       }
     },
     markAsCompleted(item) {
-      if (!item.status) {
-        let confirmed = confirm(
-          "Confirm that you want to mark the product/item as delivered."
-        );
-        if (confirmed) {
-          updateOrderStatus(item.id, 1)
+      this.all = false;
+      this.showConfirm = true;
+      this.activeItem = item;
+      // if (!item.status) {
+      // let confirmed = confirm(
+      //   "Confirm that you want to mark the product/item as delivered."
+      // );
+      // if (confirmed) {
+
+      // }
+      // }
+    },
+    complete() {
+      if (this.all) {
+        this.orderItems.forEach((item) => {
+          updateOrderStatus(item.id, item.status ? 0 : 1)
             .then(() => {
               fetchOrders();
-              this.openCollapse(false);
+              fetchOrderItems(this.order.order_ref)
+                .then((res) => {
+                  this.orderItems = res.data;
+                })
+                .catch(() => {
+                  // console.log({ err });
+                  this.orderItems = [];
+                })
+                .finally(() => (this.loading = false));
+              this.showConfirm = false;
             })
-            .catch(() => {
-              // console.log(err);
-            });
-        }
+            .catch(() => {});
+        });
+      } else {
+        updateOrderStatus(this.activeItem.id, this.activeItem.status ? 0 : 1)
+          .then(() => {
+            fetchOrders();
+            fetchOrderItems(this.order.order_ref)
+              .then((res) => {
+                this.orderItems = res.data;
+              })
+              .catch(() => {
+                // console.log({ err });
+                this.orderItems = [];
+              })
+              .finally(() => (this.loading = false));
+            this.showConfirm = false;
+          })
+          .catch(() => {});
       }
     },
-    markAll(items) {
-      items.forEach((item) => {
-        this.markAsCompleted(item);
-      });
+    markAll() {
+      this.all = true;
+      this.showConfirm = true;
     },
   },
   computed: {

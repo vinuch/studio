@@ -67,7 +67,7 @@ export default {
     Shipping,
     SuccessModal,
     FilterOrdersModal,
-    CallCustomer
+    CallCustomer,
   },
   props: ["modal", 'phone'],
   data: () => ({
