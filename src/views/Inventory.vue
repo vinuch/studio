@@ -1,7 +1,13 @@
 <template>
   <div class="pa-5">
     <topNav>Inventory</topNav>
-    <div style="margin-top: 4rem; min-height: 80vh">
+    <div
+      :style="
+        `margin-top: 4rem; min-height: 80vh; ${
+          email_verified ? 'marginTop:4rem' : 'marginTop:8rem'
+        }`
+      "
+    >
       <div
         v-if="inventory.length < 1"
         style="min-height: 80vh; display: flex; align-items: center"
@@ -170,9 +176,7 @@ export default {
     };
   },
   methods: {
-    search() {
-      
-    },
+    search() {},
     addProduct() {
       this.edit_product_drawer = true;
     },
@@ -233,6 +237,8 @@ export default {
     ...mapGetters({
       inventory: "getInventory",
       store: "getStore",
+      email_verified: "getEmailStatus",
+
       // currentProduct: "getProductToBeEditted",
       // unsavedChange: "getUnsavedChange",
     }),

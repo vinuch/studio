@@ -1,10 +1,10 @@
 <template>
   <div class="pa-5 mb-5">
     <topNav>Dashboard</topNav>
-    <div style="width: 100%; height: 4em;marginTop:4rem;marginBottom: .8rem">
+    <div :style="`width: 100%; height: 4em;marginBottom: .8rem; ${email_verified ? 'marginTop:4rem': 'marginTop:8rem'}`">
       <h2 class="title" style="margin-top: 1em">
         <!-- Good {{ time }} {{ store.store_name }} -->
-        Welcome, Abdulraheem 😎
+        Welcome, {{store.store_name}} 😎
       </h2>
       <p class="body-2" v-if="setup_steps < 4">Let’s get you started with Leyyow</p>
       <p class="body-2" v-else>Here’s how your bussiness is doing</p>
@@ -311,7 +311,7 @@ export default {
         {
           title: "Total sales",
           // data: `NGN ${numeral(totalSales).format("0,0")}`,
-          data: Math.round(totalSales),
+          data: Math.round(totalSales).toLocaleString("en-US"),
           percent: `${Math.abs(changeInSales / yesterdaySalesTotal) * 100}%`,
           icon: Sale,
           colour: "#FFC35014",
@@ -321,7 +321,7 @@ export default {
         },
         {
           title: "Number of transactions",
-          data: this.reshapedOrders.length,
+          data: this.reshapedOrders.length.toLocaleString("en-US"),
           percent: `${Math.abs(changeInSalesCount / yesterdaySalesCount) *
             100}%`,
           icon: Transaction,
@@ -332,7 +332,7 @@ export default {
         {
           title: "Number of store visit",
           // data: `NGN ${numeral(avgCheckoutSize).format("0,0")}`,
-          data: Math.round(avgCheckoutSize),
+          data: Math.round(avgCheckoutSize).toLocaleString("en-US"),
           percent: `${Math.abs(
             changeInAvgCheckoutSize / yesterdayAvgCheckoutSize
           ) * 100}%`,
@@ -350,15 +350,6 @@ export default {
           colour: "#FFC35014",
           up: true,
         },
-        // {
-        //   title: "Return visits",
-        //   data: "18",
-        //   percent: "5%",
-        //   // icon: "mdi-account-sync",
-        //   colour: "#FFC35014",
-        //   up: false,
-        //   // up: changeInSales > 0,
-        // },
       ];
     },
   },

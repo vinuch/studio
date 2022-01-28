@@ -1,7 +1,9 @@
 <template>
   <div class="pa-5">
     <topNav>Orders</topNav>
-    <div style="margin-top: 4rem; min-height: 80vh">
+    <div :style="`margin-top: 4rem; min-height: 80vh; ${
+          email_verified ? 'marginTop:4rem' : 'marginTop:8rem'
+        }`">
       <div
         style="display: flex; align-items: center; min-height: 80vh"
         v-if="!orders.length"
@@ -160,6 +162,8 @@ export default {
   computed: {
     ...mapGetters({
         orders: "getOrders",
+      email_verified: "getEmailStatus",
+
     }),
   },
   watch: {
