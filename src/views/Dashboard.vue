@@ -294,11 +294,12 @@ export default {
           if (mn > 1 && this.isLeapYear()) dayOfYear++;
           return dayOfYear;
         };
-        console.log(
-          new Date(new Date().getFullYear(), 0, 1).getTime() -
-            new Date(date).getTime() <=
-            365 * 24 * 60 * 60 * 1000
-        );
+        // console.log(
+        //   new Date(new Date().getFullYear(), 0, 1).getTime() -
+        //     new Date(date).getTime() <=
+        //     365 * 24 * 60 * 60 * 1000
+        // );
+
         return {
           ...order,
           date,
@@ -376,8 +377,7 @@ export default {
             icon: Sale,
             colour: "#FFC35014",
             currency: "",
-            // up: changeInSales > 0,
-            up: true,
+            up: changeInSales > 0,
           },
           {
             title: "Number of transactions",
@@ -389,8 +389,7 @@ export default {
             }%`,
             icon: Transaction,
             colour: "#FFC35014",
-            // up: changeInSales > 0,
-            up: false,
+            up: changeInSales > 0,
           },
           {
             title: "Number of store visit",
@@ -407,8 +406,7 @@ export default {
             icon: Cart,
             colour: "#FFC35014",
             currency: "",
-            // up: changeInSales > 0,
-            up: true,
+            up: changeInSales > 0,
           },
           {
             title: "Number of return visit",
@@ -466,12 +464,12 @@ export default {
 
         let changeInAvgCheckoutSize =
           thisMonthAvgCheckoutSize - lastMonthAvgCheckoutSize;
-        console.log(changeInSalesCount / lastMonthSalesCount);
+        // console.log(changeInSalesCount / lastMonthSalesCount);
         return [
           {
             title: "Total sales",
             // data: `NGN ${numeral(totalSales).format("0,0")}`,
-            data: Math.round(totalSales).toLocaleString("en-US"),
+            data: Math.round(lastMonthSalesTotal).toLocaleString("en-US"),
             percent: `${
               isNaN(Math.abs(changeInSales / lastMonthSalesTotal))
                 ? 0
@@ -480,8 +478,7 @@ export default {
             icon: Sale,
             colour: "#FFC35014",
             currency: "",
-            // up: changeInSales > 0,
-            up: true,
+            up: changeInSales > 0,
           },
           {
             title: "Number of transactions",
@@ -493,8 +490,7 @@ export default {
               : Math.abs(changeInSalesCount / lastMonthSalesCount)) * 100}%`,
             icon: Transaction,
             colour: "#FFC35014",
-            // up: changeInSales > 0,
-            up: false,
+            up: changeInSales > 0,
           },
           {
             title: "Number of store visit",
@@ -509,8 +505,7 @@ export default {
             icon: Cart,
             colour: "#FFC35014",
             currency: "",
-            // up: changeInSales > 0,
-            up: true,
+            up: changeInSales > 0,
           },
           {
             title: "Number of return visit",
@@ -567,11 +562,12 @@ export default {
 
         let changeInAvgCheckoutSize =
           thisYearAvgCheckoutSize - lastYearAvgCheckoutSize;
+          console.log(lastYearSalesTotal, thisYearSalesTotal, totalSales)
         return [
           {
             title: "Total sales",
             // data: `NGN ${numeral(totalSales).format("0,0")}`,
-            data: Math.round(totalSales).toLocaleString("en-US"),
+            data: Math.round(thisYearSalesTotal).toLocaleString("en-US"),
             percent: `${
               isNaN(Math.abs(changeInSales / lastYearSalesTotal))
                 ? 0

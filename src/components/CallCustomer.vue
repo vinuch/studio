@@ -12,7 +12,7 @@
           Call customer
         </h3>
         <span class="body-2" style="color: #646464;">
-          Are you sure you want to call your customer ({{ phone }})
+         Call {{name}} ({{ phone }})
         </span>
       </div>
       <v-card-actions class="justify-center mb-2">
@@ -51,7 +51,7 @@ export default {
   components: {
     Button,
   },
-  props: ["phone"],
+  props: ["phone", "name"],
   data: () => ({
     acc_name: "",
     acc_no: "",

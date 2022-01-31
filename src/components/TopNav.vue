@@ -28,10 +28,11 @@
                 style="margin-right: 0"
               >
                 <img
-                  :src="require('@/assets/avatar.png')"
+                  :src="getStore.logo"
                   class="mx-2"
                   height="32px"
                   width="32px"
+                  style="border-radius: 4px; object-fit: cover; ;object-position: top"
                 />
                 <v-icon style="color: grey">$vuetify.icons.arrowDown</v-icon>
               </v-btn>
@@ -96,7 +97,7 @@ export default {
     },
   },
   computed: {
-    ...mapGetters(["getEmailStatus"]),
+    ...mapGetters(["getEmailStatus", "getStore"]),
   },
 };
 </script>

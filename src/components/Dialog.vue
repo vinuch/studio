@@ -37,7 +37,7 @@
           <Shipping v-if="propModal == 'shipping'" />
           <SuccessModal v-if="propModal == 'success'" />
           <FilterOrdersModal v-if="propModal == 'filter_orders'" />
-          <CallCustomer v-if="propModal == 'call_customer'" :phone="phone" />
+          <CallCustomer v-if="propModal == 'call_customer'" :phone="phone" :name="name" />
         </div>
       </v-dialog>
     </v-row>
@@ -69,7 +69,7 @@ export default {
     FilterOrdersModal,
     CallCustomer,
   },
-  props: ["modal", 'phone'],
+  props: ["modal", 'phone', 'name'],
   data: () => ({
     dialog: true, // default is false
     // propModal: "shipping",
@@ -87,7 +87,6 @@ export default {
     
   },
   mounted() {
-    console.log(this.$props)
   }
 };
 </script>

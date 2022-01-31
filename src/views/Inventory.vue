@@ -52,23 +52,18 @@
           >
         </v-col>
       </v-row> -->
-        <v-row class="pa-0">
+        <v-row class="pa-0" style="align-items: flex-start">
+
           <v-col cols="9">
-            <!-- <v-text-field
-              outlined
-              prepend-inner-icon="mdi-magnify"
-              placeholder="Search by name"
-              background-color="grey lighten-5"
-            >
-            </v-text-field> -->
+
             <TextInput
               placeholder="Search by name"
               name="search"
               inputStyles="background-color: #FDFDFD; margin-bottom: 0 !important;"
             >
-              <template v-slot:prepend-inner>
+              <!-- <template v-slot:prepend-inner>
                 <Search />
-              </template>
+              </template> -->
             </TextInput>
           </v-col>
           <v-col cols="3" class="">
@@ -113,6 +108,7 @@
       </v-container>
       <v-navigation-drawer app right :width="400" v-model="edit_product_drawer">
         <AddOrEditProduct
+        v-if="edit_product_drawer"
           :variant_payload="variant_payload"
           @back="backToProductView()"
           @close="closeAddEditDrawer()"
@@ -139,7 +135,6 @@ import * as mutationTypes from "@/store/mutationTypes";
 import Button from "@/components/Button";
 import Inventory from "@/components/Icons/Inventory";
 import TextInput from "@/components/TextInput";
-import Search from "@/components/Icons/Search.vue";
 
 import topNav from "@/components/TopNav";
 import Product from "@/components/Product";
@@ -158,7 +153,6 @@ export default {
     AddOrEditProduct,
     MenuSpacer,
     TextInput,
-    Search,
   },
   data: () => {
     return {
@@ -183,7 +177,7 @@ export default {
     backToInventory() {
       // this.clear_variants=true
       this.view_product_drawer = false;
-      this.$store.commit(mutationTypes.SET_PRODUCT_TO_BE_EDITTED, {});
+      this.$store.commit(mutationTypes.SET_PRODUCT_TO_BE_EDITTED, null);
     },
     backToProductView() {
       this.view_product_drawer = true;
@@ -202,7 +196,7 @@ export default {
       //   this.showConfirm();
       // } else {
       //   this.visible = false;
-      this.$store.commit(mutationTypes.SET_PRODUCT_TO_BE_EDITTED, {});
+      this.$store.commit(mutationTypes.SET_PRODUCT_TO_BE_EDITTED, null);
       // }
     },
     closeProductViewDrawer() {

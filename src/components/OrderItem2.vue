@@ -316,12 +316,11 @@ export default {
       this.showConfirm = false;
     },
     handleCall(order) {
-      console.log(order);
-      this.openDialog("call_customer", order.phone);
+      this.openDialog("call_customer", order.phone, order.full_name);
     },
-    openDialog(setup, phone) {
+    openDialog(setup, phone, name) {
       this.$store.commit(mutationTypes.SET_SETTINGS_STATE, false);
-      EventBus.$emit("dialog", "open", setup, phone);
+      EventBus.$emit("dialog", "open", setup, phone, name);
     },
     openCollapse() {
       if (this.open) {
