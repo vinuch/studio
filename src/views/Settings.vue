@@ -3,12 +3,14 @@
     <topNav>
       Settings
     </topNav>
-    <div style="margin: 4rem 0;">
+    <div :style="`margin: 4rem 0; ${
+          email_verified ? 'marginTop:4rem' : 'marginTop:8rem'
+        }`">
       <v-card class="elevation-0 overflow-hidden pa-0 rounded-xl" style="border: 0.5px solid #F3F3F3;">
         <v-tabs id="tab" v-model="tabs" fixed-tabs>
           <v-tab v-for="(link, i) in links" :key="i">
-            <span class="caption"> {{link.name}}</span>
-            <!-- <v-icon>{{ link.icon }}</v-icon> -->
+            <!-- <span class="caption"> {{link.name}}</span> -->
+            <v-icon>{{ link.icon }}</v-icon>
            
           </v-tab>
         </v-tabs>
@@ -42,6 +44,7 @@ import BusinessHours from "@/components/BusinessHours";
 import BankDetails from "@/components/BankDetails";
 import Shipping from "@/components/Shipping";
 import StoreDetails from "@/components/StoreDetails";
+import { mapGetters } from 'vuex';
 
 export default {
   name: "Settings",
@@ -62,6 +65,12 @@ export default {
       ],
       tabs: null,
     };
+  },
+   computed: {
+    ...mapGetters({
+      email_verified: "getEmailStatus",
+
+    }),
   },
 };
 </script>

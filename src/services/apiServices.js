@@ -185,6 +185,7 @@ export const updateProduct = (data, id) => {
 };
 
 export const updateStore = (data, id) => {
+  console.log(urls.updateStoreUrl)
   return axios({
     method: "patch",
     url: `${urls.updateStoreUrl}${id}/`,

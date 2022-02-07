@@ -5,7 +5,6 @@
         <v-card-title v-if="!settings" class="title justify-center">
           Store Details
         </v-card-title>
-
         <v-sheet
           elevation="0"
           rounded="lg"
@@ -17,7 +16,7 @@
               outlined
               hide-details=""
               class="mb-2"
-              :value="store.slug + '.leyyow.com'"
+              :value="merchant_url"
               ref="merchant_url"
               readonly
             >
@@ -37,19 +36,51 @@
         <v-card-text class="text-left pa-0"
           >Store front image (max size: 1mb)</v-card-text
         >
-        <!-- <v-text-field
-        type="file"
-        v-model="bck_img"
-        @change="uploadImage($event)"
-        outlined class="mt-2"
-      ></v-text-field> -->
-
-        <!-- <v-btn width=100% depressed color="primary" @click="refs.inputUpload.$el.click()">Upload</v-btn> -->
+        <div style="display: flex">
+          <img
+            :src="background"
+            alt=""
+            width="100%"
+            height="250"
+            @click="$refs.backgroundInput.click()"
+            style="border: 0.5px solid #E5E9F2;; border-radius: 8px; margin: 0 auto; object-fit: cover; object-position: top"
+          />
+        </div>
+  <v-card-text class="text-left pa-0 my-3"
+          >Click image to change</v-card-text
+        >
         <input
+          ref="backgroundInput"
           type="file"
           accept="image/*"
           @change="uploadImage($event)"
           name="Store front photo"
+          style="display: none"
+        />
+
+        <v-card-text class="text-left pa-0 "
+          >Store logo (max size: 1mb)</v-card-text
+        >
+        <div style="display: flex">
+          <img
+            :src="logo"
+            alt=""
+            width="100%"
+            height="250"
+            @click="$refs.logoInput.click()"
+            style="border: 0.5px solid #E5E9F2;; border-radius: 8px; margin: 0 auto; object-fit: cover; object-position: top"
+          />
+        </div>
+         <v-card-text class="text-left pa-0 my-3"
+          >Click image to change</v-card-text
+        >
+        <input
+          ref="logoInput"
+          type="file"
+          accept="image/*"
+          @change="uploadLogo($event)"
+          name="Store logo"
+          style="display: none"
         />
 
         <v-card-text class="text-left pa-0 mt-5">About your store</v-card-text>
@@ -139,6 +170,8 @@ export default {
     setupFooter,
   },
   data: () => ({
+    logo: "",
+    background: "",
     inputFields: {
       about: "",
       email: "",
@@ -184,8 +217,47 @@ export default {
           //   this.uploadingImage = false;
         });
     },
+    uploadLogo(e) {
+      let form = new FormData();
+      var file = e.target.files[0];
+      var reader = new FileReader();
+      reader.onloadend = function() {
+        if (reader.result) {
+          switch (e.target.name) {
+            case "Store front photo":
+              this.background = String(reader.result);
+              break;
+            case "Store logo":
+              this.logo = String(reader.result);
+              break;
+
+            default:
+              break;
+          }
+        }
+      };
+      reader.readAsDataURL(file);
+
+      form.append("logo", e.target.files[0]);
+      // this.uploadingImage = true;
+      updateStore(form, this.store.id)
+        .then((res) => {
+          let store = res.data;
+          this.$store.commit(mutationTypes.SAVE_STORE, store);
+        })
+        .catch((err) => {
+          EventBus.$emit(
+            "open_alert",
+            "error",
+            "error uploading store image " + err
+          );
+        })
+        .finally(() => {
+          EventBus.$emit("open_alert", "success", "Store image saved");
+          //   this.uploadingImage = false;
+        });
+    },
     save() {
-   
       // let payload = {}
 
       // for (const key in data) {
@@ -206,8 +278,10 @@ export default {
       // this.platforms[0].handle.trim() != this.store.instagram.trim() ? data.instagram = this.platforms[0].handle : ""
       // this.platforms[1].handle.trim() != this.store.twitter.trim() ? data.twitter = this.platforms[1].handle : ""
       // this.platforms[2].handle.trim() != this.store.facebook.trim() ? data.facebook = this.platforms[2].handle : ""
-
-      updateStore(this.inputFields, this.store.id)
+      let data = this.inputFields;
+      delete data.logo;
+      delete data.background;
+      updateStore(data, this.store.id)
         .then((res) => {
           let store = res.data;
           this.$store.commit(mutationTypes.SAVE_STORE, store);
@@ -229,9 +303,15 @@ export default {
       store: "getStore",
       settings: "getSettingsState",
     }),
+    merchant_url() {
+      console.log(this.store);
+      return this.store.slug + ".leyyow.com";
+    },
   },
   mounted() {
-    this.inputFields = this.store
+    this.inputFields = this.store;
+    this.logo = this.store.logo;
+    this.background = this.store.background;
   },
 };
 </script>

@@ -211,7 +211,6 @@ export default {
       this.$router.push("/reset-password");
     },
     login() {
-      console.log(this.username, this.password)
       let data = {
         username: this.username,
         password: this.password,

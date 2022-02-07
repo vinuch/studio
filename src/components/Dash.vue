@@ -28,7 +28,7 @@
             {{ item.title }}
           </p>
           <p class="box-count utb">
-            {{ item.count }}
+            {{ item.count}}
           </p>
           <p class="box-metrics">
               <!-- <v-icon>mdi-menu-up</v-icon> -->
@@ -130,11 +130,11 @@ export default {
       let yesterdayAvgCheckoutSize = yesterdaySalesTotal / yesterdaySalesCount;
       let changeInAvgCheckoutSize =
         todayAvgCheckoutSize - yesterdayAvgCheckoutSize;
-
+  console.log(Number(totalSales).toLocaleString("en-US"), 'gere')
       return [
         {
           title: "Total sales",
-          count: `NGN ${numeral(totalSales).format("0,0")}`,
+          count: `NGN ${Number(totalSales).toLocaleString("en-US")}`,
           percent: `${Math.abs(changeInSales / yesterdaySalesTotal) * 100}%`,
           up: changeInSales > 0,
         },
