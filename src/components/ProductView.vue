@@ -103,7 +103,7 @@
               id="switch"
               v-model="display"
               inset
-              @change="toggleDisplay()"
+              disabled
             >
             </v-switch>
           </span>
@@ -283,88 +283,88 @@ export default {
   mounted() {
     if (this.currentProduct) {
       this.display = this.currentProduct.display;
-    //   let _currentProduct = this.currentProduct
+      let _currentProduct = this.currentProduct
 
-    //   this.$nextTick(function() {
-    //     console.log(_currentProduct)
-    //     if (_currentProduct.has_variant) {
-    //       // extracts options for each existing variant
-    //       // as well as their prices and quantities
-    //       let options_1 = _currentProduct.first_variant.split(",");
-    //       options_1.slice(-1)[0] == "" ? options_1.splice(-1) : "";
-    //       let options_2;
-    //       let options_3;
+      this.$nextTick(function() {
+        console.log(_currentProduct)
+        if (_currentProduct.has_variant) {
+          // extracts options for each existing variant
+          // as well as their prices and quantities
+          let options_1 = _currentProduct.first_variant.split(",");
+          options_1.slice(-1)[0] == "" ? options_1.splice(-1) : "";
+          let options_2;
+          let options_3;
 
-    //       _currentProduct.second_variant
-    //         ? (options_2 = _currentProduct.second_variant.split(","))
-    //         : (options_2 = []);
-    //       options_2.slice(-1)[0] == "" ? options_2.splice(-1) : "";
+          _currentProduct.second_variant
+            ? (options_2 = _currentProduct.second_variant.split(","))
+            : (options_2 = []);
+          options_2.slice(-1)[0] == "" ? options_2.splice(-1) : "";
 
-    //       _currentProduct.third_variant
-    //         ? (options_3 = _currentProduct.third_variant.split(","))
-    //         : (options_3 = []);
-    //       options_3.slice(-1)[0] == "" ? options_3.splice(-1) : console;
+          _currentProduct.third_variant
+            ? (options_3 = _currentProduct.third_variant.split(","))
+            : (options_3 = []);
+          options_3.slice(-1)[0] == "" ? options_3.splice(-1) : console;
 
-    //       let variant_options = _currentProduct.variant_options.split(";");
-    //       let split_ops = [];
+          let variant_options = _currentProduct.variant_options.split(";");
+          let split_ops = [];
 
-    //       this.variants.options_1 = options_1;
-    //       this.variants.options_2 = options_2;
-    //       this.variants.options_3 = options_3;
+          this.variants.options_1 = options_1;
+          this.variants.options_2 = options_2;
+          this.variants.options_3 = options_3;
 
-    //       variant_options.forEach((var_options) => {
-    //         split_ops.push(var_options.split(","));
-    //       });
+          variant_options.forEach((var_options) => {
+            split_ops.push(var_options.split(","));
+          });
 
-    //       if (options_1.length && options_2.length && options_3.length) {
-    //         // three variants
-    //         let x = 0;
-    //         for (let i = 0; i < options_1.length; i++) {
-    //           for (let j = 0; j < options_2.length; j++) {
-    //             for (let k = 0; k < options_3.length; k++) {
-    //               let object = {
-    //                 name:
-    //                   options_1[i] +
-    //                   " / " +
-    //                   options_2[j] +
-    //                   " / " +
-    //                   options_3[k],
-    //                 qty: split_ops[x][1],
-    //                 price: split_ops[x][2],
-    //               };
-    //               this.variants.variants.push(object);
-    //               x++;
-    //             }
-    //           }
-    //         }
-    //       } else if (options_1.length && options_2.length) {
-    //         // two variants
-    //         let x = 0;
-    //         for (let i = 0; i < options_1.length; i++) {
-    //           for (let j = 0; j < options_2.length; j++) {
-    //             let object = {
-    //               name: options_1[i] + " / " + options_2[j],
-    //               qty: split_ops[x][1],
-    //               price: split_ops[x][2],
-    //             };
-    //             this.variants.variants.push(object);
-    //             x++;
-    //           }
-    //         }
-    //       } else if (options_1.length) {
-    //         // one variant
-    //         let x = 0;
-    //         for (let i = 0; i < options_1.length; i++) {
-    //           this.variants.variants.push({
-    //             name: options_1[i],
-    //             qty: split_ops[x][1],
-    //             price: split_ops[x][2],
-    //           });
-    //           x++;
-    //         }
-    //       }
-    //     }
-    //   });
+          if (options_1.length && options_2.length && options_3.length) {
+            // three variants
+            let x = 0;
+            for (let i = 0; i < options_1.length; i++) {
+              for (let j = 0; j < options_2.length; j++) {
+                for (let k = 0; k < options_3.length; k++) {
+                  let object = {
+                    name:
+                      options_1[i] +
+                      " / " +
+                      options_2[j] +
+                      " / " +
+                      options_3[k],
+                    qty: split_ops[x][1],
+                    price: split_ops[x][2],
+                  };
+                  this.variants.variants.push(object);
+                  x++;
+                }
+              }
+            }
+          } else if (options_1.length && options_2.length) {
+            // two variants
+            let x = 0;
+            for (let i = 0; i < options_1.length; i++) {
+              for (let j = 0; j < options_2.length; j++) {
+                let object = {
+                  name: options_1[i] + " / " + options_2[j],
+                  qty: split_ops[x][1],
+                  price: split_ops[x][2],
+                };
+                this.variants.variants.push(object);
+                x++;
+              }
+            }
+          } else if (options_1.length) {
+            // one variant
+            let x = 0;
+            for (let i = 0; i < options_1.length; i++) {
+              this.variants.variants.push({
+                name: options_1[i],
+                qty: split_ops[x][1],
+                price: split_ops[x][2],
+              });
+              x++;
+            }
+          }
+        }
+      });
     }
   },
 };

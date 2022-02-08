@@ -48,7 +48,7 @@
           hide-details
           class="mt-2 mb-0"
           @keyup="unsavedChangeMade()"
-          v-model="product_name"
+          v-model="product.product_name"
           :placeholder="!currentProduct ? '' : currentProduct.product_name"
         ></v-text-field>
         <v-card-text
@@ -82,16 +82,14 @@
         >
           <div>
             <p style="text-align: left; color: #69747E; font-weight: 600;">
-              <span v-if="currentProduct && currentProduct.has_variant"
-                >Variants</span
-              >
+              <span v-if="currentProduct && product.has_variant">Variants</span>
               <span v-else>Add product variants</span>
               <span class="switch">
                 <v-switch
                   class="float-right mt-0 pt-0"
                   color="success"
                   style="position: relative; right: -12px;"
-                  v-model="has_variant"
+                  v-model="product.has_variant"
                   inset
                 >
                 </v-switch>
@@ -104,16 +102,20 @@
           </p>
           <div v-for="i in variant_index" :key="i">
             <AddVariant
-              v-if="has_variant"
+              v-if="product.has_variant"
               :send_variants="get_variants"
               @sendVariants="getVariants($event)"
+              :first_variant="product.first_variant"
+              :second_variant="product.second_variant"
+              :third_variant="product.third_variant"
+              :variant_options="product.variant_options"
             />
           </div>
         </v-sheet>
 
         <!-- non-variant qty and pricing -->
         <v-sheet
-          v-if="!has_variant"
+          v-if="!product.has_variant"
           elevation="0"
           rounded="lg"
           color="bg_grey"
@@ -127,7 +129,7 @@
                 :placeholder="!currentProduct ? 'Price' : onePrice"
                 background-color="grey lighten-5"
                 hide-details="true"
-                v-model="price"
+                v-model="product.price"
               ></v-text-field>
             </v-col>
             <v-col cols="6">
@@ -137,7 +139,7 @@
                 :placeholder="!currentProduct ? 'Qty' : oneQty"
                 background-color="grey lighten-5"
                 hide-details="true"
-                v-model="total_stock"
+                v-model="product.total_stock"
               ></v-text-field>
             </v-col>
           </v-row>
@@ -155,24 +157,24 @@
                   class="mt-0 pt-0"
                   color="success"
                   style="position: absolute; right: -12px; top: 0;"
-                  v-model="has_discount"
+                  v-model="product.has_discount"
                   inset
                 >
                 </v-switch>
               </span>
             </p>
           </div>
-          <p v-if="has_variant" class="describe">
+          <p v-if="product.has_variant" class="describe">
             Apply a uniform discount across all variants.
           </p>
-          <v-row v-if="has_discount" class="mt-2">
+          <v-row v-if="product.has_discount" class="mt-2">
             <v-col cols="6">
               <v-select
                 label="Mode"
                 dense
                 single-line
                 hide-details="true"
-                v-model="discount_type"
+                v-model="product.discount_type"
                 outlined
                 item-text="type"
                 item-value="value"
@@ -189,7 +191,7 @@
                 placeholder="Amount"
                 background-color="grey lighten-5"
                 hide-details="true"
-                v-model="discount"
+                v-model="product.discount"
               ></v-text-field>
             </v-col>
           </v-row>
@@ -211,7 +213,7 @@
                   class="float-right mt-0 pt-0"
                   color="success"
                   style="position: relative; right: -12px;"
-                  v-model="display"
+                  v-model="product.display"
                   inset
                 >
                 </v-switch>
@@ -242,7 +244,7 @@
           label="Save Product"
           :block="true"
           :primary="true"
-          @onClick="finishCreation()"
+          @onClick="fetchVariants()"
         />
 
         <Button
@@ -252,7 +254,7 @@
           label="Add Product"
           :block="true"
           :primary="true"
-          @onClick="finishCreation()"
+          @onClick="fetchVariants()"
         />
         <!-- </v-card-actions> -->
       </v-container>
@@ -281,6 +283,7 @@ export default {
   },
   data: () => {
     return {
+      product: {},
       variant_pairs: 25, // should be an array
       description: "",
       discount: "",
@@ -291,22 +294,23 @@ export default {
         { value: 1, type: "Percentage" },
         { value: 2, type: "Amount" },
       ],
-      display: true,
+      // display: true,
       get_variants: false,
-      hasDiscountError: false, // change casing
-      has_discount: false,
-      has_variant: false,
+      // hasDiscountError: false, // change casing
+      // has_discount: false,
+      // has_variant: false,
       image_preview: null,
-      preview: null,
-      price: "",
-      product_id: null,
-      product_name: "",
-      product_image: "",
+      // preview: null,
+      // price: "",
+      // id: null,
+      // product_name: "",
+      // product_image: "",
       loading: false,
       total_stock: "",
       uploading_image: false, // implement loading icon
       variants_with_options: [],
       variant_index: 1, // not zero indexed
+      variant_data: {},
     };
   },
   methods: {
@@ -317,8 +321,12 @@ export default {
       this.$emit("close");
       // this.$store.commit(mutationTypes.SET_PRODUCT_TO_BE_EDITTED, {});
     },
+    fetchVariants() {
+      this.get_variants = true;
+      // this.get_variants = false
+    },
     composePayload() {
-      this.has_variant ? (this.get_variants = true) : "";
+      // this.has_variant ? (this.get_variants = true) : "";
       // var variant_1_options = this.variants_with_options.variant_1_options.reduce((acc, curr) => {
       //   acc += `${curr},`
       //   return acc
@@ -334,6 +342,8 @@ export default {
       //   acc += `${curr.text},${curr.qty},`;
       //   return acc;
       // }, "");
+
+      // console.log(variant_options, this.variants)
 
       let data = {
         // only add parameters that have values/new values so not to overwite the existing stuff with empty values
@@ -352,7 +362,7 @@ export default {
         discount: this.discount,
         display: this.display,
         store: this.store.store_name,
-        // has_discount: this.addDiscount,
+        has_discount: this.addDiscount,
 
         // first_variant_name: this.variants[0] ? this.variants[0].key : "",
         // first_variant: this.variants[0]
@@ -369,15 +379,31 @@ export default {
         //     )
         //   : "",
       };
-      return data;
+      // console.log(data)
+      return this.product;
     },
     finishCreation() {
-      let data = this.composePayload();
+      // this.get_variants = true;
+      // console.log(this.composePayload())
+      let data = {
+        ...this.product,
+        ...{
+          first_variant_name: this.variants_with_options.variant_name_1,
+          second_variant_name: this.variants_with_options.variant_name_2,
+          first_variant: this.variants_with_options.variant_1_options,
+          second_variant: this.variants_with_options.variant_2_options,
+          variant_options: this.variants_with_options.variant_options,
+        total_stock: this.total_stock,
+
+        },
+      };
+      delete data.product_image
       if (this.hasDiscountError) {
         return;
       }
-      if (this.product_id) {
-        updateProduct(data, this.product_id)
+      if (this.product.id) {
+        console.log(data, this.variants_with_options);
+        updateProduct(data, this.product.id)
           .then(() => {
             EventBus.$emit(
               "open_alert",
@@ -386,17 +412,19 @@ export default {
                 ? "Product updated successfully"
                 : "Product created successfully"
             );
-            this.product_image = null;
-            this.product_name = null;
-            this.description = "";
-            this.has_discount = false;
-            this.has_variant = false;
-            this.discount_type = "0";
-            this.discount = "";
-            this.product_id = null;
-            this.price = null;
-            this.total_stock = null;
-            this.display = false;
+            this.product = {
+              product_image: null,
+              product_name: null,
+              description: "",
+              has_discount: false,
+              has_variant: false,
+              discount_type: "0",
+              discount: "",
+              product_id: null,
+              price: null,
+              total_stock: null,
+              display: false,
+            };
             EventBus.$emit("close_drawer");
             EventBus.$emit("close_drawer");
             fethcStoreInventory(this.store.slug);
@@ -412,17 +440,15 @@ export default {
           .finally(() => {
             this.loading = false;
           });
-      }else {
-         EventBus.$emit(
-              "open_alert",
-              "error",
-              "please upload a product image"
-            );
+      } else {
+        EventBus.$emit("open_alert", "error", "please upload a product image");
       }
+      this.get_variants = false;
 
       // this.loading = true;
     },
     getVariants(variant_data) {
+      this.variant_data = variant_data;
       this.variants_with_options = variant_data;
       this.total_stock = variant_data.total_stock;
       this.price += 1;
@@ -442,11 +468,11 @@ export default {
       form.append("product_image", e.target.files[0]);
       this.uploading_image = true;
 
-      if (!this.product_id) {
+      if (!this.product.id) {
         createProduct(form)
           .then((res) => {
-            this.product_image = res.data.product_image;
-            this.product_id = res.data.id;
+            this.product.product_image = res.data.product_image;
+            this.product.id = res.data.id;
           })
           .catch((err) => {
             this.image_preview = "";
@@ -460,7 +486,7 @@ export default {
             this.uploading_image = false;
           });
       } else {
-        updateProduct(form, this.product_id)
+        updateProduct(this.product, this.product.id)
           .then((res) => {
             console.log(res);
             // EventBus.$emit(
@@ -480,6 +506,11 @@ export default {
             this.loading = false;
           });
       }
+    },
+  },
+  watch: {
+    variant_data(_newData) {
+      this.finishCreation();
     },
   },
   computed: {
@@ -505,41 +536,59 @@ export default {
     // has_variant = this.currentProduct.has_variant
   },
   mounted() {
-    console.log(this.currentProduct);
+    // console.log(this.currentProducct);
     EventBus.$on("get_variants", () => {
       console.log("get variants activated from edit product");
     });
 
-    this.has_variant = this.currentProduct?.has_variant;
-    console.log(this.currentProduct);
     if (this.currentProduct) {
-      this.product_image = this.currentProduct.product_image;
-      this.product_name = this.currentProduct.product_name;
-      this.description = this.currentProduct.description;
-      this.has_discount = this.currentProduct.has_discount;
-      this.has_variant = this.currentProduct.has_variant;
-      this.discount_type = this.currentProduct.discount_type;
-      this.discount = this.currentProduct.discount;
-      this.product_id = this.currentProduct.id;
-      this.price = this.currentProduct.price;
-      this.total_stock = this.currentProduct.total_stock;
-      this.display = this.currentProduct.display;
-
-      //   let variants = [];
-      //   this.variants = variants;
+      this.product = this.currentProduct;
     } else {
-      this.product_image = null;
-      this.product_name = null;
-      this.description = "";
-      this.has_discount = false;
-      this.has_variant = false;
-      this.discount_type = "0";
-      this.discount = "";
-      this.product_id = null;
-      this.price = null;
-      this.total_stock = null;
-      this.display = false;
+      this.product = {
+        product_image: null,
+        product_name: null,
+        description: "",
+        has_discount: false,
+        has_variant: false,
+        discount_type: "0",
+        discount: "",
+        id: null,
+        price: null,
+        total_stock: null,
+        display: false,
+      };
     }
+
+    // this.has_variant = this.currentProduct?.has_variant;
+    // console.log(this.currentProduct);
+    // if (this.currentProduct) {
+    //   this.product_image = this.currentProduct.product_image;
+    //   this.product_name = this.currentProduct.product_name;
+    //   this.description = this.currentProduct.description;
+    //   this.has_discount = this.currentProduct.has_discount;
+    //   this.has_variant = this.currentProduct.has_variant;
+    //   this.discount_type = this.currentProduct.discount_type;
+    //   this.discount = this.currentProduct.discount;
+    //   this.product_id = this.currentProduct.id;
+    //   this.price = this.currentProduct.price;
+    //   this.total_stock = this.currentProduct.total_stock;
+    //   this.display = this.currentProduct.display;
+
+    //   //   let variants = [];
+    //   //   this.variants = variants;
+    // } else {
+    //   this.product_image = null;
+    //   this.product_name = null;
+    //   this.description = "";
+    //   this.has_discount = false;
+    //   this.has_variant = false;
+    //   this.discount_type = "0";
+    //   this.discount = "";
+    //   this.product_id = null;
+    //   this.price = null;
+    //   this.total_stock = null;
+    //   this.display = false;
+    // }
   },
   created() {
     // this.currentProduct.one_price ? this.generalPrice = currentProduct.total_stock
