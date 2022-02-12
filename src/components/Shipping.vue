@@ -110,24 +110,24 @@
                   item-color="success"
                   background-color="grey lighten-5"
                 ></v-select>
-                <v-card-text class="text-left pa-0 my-3">Price</v-card-text>
+                <v-card-text class="text-left pa-0 my-3">Street</v-card-text>
                 <v-text-field type="number" outlined> </v-text-field>
               </template>
-              <p class="delete text-left my-3">
+              <!-- <p class="delete text-left my-3">
                 <v-icon class="delete">
                   mdi-delete-outline
                 </v-icon>
                 Remove
-              </p>
+              </p> -->
             </div>
 
-            <p
+            <!-- <p
               class="text-left text-primary my-5 pointer describe"
               style="c"
               @click="locations.push({ state: '', lga: '' })"
             >
               + Add more location
-            </p>
+            </p> -->
           </v-sheet>
         </div>
 
@@ -137,12 +137,17 @@
           >
           <div
             class="my-4"
-            style="text-align: left; color: #69747E; font-weight: 600; display: flex; justify-content: space-between; align-items: center"
+            style="text-align: left; color: #69747E; font-weight: 600; display: flex; justify-content: space-between; align-items: flex-start"
           >
-            <div>
-               In-house
+            <div v-if="shipping_mode_in_house">
+              In-house
               <p class="caption">I have a way of getting orders to customers</p>
-              
+            </div>
+            <div v-else>
+              Third-party
+              <p class="caption">
+                Use our delivery partners to get order to your customer
+              </p>
             </div>
             <span class="switch">
               <v-switch
@@ -154,10 +159,10 @@
               >
               </v-switch>
             </span>
-            <div style="text-align: right;">
+            <!-- <div style="text-align: right;">
              Help me deliver
               <p class="caption">Let us handle shipping for you</p>
-            </div>
+            </div> -->
           </div>
           <!-- <v-sheet
             :style="shipping_mode == 'in_house' ? {borderColor: activeBorderColor} : ''"
@@ -193,12 +198,13 @@
 
         <div v-if="shipping_mode_in_house && delivery_opt != 'pick_up'">
           <v-card-text class="text-left pa-0 pt-5 mt-5"
-            >Set delivery fees</v-card-text
+            >Set delivery fees for different locations</v-card-text
           >
           <ShippingPrices
             @getLocations="saveLocations($event)"
             @resetStringify="resetStringify()"
             :stringify="stringify"
+            :defaultShipping="store.default_shipping"
           />
         </div>
       </div>
@@ -222,6 +228,7 @@ import ShippingPrices from "@/components/ShippingPrices";
 
 export default {
   name: "Shipping",
+  props: ["modal"],
   components: {
     setupFooter,
     ShippingPrices,
@@ -252,7 +259,9 @@ export default {
           this.$store.commit(mutationTypes.SAVE_STORE, store);
           this.feedback = true;
           EventBus.$emit("open_alert", "success", "Shipping details updated");
-          this.$router.go(0);
+          if (this.modal) {
+            this.$router.go(0);
+          }
         })
         .catch((err) => {
           EventBus.$emit(
@@ -262,6 +271,7 @@ export default {
           );
         })
         .finally(() => {});
+        this.stringify = false
     },
     setDeliveryOption(option) {
       this.delivery_opt = option;
@@ -276,7 +286,8 @@ export default {
     }),
   },
   mounted() {
-    console.log(NaijaStates.lgas("lagos", "abia"));
+    this.store.default_shipping ? this.shipping_mode_in_house = true : this.shipping_mode_in_house = false
+    // console.log(NaijaStates.lgas("lagos", "abia"));
   },
 };
 </script>

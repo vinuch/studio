@@ -237,6 +237,10 @@ export default {
       // unsavedChange: "getUnsavedChange",
     }),
   },
+  mounted() {
+        this.$store.commit(mutationTypes.SET_PRODUCT_TO_BE_EDITTED, null);
+
+  }
 };
 </script>
 

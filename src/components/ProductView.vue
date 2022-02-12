@@ -365,6 +365,7 @@ export default {
           }
         }
       });
+    console.log(this.variants)
     }
   },
 };

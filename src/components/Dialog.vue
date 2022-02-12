@@ -34,7 +34,7 @@
           <BankDetails v-if="propModal == 'set_bank'" />
           <BusinessHours v-if="propModal == 'business_hours'" />
           <StoreDetails v-if="propModal == 'store_details'" />
-          <Shipping v-if="propModal == 'shipping'" />
+          <Shipping v-if="propModal == 'shipping'" :modal="true"/>
           <SuccessModal v-if="propModal == 'success'" />
           <FilterOrdersModal v-if="propModal == 'filter_orders'" />
           <CallCustomer v-if="propModal == 'call_customer'" :phone="phone" :name="name" />

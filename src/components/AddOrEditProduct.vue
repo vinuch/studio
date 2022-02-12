@@ -345,40 +345,40 @@ export default {
 
       // console.log(variant_options, this.variants)
 
-      let data = {
-        // only add parameters that have values/new values so not to overwite the existing stuff with empty values
-        product_name: this.product_name,
-        description: this.description,
-        has_discount: this.has_discount,
-        has_variant: this.has_variant,
-        first_variant_name: this.variants_with_options.variant_name_1,
-        second_variant_name: this.variants_with_options.variant_name_2,
-        first_variant: this.variants_with_options.variant_1_options,
-        second_variant: this.variants_with_options.variant_2_options,
-        variant_options: this.variants_with_options.variant_options,
-        price: parseFloat(this.price) * 100,
-        total_stock: this.total_stock,
-        discount_type: this.discount_type,
-        discount: this.discount,
-        display: this.display,
-        store: this.store.store_name,
-        has_discount: this.addDiscount,
+      // let data = {
+      //   // only add parameters that have values/new values so not to overwite the existing stuff with empty values
+      //   product_name: this.product_name,
+      //   description: this.description,
+      //   has_discount: this.has_discount,
+      //   has_variant: this.has_variant,
+      //   first_variant_name: this.variants_with_options.variant_name_1,
+      //   second_variant_name: this.variants_with_options.variant_name_2,
+      //   first_variant: this.variants_with_options.variant_1_options,
+      //   second_variant: this.variants_with_options.variant_2_options,
+      //   variant_options: this.variants_with_options.variant_options,
+      //   price: parseFloat(this.price) * 100,
+      //   total_stock: this.total_stock,
+      //   discount_type: this.discount_type,
+      //   discount: this.discount,
+      //   display: this.display,
+      //   store: this.store.store_name,
+      //   has_discount: this.addDiscount,
 
-        // first_variant_name: this.variants[0] ? this.variants[0].key : "",
-        // first_variant: this.variants[0]
-        //   ? this.variants[0].values.reduce(
-        //       (cumm, curr) => (cumm += `${curr.value},`),
-        //       ""
-        //     )
-        //   : "",
-        // second_variant_name: this.variants[1] ? this.variants[1].key : "",
-        // second_variant: this.variants[1]
-        //   ? this.variants[1].values.reduce(
-        //       (cumm, curr) => (cumm += `${curr.value},`),
-        //       ""
-        //     )
-        //   : "",
-      };
+      //   // first_variant_name: this.variants[0] ? this.variants[0].key : "",
+      //   // first_variant: this.variants[0]
+      //   //   ? this.variants[0].values.reduce(
+      //   //       (cumm, curr) => (cumm += `${curr.value},`),
+      //   //       ""
+      //   //     )
+      //   //   : "",
+      //   // second_variant_name: this.variants[1] ? this.variants[1].key : "",
+      //   // second_variant: this.variants[1]
+      //   //   ? this.variants[1].values.reduce(
+      //   //       (cumm, curr) => (cumm += `${curr.value},`),
+      //   //       ""
+      //   //     )
+      //   //   : "",
+      // };
       // console.log(data)
       return this.product;
     },
@@ -509,7 +509,7 @@ export default {
     },
   },
   watch: {
-    variant_data(_newData) {
+    variant_data() {
       this.finishCreation();
     },
   },

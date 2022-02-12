@@ -341,14 +341,14 @@ export default {
         for (let i = 0; i < this.options_1?.length; i++) {
           for (let j = 0; j < this.options_2?.length; j++) {
             for (let k = 0; k < this.options_3?.length; k++) {
-              let object = {
-                name:
-                  this.options_1[i] +
-                  " / " +
-                  this.options_2[j] +
-                  " / " +
-                  this.options_3[k],
-              };
+              // let object = {
+              //   name:
+              //     this.options_1[i] +
+              //     " / " +
+              //     this.options_2[j] +
+              //     " / " +
+              //     this.options_3[k],
+              // };
               // this.variants.push(object);
             }
           }
@@ -358,9 +358,9 @@ export default {
         // two variants
         for (let i = 0; i < this.options_1?.length; i++) {
           for (let j = 0; j < this.options_2?.length; j++) {
-            let object = {
-              name: this.options_1[i] + " / " + this.options_2[j],
-            };
+            // let object = {
+            //   name: this.options_1[i] + " / " + this.options_2[j],
+            // };
             // this.variants.push(object);
           }
         }
