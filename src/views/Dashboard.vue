@@ -19,15 +19,18 @@
     </div>
 
     <!-- <div class="d-flex justify-end"> -->
-    <p class="caption text-right">Compared to</p>
-    <v-select
-      v-if="setup_steps > 3"
-      style="float: right; width: 10rem;"
-      class="d-inline-block left"
-      :items="['yesterday', 'last month', 'last year']"
-      v-model="timeFrame"
-      outlined
-    ></v-select>
+    <div v-if="verified">
+      <!-- <p class="caption text-right">Compared to</p> -->
+      <v-select
+        v-if="setup_steps > 3"
+        style="float: right; width: 10rem;"
+        class="d-inline-block left"
+        :items="['yesterday', 'last month', 'last year']"
+        v-model="timeFrame"
+        outlined
+      ></v-select>
+    </div>
+
     <!-- </div> -->
 
     <!-- store setup -->
@@ -562,7 +565,7 @@ export default {
 
         let changeInAvgCheckoutSize =
           thisYearAvgCheckoutSize - lastYearAvgCheckoutSize;
-          console.log(lastYearSalesTotal, thisYearSalesTotal, totalSales)
+        console.log(lastYearSalesTotal, thisYearSalesTotal, totalSales);
         return [
           {
             title: "Total sales",
@@ -632,14 +635,14 @@ export default {
       }
 
       if (this.verified[0] == 0) {
-        !this.email_verified
-          ? EventBus.$emit(
-              "open_alert",
-              "warning",
-              "email not verified. You can verify from here if you close this",
-              "Verify Email"
-            )
-          : "";
+        // !this.email_verified
+        //   ? EventBus.$emit(
+        //       "open_alert",
+        //       "warning",
+        //       "email not verified. You can verify from here if you close this",
+        //       "Verify Email"
+        //     )
+        //   : "";
       } else {
         this.$store.commit(mutationTypes.EMAIL_VERIFIED, true);
       }

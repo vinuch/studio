@@ -1,6 +1,6 @@
 // General
 export const baseUrl = process.env.VUE_APP_API_BASE_URL
-console.log(process.env.NODE_ENV)
+console.log(process.env.NODE_ENV, baseUrl)
 const prefix = process.env.NODE_ENV === 'development' ? '/' : baseUrl
 
 // Signup and registration
@@ -29,6 +29,7 @@ export const createProductUrl = `${prefix}api/inventory/product/create/`;
 export const initialiseProductUrl = `${prefix}product/initialise/`;
 export const inventoryUrl = `${prefix}api/inventory/product/`;
 export const updateProductUrl = `${prefix}api/inventory/product/update/`;
+export const deleteProductUrl = `${prefix}api/inventory/product/`;
 
 // Orders
 export const ordersUrl = `${prefix}api/inventory/order/`;

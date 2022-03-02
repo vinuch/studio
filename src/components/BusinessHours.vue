@@ -1,12 +1,12 @@
 <template>
   <div class="rounded-xl">
-    <v-card class="elevation-0 overflow-hidden">
-      <v-card-title class="title justify-center">
+    <v-card class="elevation-0 overflow-hidden " >
+      <!-- <v-card-title class="title justify-center">
         Business Hours
       </v-card-title>
       <v-card-text>
         Set the hours you are available to receive orders
-      </v-card-text>
+      </v-card-text> -->
 
       <v-sheet elevation="0" rounded="lg" class="ma-5 mb-0 py-5">
         <div>
@@ -34,12 +34,13 @@
 
       <div v-for="(period, i) in periods" :ref="'period_' + i" :key="i">
         <v-icon
-          v-if="always_open != true"
+          v-if="always_open != true && i > 0"
           class="delete"
           @click="deletePeriod(i)"
         >
           mdi-delete-outline
         </v-icon>
+
         <OpenHours
           v-if="always_open != true"
           @setSelectedDay="setSelectedDay($event)"
@@ -48,17 +49,33 @@
           :isset_status="isset_status"
           :disable_set_days="disable_set_days"
           :set_indexes="set_indexes"
+          :days="days"
+          :period="i"
+          :periods="periods"
         />
       </div>
-<!-- {{set_indexes.length}} {{days.length}} -->
-      <p
-        v-if="always_open != true && ( set_indexes.length <= days.length)"
-        class="text-left mb-5 pl-5 pointer describe"
-        style="color: #4CAF50"
-        @click="addPeriod()"
-      >
-        + specify more days and times
-      </p>
+      <!-- {{set_indexes.length}} {{days.length}} -->
+      <div class="d-flex justify-space-between align-center block">
+        <p
+          v-if="always_open != true && !allDaysSet"
+          class="text-left mb-5 pl-5 pointer describe"
+          style="color: #4CAF50"
+          @click="addPeriod()"
+        >
+          + specify more days and times {{ allDaysSet }}
+        </p>
+        <!-- <p
+          v-if="always_open != true && set_indexes.length <= days.length"
+          class="text-left mb-5 pr-5 pointer describe"
+          style="color: red"
+          @click="deleteAllPeriods()"
+        >
+          <v-icon small v-if="always_open != true" class="delete">
+            mdi-delete-outline
+          </v-icon>
+          clear
+        </p> -->
+      </div>
 
       <setupFooter @saveSetUp="save()">
         Save Business Hours
@@ -87,16 +104,25 @@ export default {
   data: () => ({
     always_open: true,
     close: null, // current closing time
-    days: [], // days of the week with truthy values
+    // days: [], // days of the week with truthy values
     days_with_times: [],
     disable_set_days: false,
     freeze: false, // freeze all edits after time is set
     isset_status: null,
     loading: false,
     open: null, // current open time
-    periods: [{}], // days with same open and closing times
+    periods: [{ days: [], open: null, close: null }], // days with same open and closing times
     set_indexes: [],
     stringified_hours: "",
+    days: [
+      { day: "Mon", open: "", close: "", selected: false, isset: false },
+      { day: "Tue", open: "", close: "", selected: false, isset: false },
+      { day: "Wed", open: "", close: "", selected: false, isset: false },
+      { day: "Thu", open: "", close: "", selected: false, isset: false },
+      { day: "Fri", open: "", close: "", selected: false, isset: false },
+      { day: "Sat", open: "", close: "", selected: false, isset: false },
+      { day: "Sun", open: "", close: "", selected: false, isset: false },
+    ],
   }),
 
   methods: {
@@ -110,20 +136,43 @@ export default {
           this.always_open = !this.always_open;
         }
       } else {
-        this.periods = [{}];
+        // this.periods = [{ days: [], open: null, close: null }];
         this.always_open = !this.always_open;
       }
     },
+    deleteAllPeriods() {
+      console.log("delete all");
+      this.periods = [];
+
+      this.days = [
+        { day: "Mon", open: "", close: "", selected: false, isset: false },
+        { day: "Tue", open: "", close: "", selected: false, isset: false },
+        { day: "Wed", open: "", close: "", selected: false, isset: false },
+        { day: "Thu", open: "", close: "", selected: false, isset: false },
+        { day: "Fri", open: "", close: "", selected: false, isset: false },
+        { day: "Sat", open: "", close: "", selected: false, isset: false },
+        { day: "Sun", open: "", close: "", selected: false, isset: false },
+      ];
+      this.periods.push({});
+      this.close = null;
+      this.open = null;
+    },
     addPeriod() {
+      console.log(this.days);
       this.preSave();
-      if (!this.close || !this.open) {
-        // EventBus.$emit(
-        //   "open_alert",
-        //   "error",
-        //   "Set an opening time | Set a closing time"
-        // );
+      if (
+        !this.periods[this.periods.length - 1].close ||
+        !this.periods[this.periods.length - 1].open
+      ) {
+        EventBus.$emit(
+          "open_alert",
+          "error",
+          "Set an opening time | Set a closing time ser"
+        );
       } else if (this.set_indexes.length < this.days.length) {
-        this.periods.push({});
+        this.periods.push({ days: [], open: null, close: null });
+        this.open = null;
+        this.close = null;
         this.disable_set_days = false; // in case not already false
 
         this.$nextTick(function() {
@@ -139,12 +188,22 @@ export default {
         //   "Opening and closing hours have already been set for all days of the week"
         // );
       }
+      console.log(this.periods);
     },
     closeDialog() {
       this.$emit("closeDialog");
     },
     deletePeriod(index) {
+      let _days = this.periods[index].days;
+      this.periods[index].close = null;
+      this.periods[index].open = null;
+      if (_days.length) {
+        _days.forEach((day) => {
+          this.days.find((item) => item.day === day).isset = false;
+        });
+      }
       this.periods.splice(index, 1);
+      console.log(this.periods);
     },
     preSave() {
       if (this.days && this.open && this.close) {
@@ -157,22 +216,13 @@ export default {
         }
         this.isset_status = true; // prevent next period from editing
       } else {
-
         if (!this.days) {
           EventBus.$emit(
             "open_alert",
             "error",
             "Please select a day or days for this time-block "
           );
-        }else if(!this.close || !this.open){
-            EventBus.$emit(
-            "open_alert",
-            "error",
-            "Please Set an opening time | Set a closing time for this time-block "
-          );
         }
-
-        console.log("days is empty");
       }
     },
     save() {
@@ -236,7 +286,7 @@ export default {
       let data = {
         open_hours: this.stringified_hours,
       };
-      console.log(data)
+      console.log(data);
       updateStore(data, this.store.id)
         .then((res) => {
           let store = res.data;
@@ -253,21 +303,74 @@ export default {
         })
         .finally(() => {});
     },
-    setCloseTime(time) {
-      this.close = time;
+    setCloseTime(params) {
+      let { time, period } = params;
+      this.periods[period].close = time;
     },
-    setOpenTime(time) {
-      this.open = time;
+    setOpenTime(params) {
+      let { time, period } = params;
+      this.periods[period].open = time;
     },
-    setSelectedDay(days) {
-      this.days = days;
+    setSelectedDay(param) {
+      let { day, period } = param;
+      console.log(this.periods[period].days);
+
+      if (day.isset && this.periods[period].days.includes(day.day)) {
+        const index = this.periods[period].days.indexOf(day.day);
+        if (index > -1) {
+          this.periods[period].days.splice(index, 1); // 2nd parameter means remove one item only
+          day.isset = false;
+        }
+      } else if (!day.isset) {
+        this.periods[period].days.push(day.day);
+        day.isset = true;
+      }
+
+      console.log(day, "day");
+
+      // this.days = days;
+      // if (day.selected == true && day.isset == false) {
+      //   // can't undo already set day
+      //   day.selected = false;
+      // } else if (day.selected == false && day.isset == false) {
+      //   day.selected = true;
+      // }
+      console.log(day.selected, day.isset);
     },
     stringifyBizHrs() {
-      for (let i = 0; i < this.days.length; i++) {
-        if (this.days[i].selected) {
-          this.stringified_hours += this.days[i].day + ",";
-          this.stringified_hours += this.days[i].open + ",";
-          this.stringified_hours += this.days[i].close + ",";
+      // for (let i = 0; i < this.days.length; i++) {
+      //   if (this.days[i].selected) {
+      //     this.stringified_hours += this.days[i].day + ",";
+      //     this.stringified_hours += this.days[i].open + ",";
+      //     this.stringified_hours += this.days[i].close + ",";
+      //   }
+      // }
+      for (let i = 0; i < this.periods.length; i++) {
+        this.periods[i].days.forEach((item) => {
+          this.stringified_hours += item + ",";
+          this.stringified_hours += this.periods[i].open + ",";
+          this.stringified_hours += this.periods[i].close + ",";
+        });
+        // if (this.days[i].selected) {
+        //   this.stringified_hours += this.days[i].day + ",";
+        //   this.stringified_hours += this.days[i].open + ",";
+        //   this.stringified_hours += this.days[i].close + ",";
+        // }
+      }
+    },
+  },
+  watch: {
+    isset_status() {
+      if (this.isset_status == true) {
+        for (let i = 0; i < this.days.length; i++) {
+          // this.days[i].isset = this.isset_status;
+        }
+      }
+    },
+    disable_set_days() {
+      if (this.disable_set_days == true) {
+        for (let i = 0; i < this.set_indexes.length; i++) {
+          this.days[this.set_indexes[i]].isset = true;
         }
       }
     },
@@ -276,6 +379,51 @@ export default {
     ...mapGetters({
       store: "getStore",
     }),
+    allDaysSet() {
+      console.log(this.days);
+      let result = this.days[0].isset;
+      console.log(
+        this.days.reduce((_, currentValue) => {
+          result = result && currentValue.isset;
+          return currentValue;
+        })
+      );
+      return result;
+    },
+  },
+  mounted() {
+    if (this.store.open_hours) {
+      this.always_open = false;
+      // Mon,00:01,06:30,Sun,00:01,06:30,
+      let reconstructedPeriod = [];
+      let splitHours = this.store.open_hours
+        .split(",")
+        .filter((item) => item !== "");
+      let dayCount = splitHours.length / 3;
+      for (let index = 0; index < splitHours.length / dayCount; index++) {
+        // console.log(dayCount, splitHours[(index * dayCount)], splitHours[(index * dayCount) + 1], splitHours[(index * dayCount) + 2])
+        this.days.find(day => day.day === splitHours[index * dayCount]).isset = true
+        let periodWithSameTime = reconstructedPeriod.find((item) => {
+          return (
+            item.open === splitHours[index * dayCount + 1] &&
+            item.close === splitHours[index * dayCount + 2]
+          );
+        });
+        // console.log(periodWithSameTime);
+
+        if (periodWithSameTime) {
+          periodWithSameTime.days.push(splitHours[index * dayCount]);
+        } else {
+          reconstructedPeriod[index] = {
+            days: [splitHours[index * dayCount]],
+            open: splitHours[index * dayCount + 1],
+            close: splitHours[index * dayCount + 2],
+          };
+        }
+      }
+      // console.log(reconstructedPeriod);
+      this.periods = reconstructedPeriod
+    }
   },
 };
 </script>
@@ -318,5 +466,6 @@ li {
   right: 25px;
   top: -16px;
   cursor: pointer;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.08);
 }
 </style>

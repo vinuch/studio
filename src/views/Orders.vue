@@ -29,28 +29,8 @@
 
       <v-container v-else fluid class="pa-0">
         <v-row class="pa-0">
-          <v-col cols="3" style="padding: 12px 0">
-            <!-- <v-text-field
-              outlined
-              prepend-inner-icon="mdi-magnify"
-              placeholder="Search by name"
-              background-color="grey lighten-5"
-            >
-            </v-text-field> -->
-            <v-select
-              style="font-size: 12px"
-              class="d-inline-block left"
-              :items="[
-                'client name',
-                'item in order',
-                'phone number',
-                'order number',
-              ]"
-              v-model="searchBy"
-              outlined
-            ></v-select>
-          </v-col>
-          <v-col cols="6">
+
+          <v-col cols="9">
             <!-- <v-text-field
               outlined
               prepend-inner-icon="mdi-magnify"
@@ -59,14 +39,14 @@
             >
             </v-text-field> -->
             <TextInput
-              :placeholder="`Search by ${searchBy}`"
+              :placeholder="`Search by ${filterOption}`"
               name="search"
               inputStyles="background-color: #FDFDFD; margin-bottom: 0 !important; font-size: 12px"
               @update="(vl) => searchOrders(vl)"
             >
-              <!-- <template v-slot:prepend-inner>
+              <template v-slot:prepend-inner>
                 <Search />
-              </template> -->
+              </template>
             </TextInput>
           </v-col>
           <v-col cols="3" class="">
@@ -119,7 +99,7 @@ import MenuSpacer from "@/components/MenuSpacer.vue";
 import OrdersEmpty from "../components/Icons/OrdersEmpty.vue";
 import Button from "@/components/Button";
 import TextInput from "@/components/TextInput";
-// import Search from "@/components/Icons/Search.vue";
+import Search from "@/components/Icons/Search.vue";
 import * as mutationTypes from "@/store/mutationTypes";
 import { EventBus } from "@/services/eventBus";
 
@@ -131,11 +111,11 @@ export default {
     OrdersEmpty,
     Button,
     TextInput,
-    // Search,
+    Search,
   },
   data: () => {
     return {
-      searchBy: "client name",
+      // searchBy: "client name",
       searchTerm: "",
       pageWidth: true,
       activeKey: null,
@@ -202,6 +182,7 @@ export default {
     ...mapGetters({
       orders: "getOrders",
       email_verified: "getEmailStatus",
+      filterOption: 'getFilterOption'
     }),
   },
   watch: {

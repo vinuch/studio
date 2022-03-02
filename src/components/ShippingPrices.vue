@@ -37,7 +37,7 @@
               class="location"
             >
               {{ location }}
-              <v-icon small @click="deleteLocation(i)"
+              <v-icon small @click="deleteLocation(i, idx)"
                 >mdi-delete-outline</v-icon
               >
             </p>
@@ -136,8 +136,8 @@ export default {
         location.charAt(0).toUpperCase() + location.slice(1);
       return;
     },
-    deleteLocation(i) {
-      this.band[this.band_index].locations.splice(i, 1);
+    deleteLocation(i, idx) {
+      this.band[idx].locations.splice(i, 1);
     },
     stringifyLocations() {
       this.band[this.band_index].locations.length > 0

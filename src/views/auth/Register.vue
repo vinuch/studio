@@ -27,13 +27,14 @@
                 mt-5
                 pt-5
                 text-h5
-                text_pink--text
+                
                 font-weight-medium
               "
+              style="color: #143E32"
             >
               Create your store
             </h1>
-            <p class="text-left text-body-2 text_pink--text">
+            <p class="text-left text-body-2" style="color: #445B54">
               Enter your store name, custom link, and select a store type.
             </p>
             <v-form
@@ -323,7 +324,7 @@ export default {
           };
           signUp(data)
             .then((res) => {
-              console.log(res)
+              console.log('response:', res)
               window.sessionStorage.setItem("leyyow_token", res.data.token);
               axios.defaults.headers.common[
                 "Authorization"
@@ -334,6 +335,7 @@ export default {
                 slug: this.store_slug,
                 business_type: this.store_type,
               };
+              console.log(data)
               createStore(data);
             })
             .catch(() => {

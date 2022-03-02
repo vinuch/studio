@@ -19,7 +19,7 @@
       >
       <div v-if="shipping_price != null">
         <v-card-text 
-          class="text-left pa-0 mb-1">Type areas that cost <span style="font-weight: bold">{{shipping_price}}</span> to deliver to. Separate each area with a comma or press enter.
+          class="text-left pa-0 mb-1">Type areas that costadfa <span style="font-weight: bold">{{shipping_price}}</span> to deliver to. Separate each area with a comma or press enter.
         </v-card-text>
         <div
           style="border: 1px solid blue; border-radius: 8px; padding: 16px; text-align: left;"

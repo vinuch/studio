@@ -283,7 +283,11 @@ export default {
   },
   data: () => {
     return {
-      product: {},
+      product: {
+        first_variant: [],
+        second_variant: [],
+        third_variant: [],
+      },
       variant_pairs: 25, // should be an array
       description: "",
       discount: "",
@@ -322,7 +326,11 @@ export default {
       // this.$store.commit(mutationTypes.SET_PRODUCT_TO_BE_EDITTED, {});
     },
     fetchVariants() {
-      this.get_variants = true;
+      if (this.product.has_variant) {
+        this.get_variants = true;
+      }else{
+        this.finishCreation()
+      }
       // this.get_variants = false
     },
     composePayload() {
@@ -393,11 +401,12 @@ export default {
           first_variant: this.variants_with_options.variant_1_options,
           second_variant: this.variants_with_options.variant_2_options,
           variant_options: this.variants_with_options.variant_options,
-        total_stock: this.total_stock,
-
         },
       };
-      delete data.product_image
+      delete data.product_image;
+      if (data.has_variant) {
+        data.price = 0;
+      }
       if (this.hasDiscountError) {
         return;
       }
@@ -473,6 +482,7 @@ export default {
           .then((res) => {
             this.product.product_image = res.data.product_image;
             this.product.id = res.data.id;
+            console.log(res);
           })
           .catch((err) => {
             this.image_preview = "";
@@ -553,7 +563,7 @@ export default {
         discount_type: "0",
         discount: "",
         id: null,
-        price: null,
+        price: 0,
         total_stock: null,
         display: false,
       };

@@ -53,7 +53,7 @@
         </ul>
         <!-- </v-sheet> -->
 
-        <div v-if="delivery_opt == 'pick_up'">
+        <div v-if="delivery_opt == 'pick_up' || delivery_opt == 'both'">
           <v-card-text class="text-left pa-0 pt-5 mt-5">
             Enter your pick-up address
             <v-tooltip bottom>
@@ -136,8 +136,8 @@
             >What delivery service will you use?</v-card-text
           >
           <div
-            class="my-4"
-            style="text-align: left; color: #69747E; font-weight: 600; display: flex; justify-content: space-between; align-items: flex-start"
+            class="my-4 pa-4"
+            style="text-align: left; color: #69747E; font-weight: 600; display: flex; justify-content: space-between; align-items: flex-start;border: 0.5px solid #E5E9F2;border-radius: 8px;"
           >
             <div v-if="shipping_mode_in_house">
               In-house
@@ -208,7 +208,7 @@
           />
         </div>
       </div>
-      <setupFooter @saveSetUp="stringifyLocations()">
+      <setupFooter @saveSetUp="stringifyLocations()" :modal="modal">
         Save Shipping
       </setupFooter>
     </v-card>
@@ -271,7 +271,7 @@ export default {
           );
         })
         .finally(() => {});
-        this.stringify = false
+      this.stringify = false;
     },
     setDeliveryOption(option) {
       this.delivery_opt = option;
@@ -286,7 +286,9 @@ export default {
     }),
   },
   mounted() {
-    this.store.default_shipping ? this.shipping_mode_in_house = true : this.shipping_mode_in_house = false
+    this.store.default_shipping
+      ? (this.shipping_mode_in_house = true)
+      : (this.shipping_mode_in_house = false);
     // console.log(NaijaStates.lgas("lagos", "abia"));
   },
 };

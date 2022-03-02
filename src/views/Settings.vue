@@ -6,7 +6,7 @@
     <div :style="`margin: 4rem 0; ${
           email_verified ? 'marginTop:4rem' : 'marginTop:8rem'
         }`">
-      <v-card class="elevation-0 overflow-hidden pa-0 rounded-xl" style="border: 0.5px solid #F3F3F3;">
+      <v-card class="elevation-0 overflow-hidden pa-0 rounded-xl" style="border: 1px solid #F3F3F3;">
         <v-tabs id="tab" v-model="tabs" fixed-tabs>
           <v-tab v-for="(link, i) in links" :key="i">
             <!-- <span class="caption"> {{link.name}}</span> -->
