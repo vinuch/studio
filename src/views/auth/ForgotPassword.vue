@@ -21,11 +21,11 @@
               contain
               position="center left"
             />
-            <h1 class="text-left mt-5 pt-5 text-h6 text_pink--text">
+            <h1 class="text-left mt-5 pt-5 text-h6" style="color: #0C3E26">
               Forgot Password?
             </h1>
-            <p class="text-left text-body-2 text_pink--text">
-              Enter the email address you created your store with.
+            <p class="text-left text-body-2" style="color: #445B54">
+              Enter the email associated with your account.
             </p>
             <v-form
               class="auth_form_xs mt-2"
@@ -65,13 +65,10 @@
               </TextInput>
               <Button
                 :block="true"
-                label="Request reset password"
+                label="send"
                 :primary="true"
                 size="large"
-                @onClick="
-                  {
-                  }
-                "
+                @onClick="requestPassworReset"
               />
               <p class="text-body-2 mt-5">
                 Remember your password?
@@ -92,6 +89,7 @@ import About from "@/components/About";
 import MobileBanner from "@/components/MobileBanner";
 import TextInput from "@/components/TextInput";
 import { required, email } from "@vuelidate/validators";
+import { EventBus } from "@/services/eventBus";
 
 import Button from "@/components/Button";
 
@@ -108,6 +106,13 @@ export default {
       email: { required, email },
     },
   }),
+  methods: {
+    requestPassworReset() {
+      // this.$store.commit(mutationTypes.SET_SETTINGS_STATE, false);
+      EventBus.$emit("dialog", "open", "success_password_reset_mail");
+
+    }
+  },
   computed: {},
 };
 </script>

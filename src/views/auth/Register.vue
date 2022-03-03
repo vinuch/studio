@@ -35,7 +35,7 @@
               Create your store
             </h1>
             <p class="text-left text-body-2" style="color: #445B54">
-              Enter your store name, custom link, and select a store type.
+             Enter your store name and link, and select your store type
             </p>
             <v-form
               class="auth_form_xs"

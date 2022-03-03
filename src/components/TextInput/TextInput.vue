@@ -10,8 +10,6 @@
     @blur="v$.form[name].$touch"
     outlined
     @keyup="handleChange"
-    
-    
   >
     <template v-slot:prepend-inner>
       <slot name="prepend-inner"></slot>
@@ -33,7 +31,7 @@ export default {
   },
   validations() {
     return {
-        form: {
+      form: {
         ...{ [this.name]: this.validations || {} },
       },
     };
@@ -52,32 +50,36 @@ export default {
     },
     placeholder: {
       type: String,
-    
     },
     inputStyles: {
       type: String,
-    
     },
 
     validations: {
       type: Object,
+    },
+    validate: {
+      type: Boolean,
     },
   },
 
   data() {
     return {
       form: {
-        ...{ [this.name]: '' },
+        ...{ [this.name]: "" },
       },
     };
   },
 
   methods: {
+    handleAppendClick() {
+      this.$emit("handleAppendClick");
+    },
     handleChange() {
       this.$emit("update", this.form[this.name]);
     },
     catchValidations() {
-      if (this.validations) {
+      if (this.validate && this.validations) {
         return this.v$.form[this.name]?.$dirty
           ? !this.v$.form[this.name]?.$error
             ? true
@@ -100,6 +102,17 @@ export default {
       return {
         backgroundColor: this.backgroundColor,
       };
+    },
+  },
+  watch: {
+    validate() {
+      if (!this.form[this.name]) {
+        this.form[this.name] = " ";
+
+        setTimeout(() => {
+          this.form[this.name] = "";
+        }, 100);
+      }
     },
   },
 };

@@ -1,11 +1,7 @@
 <template>
   <div>
     <v-row justify="center">
-      <v-dialog
-        v-model="dialog"
-        persistent
-        @click:outside="closeDialog"
-      >
+      <v-dialog v-model="dialog" persistent @click:outside="closeDialog">
         <div class="white rounded-xl" style="position: relative">
           <v-btn
             @click="closeDialog"
@@ -34,10 +30,17 @@
           <BankDetails v-if="propModal == 'set_bank'" />
           <BusinessHours v-if="propModal == 'business_hours'" />
           <StoreDetails v-if="propModal == 'store_details'" />
-          <Shipping v-if="propModal == 'shipping'" :modal="true"/>
+          <Shipping v-if="propModal == 'shipping'" :modal="true" />
           <SuccessModal v-if="propModal == 'success'" />
           <FilterOrdersModal v-if="propModal == 'filter_orders'" />
-          <CallCustomer v-if="propModal == 'call_customer'" :phone="phone" :name="name" />
+          <CallCustomer
+            v-if="propModal == 'call_customer'"
+            :phone="phone"
+            :name="name"
+          />
+          <SuccessPasswordResetMail
+            v-if="propModal == 'success_password_reset_mail'"
+          />
         </div>
       </v-dialog>
     </v-row>
@@ -56,6 +59,7 @@ import Shipping from "@/components/Shipping";
 import SuccessModal from "./successModal.vue";
 import FilterOrdersModal from "./FilterOrdersModal.vue";
 import CallCustomer from "./CallCustomer.vue";
+import SuccessPasswordResetMail from "./SuccessPasswordResetMail.vue";
 
 export default {
   name: "Dialog",
@@ -68,8 +72,9 @@ export default {
     SuccessModal,
     FilterOrdersModal,
     CallCustomer,
+    SuccessPasswordResetMail,
   },
-  props: ["modal", 'phone', 'name'],
+  props: ["modal", "phone", "name"],
   data: () => ({
     dialog: true, // default is false
     // propModal: "shipping",
@@ -84,12 +89,9 @@ export default {
     propModal() {
       return this.modal; // replace propModal in data with this
     },
-    
   },
-  mounted() {
-  }
+  mounted() {},
 };
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>

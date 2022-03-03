@@ -231,7 +231,7 @@ export default {
     dialog: false, // default is false
     modal: null,
     setup_steps: 0,
-    verified: "00000",
+    verified: null
   }),
   methods: {
     openDialog(setup) {
@@ -622,7 +622,7 @@ export default {
       }
     },
   },
-  created() {
+  mounted() {
     this.verified = this.store.verified;
 
     if (this.verified) {
@@ -633,16 +633,9 @@ export default {
           this.setup_steps += 1;
         }
       }
-
       if (this.verified[0] == 0) {
-        // !this.email_verified
-        //   ? EventBus.$emit(
-        //       "open_alert",
-        //       "warning",
-        //       "email not verified. You can verify from here if you close this",
-        //       "Verify Email"
-        //     )
-        //   : "";
+        this.$store.commit(mutationTypes.EMAIL_VERIFIED, false);
+
       } else {
         this.$store.commit(mutationTypes.EMAIL_VERIFIED, true);
       }

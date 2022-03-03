@@ -9,6 +9,12 @@ Vue.use(Vuex);
 const vuexLocal = new VuexPersistence({
   storage: window.localStorage,
   key: "leyyow",
+  // reducer: state => ({
+  //   store: state.store,
+  //   settlement: state.settlement,
+  //   inventory: state.inventory,
+  //   orders: state.orders,
+  // })
 });
 
 export default new Vuex.Store({
@@ -30,6 +36,7 @@ export default new Vuex.Store({
   mutations: {
     [mutationTypes.EMAIL_VERIFIED](state, data) {
       state.email_verified = data;
+      // console.log(state, data)
     },
     [mutationTypes.UNSAVED_CHANGE](state, data) {
       state.unsaved_change = data;
@@ -68,11 +75,13 @@ export default new Vuex.Store({
       state.settings = data;
     },
     [mutationTypes.UPDATE_EMAIL_VERIFIED](state, data) {
-      state.email_verified = data;
+      // state.email_verified = data;
+      console.log(state, data)
     },
     [mutationTypes.SET_FILTER_OPTION](state, data) {
       state.filter_option = data;
     },
+
   },
   getters: {
     getEmail: (state) => state.unregistered_email,
