@@ -10,7 +10,7 @@
       <!-- <v-breadcrumbs class="pl-0 pr-0"> -->
       <div style="display: flex;  width: 100%;  flex-direction: column;">
         <div
-          style="display: flex; padding: 1rem 0; align-items: center  width: 100%;  justify-content: center"
+          style="display: flex; padding: 1rem 0; align-items: center  width: 100%;  justify-content: centers;align-items: center"
         >
           <h1>
             <slot>Location</slot>
@@ -18,7 +18,14 @@
 
           <v-spacer></v-spacer>
           <v-icon class="mr-3">mdi-bell-outline</v-icon>
-
+          <img
+          @click="$router.push('/profile')"
+            :src="getStore.logo || require('@/assets/user.png')"
+            class="mx-2"
+            height="32px"
+            width="32px"
+            style="border-radius: 4px; object-fit: cover; ;object-position: top"
+          />
           <v-menu
             style="box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.04);"
             bottom
@@ -33,13 +40,6 @@
                 v-on="on"
                 style="margin-right: 0"
               >
-                <img
-                  :src="getStore.logo || require('@/assets/user.png')"
-                  class="mx-2"
-                  height="32px"
-                  width="32px"
-                  style="border-radius: 4px; object-fit: cover; ;object-position: top"
-                />
                 <v-icon style="color: grey">$vuetify.icons.arrowDown</v-icon>
               </v-btn>
             </template>
@@ -66,7 +66,7 @@
           style="bottom: -5rem; margin: 0 10px; left: 0;  z-index: 100;background: #FFE8E5;border-radius: 8px;padding: 13px 11px; width: 95%; display: flex;align-items: flex-start; justify-content: space-between  "
         >
           <p class="text-left caption" style="color: #ED6555; width: 70%">
-            Verify your email ({{getStore.email}}) to take your store live
+            Verify your email ({{ getStore.email }}) to take your store live
           </p>
           <button
             style="background: #FECACA; font-weight: 600; padding: 0.5rem 1rem; border-radius: 8px"

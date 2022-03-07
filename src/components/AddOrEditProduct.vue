@@ -406,6 +406,7 @@ export default {
       delete data.product_image;
       if (data.has_variant) {
         data.price = 0;
+        data.total_stock = 0
       }
       if (this.hasDiscountError) {
         return;

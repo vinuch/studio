@@ -15,11 +15,9 @@
         <!-- <v-sheet class="mb-4"> -->
         <ul class="del_ops">
           <li
-            @click="setDeliveryOption('pick_up')"
+            @click="setDeliveryOption('pickup')"
             :style="
-              delivery_opt == 'pick_up'
-                ? { borderColor: activeBorderColor }
-                : ''
+              delivery_opt == 'pickup' ? { borderColor: activeBorderColor } : ''
             "
           >
             <!-- <v-icon class="">mdi-store-outline</v-icon> -->
@@ -53,7 +51,7 @@
         </ul>
         <!-- </v-sheet> -->
 
-        <div v-if="delivery_opt == 'pick_up' || delivery_opt == 'both'">
+        <div v-if="delivery_opt == 'pickup' || delivery_opt == 'both'">
           <v-card-text class="text-left pa-0 pt-5 mt-5">
             Enter your pick-up address
             <v-tooltip bottom>
@@ -131,7 +129,7 @@
           </v-sheet>
         </div>
 
-        <div v-if="delivery_opt != 'pick_up'">
+        <div v-if="delivery_opt != 'pickup'">
           <v-card-text class="text-left pa-0 pt-5 mt-5"
             >What delivery service will you use?</v-card-text
           >
@@ -196,7 +194,7 @@
           </v-sheet> -->
         </div>
 
-        <div v-if="shipping_mode_in_house && delivery_opt != 'pick_up'">
+        <div v-if="shipping_mode_in_house && delivery_opt != 'pickup'">
           <v-card-text class="text-left pa-0 pt-5 mt-5"
             >Set delivery fees for different locations</v-card-text
           >
@@ -277,7 +275,16 @@ export default {
       this.delivery_opt = option;
     },
     stringifyLocations() {
-      this.stringify = true;
+      if (this.delivery_opt === "pickup") {
+        let stringifiedLocations = "pickup;";
+        this.locations.forEach((location) => {
+          stringifiedLocations += location.state + "," + location.lga + ";";
+        });
+
+        this.saveLocations(stringifiedLocations);
+      } else {
+        this.stringify = true;
+      }
     },
   },
   computed: {
@@ -289,6 +296,40 @@ export default {
     this.store.default_shipping
       ? (this.shipping_mode_in_house = true)
       : (this.shipping_mode_in_house = false);
+
+    this.delivery_opt =
+      this.store.default_shipping
+        .split(",")[0]
+        .split(" ")
+        .join("")
+        .toLowerCase() === "pickup"
+        ? "pickup"
+        : this.store.default_shipping.split(";")[0] === "pickup"
+        ? "pickup"
+        : "delivery";
+
+    if (this.delivery_opt == "pickup") {
+      let locations = this.store.default_shipping
+        ?.split(";")
+        .filter((item) => item !== "");
+
+      if (locations) {
+        console.log(locations);
+        let computedLocations = [];
+
+        for (let index = 1; index < locations.length; index++) {
+          const [state, ...others] = locations[index].split(",");
+          computedLocations.push({
+            state: state,
+            lga: others,
+          });
+        }
+
+        console.log(computedLocations);
+
+        this.locations = computedLocations;
+      }
+    }
     // console.log(NaijaStates.lgas("lagos", "abia"));
   },
 };

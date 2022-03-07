@@ -19,17 +19,6 @@
     </div>
 
     <!-- <div class="d-flex justify-end"> -->
-    <div v-if="verified">
-      <!-- <p class="caption text-right">Compared to</p> -->
-      <v-select
-        v-if="setup_steps > 3"
-        style="float: right; width: 10rem;"
-        class="d-inline-block left"
-        :items="['yesterday', 'last month', 'last year']"
-        v-model="timeFrame"
-        outlined
-      ></v-select>
-    </div>
 
     <!-- </div> -->
 
@@ -37,7 +26,7 @@
     <v-container
       v-if="setup_steps < 4"
       class="rounded-xl mt-4"
-      style="border: 1px solid #e2e8f0; overflow: hidden; margin-top: 1rem"
+      style="border: 0.5px solid #e2e8f0; overflow: hidden; margin-top: 1rem;"
       fluid
       fill-height
       pa-0
@@ -55,9 +44,9 @@
               flat
               outlined
               style="
-                background: #f6f8fa;
                 border: none;
-                border-top: 1px solid #e2e8f0;
+                border-top: 0.5px solid #e2e8f0;
+                background: #FDFDFD;
               "
             >
               <v-checkbox
@@ -71,7 +60,7 @@
               </v-checkbox>
               <v-card-title
                 class="pa-0"
-                style="font-size: 1.1rem; margin-bottom: -4px"
+                style="font-size: 1.1rem; margin-bottom: -4px; color: #143E32;"
                 >{{ dash.title }}</v-card-title
               >
               <v-card-text class="pa-0 pb-3">{{ dash.text }}</v-card-text>
@@ -100,11 +89,22 @@
     <v-container
       v-if="setup_steps > 3"
       class="rounded-lg pa-4"
-      style="border: 1px solid #e2e8f0; background: #fff; overflow: hidden"
+      style="border: 0.4px solid #e2e8f0; background: #FDFDFD; overflow: hidden"
       fluid
       fill-height
       pa-0
     >
+      <div v-if="verified" style="width: 100%">
+        <!-- <p class="caption text-right">Compared to</p> -->
+        <v-select
+          v-if="setup_steps > 3"
+          style="float: right; width: 10rem;"
+          class="d-inline-block left"
+          :items="['yesterday', 'last month', 'last year']"
+          v-model="timeFrame"
+          outlined
+        ></v-select>
+      </div>
       <v-card
         v-for="(data, i) in metrics"
         :key="i"
@@ -113,7 +113,7 @@
       >
         <div
           class="pa-5"
-          style="width: 100%; box-shadow: -2px 8px 16px rgba(14, 10, 10, 0.05;"
+          style="width: 100%; box-shadow: -2px 8px 16px rgba(14, 10, 10, 0.05;border: 0.5px solid #E2E8F0;"
         >
           <v-row>
             <v-col cols="3">
@@ -157,7 +157,7 @@
                       fill="#FF0000"
                     />
                   </svg>
-                  {{ data.percent }}
+                   {{data.up ? '+' : '-'}} {{ data.percent }}
                 </span>
               </p>
               <div class="text-left caption">vs {{ timeFrame }}</div>
@@ -201,28 +201,28 @@ export default {
         status: 0,
         title: "Payments",
         text: "Get paid by customers",
-        btn_title: "Setup payment account",
+        btn_title: "Get paid",
         modal: "set_bank",
       },
       {
         status: 0,
         title: "Store details",
-        text: "Store contacts, etc",
-        btn_title: "Add store details",
+        text: "Enter location & more",
+        btn_title: "Store details",
         modal: "store_details",
       },
       {
         status: 0,
         title: "Business hours",
         text: "Opening & closing hours",
-        btn_title: "Set hours",
+        btn_title: " Bussiness hours",
         modal: "business_hours",
       },
       {
         status: 0,
         title: "Shipping",
-        text: "Delivery & pick-up arrangements",
-        btn_title: "Set shipping",
+        text: "Delivery & pickup plan",
+        btn_title: "Shipping",
         modal: "shipping",
       },
     ],
@@ -231,7 +231,7 @@ export default {
     dialog: false, // default is false
     modal: null,
     setup_steps: 0,
-    verified: null
+    verified: null,
   }),
   methods: {
     openDialog(setup) {
@@ -635,7 +635,6 @@ export default {
       }
       if (this.verified[0] == 0) {
         this.$store.commit(mutationTypes.EMAIL_VERIFIED, false);
-
       } else {
         this.$store.commit(mutationTypes.EMAIL_VERIFIED, true);
       }

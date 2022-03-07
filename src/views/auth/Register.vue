@@ -337,6 +337,7 @@ export default {
               };
               console.log(data)
               createStore(data);
+              EventBus.$emit("open_alert", "success", "Sign up successful");
             })
             .catch(() => {
               EventBus.$emit("open_alert", "error", "Signup error");
@@ -344,7 +345,7 @@ export default {
             .finally(() => {
               this.loading = false;
               // this.$router.push("/dash");
-              EventBus.$emit("open_alert", "success", "Sign up successful");
+              
             });
         } else {
           EventBus.$emit("open_alert", "error", "Sign up form incomplete");

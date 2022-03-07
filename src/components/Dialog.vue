@@ -28,7 +28,7 @@
 
           <VerifyID v-if="propModal == 'verify_auth'" />
           <BankDetails v-if="propModal == 'set_bank'" />
-          <BusinessHours v-if="propModal == 'business_hours'" />
+          <BusinessHours v-if="propModal == 'business_hours'" :modal="true"/>
           <StoreDetails v-if="propModal == 'store_details'" />
           <Shipping v-if="propModal == 'shipping'" :modal="true" />
           <SuccessModal v-if="propModal == 'success'" />

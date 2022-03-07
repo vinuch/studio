@@ -9,6 +9,8 @@
       elevation="0"
       rounded="lg"
       class="mt-2 mb-5 pa-5"
+      color="#FDFDFD"
+      style="border: 0.5px solid #F3F3F3;"
     >
       <div class="mb-5">
         <v-card-text class="text-left pa-0 mb-1"
@@ -51,6 +53,10 @@
           </div>
         </div>
       </div>
+
+      <p class="text-caption text-left" style="color: #FF0000;">
+        <button @click="deletePeriod(idx)">Remove</button>
+      </p>
     </v-sheet>
 
     <p
@@ -87,6 +93,16 @@ export default {
     locations: [],
   }),
   methods: {
+    deletePeriod(idx) {
+      this.band.splice(idx, 1);
+      this.band.push({
+        price: "",
+        locations: [],
+        newLocation: "",
+        hide: true,
+        isset: false,
+      });
+    },
     addLocation() {
       if (this.band[this.band_index].price > 0) {
         if (this.band[this.band_index].locations.length < 1) {
@@ -211,39 +227,52 @@ export default {
   },
   mounted() {
     let bands = [];
-    this.defaultShipping
-      .split(";")
-      .filter((item) => item !== "")
-      .forEach((item) => {
-        let obj = {
+
+    if (
+      this.defaultShipping.split(";")[0] !== "pickup" 
+      // ||
+      // this.defaultShipping
+      //   .split(",")[0]
+      //   .split(" ")
+      //   .join("")
+      //   .toLowerCase() !== "pickup"
+    ) {
+   
+      this.defaultShipping
+        .split(";")
+        .filter((item) => item !== "")
+        .forEach((item) => {
+          let itemSplit = item.split(",");
+
+          let obj = {
+            price: "",
+            locations: [],
+            newLocation: "",
+            hide: true,
+            isset: false,
+          };
+          obj.price = itemSplit.shift();
+          obj.locations = itemSplit;
+          obj.hide = false;
+          obj.isset = true;
+
+          bands.push(obj);
+        });
+
+      this.band_index = bands.length - 1;
+      let remainder = 10 - bands.length;
+      for (let index = 0; index < remainder; index++) {
+        bands.push({
           price: "",
           locations: [],
           newLocation: "",
           hide: true,
           isset: false,
-        };
-        let itemSplit = item.split(",");
-        obj.price = itemSplit.shift();
-        obj.locations = itemSplit;
-        obj.hide = false;
-        obj.isset = true;
+        });
+      }
 
-        bands.push(obj);
-      });
-
-    this.band_index = bands.length - 1;
-    let remainder = 10 - bands.length;
-    for (let index = 0; index < remainder; index++) {
-      bands.push({
-        price: "",
-        locations: [],
-        newLocation: "",
-        hide: true,
-        isset: false,
-      });
+      this.band = bands;
     }
-
-    this.band = bands;
   },
   created() {
     // if (this.currentItem) {

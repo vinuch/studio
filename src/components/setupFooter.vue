@@ -10,7 +10,7 @@
       /> -->
       <span v-if="modal" style="color: #445B54; font-weight: 600;margin: 0 1rem" @click="closeDialog()" >Cancel</span>
 
-      <Button :containerStyle="{margin: '0 1rem', width:'100%'}" label="Save" :primary="true" :block="!modal ? true : false" @onClick="save()" />
+      <Button :containerStyle="{margin: '0 1rem', width: !modal ? '100%' : 'auto'}" label="Save" :primary="true" :block="!modal ? true : false" @onClick="save()" />
     </v-card-actions>
   </div>
 </template>

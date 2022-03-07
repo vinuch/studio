@@ -1,6 +1,6 @@
 <template>
   <div class="rounded-xl">
-    <v-card class="elevation-0 overflow-hidden " >
+    <v-card class="elevation-0 overflow-hidden ">
       <!-- <v-card-title class="title justify-center">
         Business Hours
       </v-card-title>
@@ -77,7 +77,7 @@
         </p> -->
       </div>
 
-      <setupFooter @saveSetUp="save()">
+      <setupFooter @saveSetUp="save()" :modal="modal">
         Save Business Hours
       </setupFooter>
     </v-card>
@@ -95,7 +95,7 @@ import OpenHours from "@/components/OpenHours";
 
 export default {
   name: "BusinessHours",
-
+  props: ["modal"],
   components: {
     setupFooter,
     OpenHours,
@@ -199,7 +199,9 @@ export default {
       this.periods[index].open = null;
       if (_days.length) {
         _days.forEach((day) => {
-          this.days.find((item) => item.day === day).isset = false;
+          this.days.find((item) => item.day === day)
+            ? (this.days.find((item) => item.day === day).isset = false)
+            : null;
         });
       }
       this.periods.splice(index, 1);
@@ -230,78 +232,88 @@ export default {
         this.days = [
           {
             day: "Mon",
-            open: "",
-            close: "",
+            open: "00:00",
+            close: "11:59",
             selected: true,
             isset: false,
           },
           {
             day: "Tue",
-            open: "",
-            close: "",
+            open: "00:00",
+            close: "11:59",
             selected: true,
             isset: false,
           },
           {
             day: "Wed",
-            open: "",
-            close: "",
+            open: "00:00",
+            close: "11:59",
             selected: true,
             isset: false,
           },
           {
             day: "Thu",
-            open: "",
-            close: "",
+            open: "00:00",
+            close: "11:59",
             selected: true,
             isset: false,
           },
           {
             day: "Fri",
-            open: "",
-            close: "",
+            open: "00:00",
+            close: "11:59",
             selected: true,
             isset: false,
           },
           {
             day: "Sat",
-            open: "",
-            close: "",
+            open: "00:00",
+            close: "11:59",
             selected: true,
             isset: false,
           },
           {
             day: "Sun",
-            open: "",
-            close: "",
+            open: "00:00",
+            close: "11:59",
             selected: true,
             isset: false,
           },
         ];
-        this.setOpenTime("00:00");
-        this.setCloseTime("11:59");
+        this.periods = [
+           {
+            days: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
+            open: "00:00",
+            close: "11:59",
+          },
+        ];
       }
-      this.preSave();
-      this.stringifyBizHrs();
-      let data = {
-        open_hours: this.stringified_hours,
-      };
-      console.log(data);
-      updateStore(data, this.store.id)
-        .then((res) => {
-          let store = res.data;
-          this.$store.commit(mutationTypes.SAVE_STORE, store);
-          EventBus.$emit("open_alert", "success", "Business hours updated");
-          this.$router.go(0);
-        })
-        .catch((err) => {
-          EventBus.$emit(
-            "open_alert",
-            "error",
-            "Error saving business hours" + err
-          );
-        })
-        .finally(() => {});
+      // this.preSave();
+      console.log(this.stringifyBizHrs());
+      if (this.stringifyBizHrs()) {
+        console.log("entered");
+        let data = {
+          open_hours: this.stringified_hours,
+        };
+
+        console.log(data, this.periods);
+        updateStore(data, this.store.id)
+          .then((res) => {
+            let store = res.data;
+            this.$store.commit(mutationTypes.SAVE_STORE, store);
+            EventBus.$emit("open_alert", "success", "Business hours updated");
+            // this.$router.go(0);
+            console.log(res);
+          })
+          .catch((err) => {
+            EventBus.$emit(
+              "open_alert",
+              "error",
+              "Error saving business hours" + err
+            );
+          })
+          .finally(() => {});
+      }
     },
     setCloseTime(params) {
       let { time, period } = params;
@@ -313,7 +325,7 @@ export default {
     },
     setSelectedDay(param) {
       let { day, period } = param;
-      console.log(this.periods[period].days);
+      console.log(this.periods, param);
 
       if (day.isset && this.periods[period].days.includes(day.day)) {
         const index = this.periods[period].days.indexOf(day.day);
@@ -326,8 +338,6 @@ export default {
         day.isset = true;
       }
 
-      console.log(day, "day");
-
       // this.days = days;
       // if (day.selected == true && day.isset == false) {
       //   // can't undo already set day
@@ -336,26 +346,43 @@ export default {
       //   day.selected = true;
       // }
       console.log(day.selected, day.isset);
+      console.log(this.periods, param);
     },
     stringifyBizHrs() {
-      // for (let i = 0; i < this.days.length; i++) {
-      //   if (this.days[i].selected) {
-      //     this.stringified_hours += this.days[i].day + ",";
-      //     this.stringified_hours += this.days[i].open + ",";
-      //     this.stringified_hours += this.days[i].close + ",";
-      //   }
-      // }
+      let error = false;
+
       for (let i = 0; i < this.periods.length; i++) {
         this.periods[i].days.forEach((item) => {
           this.stringified_hours += item + ",";
-          this.stringified_hours += this.periods[i].open + ",";
-          this.stringified_hours += this.periods[i].close + ",";
+          if (this.periods[i].open) {
+            this.stringified_hours += this.periods[i].open + ",";
+          } else {
+            EventBus.$emit(
+              "open_alert",
+              "error",
+              `please add an opening time for ${this.periods[i].days.join(
+                ", "
+              )}`
+            );
+            error = true;
+          }
+          if (this.periods[i].close) {
+            this.stringified_hours += this.periods[i].close + ",";
+          } else {
+            EventBus.$emit(
+              "open_alert",
+              "error",
+              `please add a closing time for ${this.periods[i].days.join(", ")}`
+            );
+
+            error = true;
+          }
         });
-        // if (this.days[i].selected) {
-        //   this.stringified_hours += this.days[i].day + ",";
-        //   this.stringified_hours += this.days[i].open + ",";
-        //   this.stringified_hours += this.days[i].close + ",";
-        // }
+      }
+      if (error) {
+        return false;
+      } else {
+        return true;
       }
     },
   },
@@ -392,7 +419,8 @@ export default {
     },
   },
   mounted() {
-    if (this.store.open_hours) {
+    if (this.store.open_hours !== "00:00") {
+      console.log("has open");
       this.always_open = false;
       // Mon,00:01,06:30,Sun,00:01,06:30,
       let reconstructedPeriod = [];
@@ -401,8 +429,11 @@ export default {
         .filter((item) => item !== "");
       let dayCount = splitHours.length / 3;
       for (let index = 0; index < splitHours.length / dayCount; index++) {
-        // console.log(dayCount, splitHours[(index * dayCount)], splitHours[(index * dayCount) + 1], splitHours[(index * dayCount) + 2])
-        this.days.find(day => day.day === splitHours[index * dayCount]).isset = true
+        this.days.find((day) => day.day === splitHours[index * dayCount])
+          ? (this.days.find(
+              (day) => day.day === splitHours[index * dayCount]
+            ).isset = true)
+          : null;
         let periodWithSameTime = reconstructedPeriod.find((item) => {
           return (
             item.open === splitHours[index * dayCount + 1] &&
@@ -416,13 +447,13 @@ export default {
         } else {
           reconstructedPeriod[index] = {
             days: [splitHours[index * dayCount]],
-            open: splitHours[index * dayCount + 1],
-            close: splitHours[index * dayCount + 2],
+            open: splitHours[index * dayCount + 1] || "00:00",
+            close: splitHours[index * dayCount + 2] || "00:00",
           };
         }
       }
       // console.log(reconstructedPeriod);
-      this.periods = reconstructedPeriod
+      this.periods = reconstructedPeriod;
     }
   },
 };
