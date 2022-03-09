@@ -83,7 +83,7 @@
         :primary="true"
         size="large"
         @onClick="clearOTP"
-        containerStyle="marginTop: 1.5rem"
+        
       />
 
       <v-card-text>
@@ -162,9 +162,10 @@ export default {
     resolveOTP() {
       verifyEmailPhone(this.otp, this.store.email) // modify to use account email not store email
         .then((res) => {
+          console.log(res)
           if (res.data.status == "Success") {
             this.otp = "";
-            this.$store.commit(mutationTypes.UPDATE_EMAIL_VERIFIED, true);
+            this.$store.commit(mutationTypes.EMAIL_VERIFIED, true);
             this.$store.commit(mutationTypes.SET_SETTINGS_STATE, true); // confirm what this is
             EventBus.$emit("open_alert", "success", "Email verified.");
             EventBus.$emit("dialog", "close", "");

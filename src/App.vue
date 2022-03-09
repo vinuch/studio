@@ -50,7 +50,11 @@ export default {
       logged_in: "getLoggedIn",
     }),
   },
+  mounted() {
+    console.log(this.logged_in)
+  },
   created() {
+    
     let token = window.sessionStorage.getItem("leyyow_token");
     if (token) {
       this.$store.commit(mutationTypes.LOGGED_IN, true);

@@ -35,7 +35,7 @@
               Create your store
             </h1>
             <p class="text-left text-body-2" style="color: #445B54">
-             Enter your store name and link, and select your store type
+              Enter your store name and link, and select your store type
             </p>
             <v-form
               class="auth_form_xs"
@@ -57,16 +57,13 @@
                 </v-stepper-header>
               </v-stepper>
               <div v-show="step === 1">
-              
                 <TextInput
                   label="Store Name"
                   name="storeName"
                   @update="(vl) => (store_name = vl)"
-
                 ></TextInput>
-            
-                
-                   <v-text-field
+
+                <v-text-field
                   label="Store Link"
                   v-model="store_slug"
                   outlined
@@ -77,7 +74,6 @@
                   @blur="cleanStoreUrl('blur')"
                 ></v-text-field>
 
-            
                 <v-select
                   label="Store Type"
                   v-model="store_type"
@@ -92,7 +88,6 @@
                 <TextInput
                   label="Email"
                   name="email"
-
                   :validations="validations.email"
                   @update="(emailValue) => (email = emailValue)"
                 >
@@ -243,7 +238,14 @@
 
 <script>
 import axios from "axios";
-import { signUp, createStore } from "@/services/apiServices";
+import {
+  fethcStoreInventory,
+  fetchOrders,
+  signUp,
+  createStore,
+} from "@/services/apiServices";
+import * as mutationTypes from "@/store/mutationTypes";
+
 import { EventBus } from "@/services/eventBus";
 import useVuelidate from "@vuelidate/core";
 import { required, email, minLength } from "@vuelidate/validators";
@@ -311,7 +313,7 @@ export default {
       // e.preventDefault()
       if (this.step === 1) {
         this.step = 2;
-   
+
         // this.color2 = "primary"
         if (this.step1 == false) {
           this.color1 = "grey";
@@ -324,7 +326,7 @@ export default {
           };
           signUp(data)
             .then((res) => {
-              console.log('response:', res)
+              console.log("response:", res);
               window.sessionStorage.setItem("leyyow_token", res.data.token);
               axios.defaults.headers.common[
                 "Authorization"
@@ -335,17 +337,41 @@ export default {
                 slug: this.store_slug,
                 business_type: this.store_type,
               };
-              console.log(data)
-              createStore(data);
-              EventBus.$emit("open_alert", "success", "Sign up successful");
+              console.log(data);
+
+              createStore(data)
+                .then((createRes) => {
+                  let store = createRes?.data.store;
+                  let settlement = createRes?.data.settlement;
+                  let acct_id = createRes?.data.store.id;
+                  console.log(createRes, 'createRes');
+
+                  fethcStoreInventory(store?.slug);
+                  fetchOrders();
+                  this.$store.commit(mutationTypes.LOGGED_IN, true);
+                  this.$store.commit(mutationTypes.SAVE_STORE, store);
+                  this.$store.commit(mutationTypes.SAVE_SETTLEMENT, settlement);
+                  this.$store.commit(mutationTypes.SAVE_ACCOUNT_ID, acct_id);
+                  this.$store.commit(mutationTypes.EMAIL_VERIFIED, false);
+                })
+                .catch((err) => {
+                  console.log(err);
+                  EventBus.$emit("open_alert", "error", "Signup error");
+                })
+                .finally(() => {
+                  this.loading = false;
+                  this.$router.push("/dash");
+                });
+
+              // EventBus.$emit(
+              //   "open_alert",
+              //   "success",
+              //   "Sign up successful. please login"
+              // );
             })
-            .catch(() => {
+            .catch((err) => {
+              console.log(err);
               EventBus.$emit("open_alert", "error", "Signup error");
-            })
-            .finally(() => {
-              this.loading = false;
-              // this.$router.push("/dash");
-              
             });
         } else {
           EventBus.$emit("open_alert", "error", "Sign up form incomplete");
@@ -384,11 +410,7 @@ export default {
   },
   computed: {
     step1() {
-      if (
-        this.store_name &&
-        this.store_slug &&
-        this.store_type 
-      ) {
+      if (this.store_name && this.store_slug && this.store_type) {
         return true;
       } else {
         return false;
@@ -397,7 +419,7 @@ export default {
     step2() {
       if (
         this.email &&
-        this.password 
+        this.password
         // !this.v$.email.$error &&
         // !this.v$.password.$error
       ) {

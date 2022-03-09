@@ -282,14 +282,14 @@ export default {
         ];
         this.periods = [
            {
-            days: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
+            days: ["Mon", "Tue", "Wed", ],
             open: "00:00",
             close: "11:59",
           },
         ];
       }
       // this.preSave();
-      console.log(this.stringifyBizHrs());
+      console.log(this.periods, this.stringifyBizHrs());
       if (this.stringifyBizHrs()) {
         console.log("entered");
         let data = {
@@ -302,8 +302,12 @@ export default {
             let store = res.data;
             this.$store.commit(mutationTypes.SAVE_STORE, store);
             EventBus.$emit("open_alert", "success", "Business hours updated");
-            // this.$router.go(0);
+            this.$router.go(0);
             console.log(res);
+        //     let verified = this.store.verified
+        //     verified[3] = 1
+
+        // this.$store.commit(mutationTypes.SAVE_STORE, {...this.store, verified})
           })
           .catch((err) => {
             EventBus.$emit(
@@ -350,6 +354,7 @@ export default {
     },
     stringifyBizHrs() {
       let error = false;
+      this.stringified_hours = ""
 
       for (let i = 0; i < this.periods.length; i++) {
         this.periods[i].days.forEach((item) => {

@@ -255,6 +255,7 @@ export default {
             this.$store.commit(mutationTypes.SAVE_STORE, store);
             this.$store.commit(mutationTypes.SAVE_SETTLEMENT, settlement);
             this.$store.commit(mutationTypes.SAVE_ACCOUNT_ID, acct_id);
+
             if (store.verified[0] == 0) {
               console.log("adafa");
               this.$store.commit(mutationTypes.EMAIL_VERIFIED, false);

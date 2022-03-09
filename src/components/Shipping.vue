@@ -308,6 +308,12 @@ export default {
         ? "pickup"
         : "delivery";
 
+    console.log(this.delivery_opt);
+
+    if (this.store.default_shipping.split(",")[1] == "0") {
+      return;
+    }
+
     if (this.delivery_opt == "pickup") {
       let locations = this.store.default_shipping
         ?.split(";")

@@ -2,11 +2,11 @@ import axios from "axios";
 import * as urls from "./urls";
 
 import * as mutationTypes from "@/store/mutationTypes";
-import { EventBus } from "@/services/eventBus"
+// import { EventBus } from "@/services/eventBus"
 import store from "@/store/index";
 
 try {
-  var auth = store.getters.getSettlement.keys.paystack_secret_key
+  var auth = store.getters.getSettlement.paystack_secret_key
 } catch {null}
 
 // axios.defaults.headers.common['Access-Control-Allow-Origin'] = '*'
@@ -58,12 +58,12 @@ export const createStore = (data) => {
     url: urls.createStoreUrl,
     data,
   })
-  .then((res) => {
-    store.commit(mutationTypes.SAVE_STORE, res.data);
-  })
-  .catch((err) => {
-    EventBus.$emit("open_alert", "error", err)
-  });
+  // .then((res) => {
+  //   store.commit(mutationTypes.SAVE_STORE, res.data);
+  // })
+  // .catch((err) => {
+  //   EventBus.$emit("open_alert", "error", err)
+  // });
 };
 
 export const createSubAcc = (data) => {

@@ -41,8 +41,9 @@ export default new Vuex.Store({
     [mutationTypes.UNSAVED_CHANGE](state, data) {
       state.unsaved_change = data;
     },
-    [mutationTypes.LOGOUT](state, data) {
-      state.store = data;
+    [mutationTypes.LOGOUT]() {
+      // state.store = data;
+      // localStorage.removeItem("leyyow")
     },
     [mutationTypes.LOGGED_IN](state, data) {
       state.logged_in = data;

@@ -8,7 +8,7 @@
         }`
       "
     >
-      <h2 class="title" style="margin-top: 1em">
+      <h2 class="title" style="margin-top: 1em" v-if="store.store_name">
         <!-- Good {{ time }} {{ store.store_name }} -->
         Welcome, {{ store.store_name }} 😎
       </h2>
@@ -100,7 +100,7 @@
           v-if="setup_steps > 3"
           style="float: right; width: 10rem;"
           class="d-inline-block left"
-          :items="['yesterday', 'last month', 'last year']"
+          :items="['Today', 'This month', 'This year']"
           v-model="timeFrame"
           outlined
         ></v-select>
@@ -160,7 +160,7 @@
                    {{data.up ? '+' : '-'}} {{ data.percent }}
                 </span>
               </p>
-              <div class="text-left caption">vs {{ timeFrame }}</div>
+              <div class="text-left caption">vs {{  timeFrame === 'Today' ? 'Yesterday' : `last ${timeFrame.split(' ')[1]} `}}</div>
             </v-col>
           </v-row>
         </div>
@@ -227,7 +227,7 @@ export default {
       },
     ],
     // dialog: true,
-    timeFrame: "yesterday",
+    timeFrame: "Today",
     dialog: false, // default is false
     modal: null,
     setup_steps: 0,
@@ -327,7 +327,7 @@ export default {
     },
     metrics() {
       // let todayOrders = this.reshapedOrders.filter((order) => order.isToday);
-      if (this.timeFrame === "yesterday") {
+      if (this.timeFrame === "Today") {
         let todayOrders = this.reshapedOrders.filter((order) => order.isToday);
         let yesterdayOrders = this.reshapedOrders.filter(
           (order) => order.isYesterday
@@ -421,7 +421,7 @@ export default {
           },
         ];
       }
-      if (this.timeFrame === "last month") {
+      if (this.timeFrame === "This month") {
         // let todayOrders = this.reshapedOrders; // all time not today only
         let thisMonthOrders = this.reshapedOrders.filter(
           (order) => order.isThisMonth
@@ -520,7 +520,7 @@ export default {
           },
         ];
       }
-      if (this.timeFrame === "last year") {
+      if (this.timeFrame === "This year") {
         // let todayOrders = this.reshapedOrders; // all time not today only
         let thisYearOrders = this.reshapedOrders.filter(
           (order) => order.isThisYear
@@ -623,7 +623,9 @@ export default {
     },
   },
   mounted() {
-    this.verified = this.store.verified;
+    this.verified = this.store?.verified;
+    console.log(this.verified)
+
 
     if (this.verified) {
       for (var i = 1; i < this.verified.length; i++) {
@@ -634,7 +636,7 @@ export default {
         }
       }
       if (this.verified[0] == 0) {
-        this.$store.commit(mutationTypes.EMAIL_VERIFIED, false);
+        // this.$store.commit(mutationTypes.EMAIL_VERIFIED, false);
       } else {
         this.$store.commit(mutationTypes.EMAIL_VERIFIED, true);
       }

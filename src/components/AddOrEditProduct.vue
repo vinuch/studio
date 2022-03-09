@@ -66,7 +66,7 @@
           hide-details
           class="mt-2 mb-0"
           @keyup="unsavedChangeMade()"
-          v-model="description"
+          v-model="product.description"
           :placeholder="!currentProduct ? '' : currentProduct.description"
         ></v-textarea>
         <v-card-text class="text-left pt-0 mt-1 mb-5 describe"
@@ -401,6 +401,7 @@ export default {
           first_variant: this.variants_with_options.variant_1_options,
           second_variant: this.variants_with_options.variant_2_options,
           variant_options: this.variants_with_options.variant_options,
+          store: this.store.store_name
         },
       };
       delete data.product_image;
@@ -483,6 +484,7 @@ export default {
           .then((res) => {
             this.product.product_image = res.data.product_image;
             this.product.id = res.data.id;
+            this.product.temp_id = res.data.id;
             console.log(res);
           })
           .catch((err) => {
