@@ -96,15 +96,15 @@ export const fetchOrders = () => {
     });
 };
 
-export const fethcStoreInventory = (slug, n) => {
+export const fethcStoreInventory = (slug) => {
   axios({
     method: "get",
     url: `${urls.inventoryUrl}${slug}/`,
   })
     .then((res) => {
-      n
-        ? store.commit(mutationTypes.SAVE_VISITOR_INVENTORY, res.data)
-        : store.commit(mutationTypes.SAVE_INVENTORY, res.data);
+      
+         store.commit(mutationTypes.SAVE_VISITOR_INVENTORY, res.data)
+         store.commit(mutationTypes.SAVE_INVENTORY, res.data);
     })
     .catch(() => {
     });

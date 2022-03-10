@@ -252,7 +252,7 @@ export default {
             isset: false,
           };
           obj.price = itemSplit.shift();
-          obj.locations = itemSplit;
+          obj.locations = itemSplit[0] != 0 ? itemSplit : [];
           obj.hide = false;
           obj.isset = true;
 
@@ -274,33 +274,7 @@ export default {
       this.band = bands;
     }
   },
-  created() {
-    // if (this.currentItem) {
-    //   let locations = [];
-    //   if (this.currentItem.first_variant_name) {
-    //     let obj = {
-    //       key: this.currentItem.first_variant_name,
-    //       values: this.currentItem.first_variant
-    //         .split(",")
-    //         .filter((v) => v)
-    //         .map((val) => {
-    //           return {
-    //             value: val,
-    //           };
-    //         }),
-    //     };
-    //     locations.push(obj);
-    //   }
-    //   this.locations = locations;
-    // } else {
-    //   this.locations = [
-    //     {
-    //       key: "",
-    //       values: [],
-    //     },
-    //   ];
-    // }
-  },
+ 
 };
 </script>
 

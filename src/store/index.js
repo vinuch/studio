@@ -31,7 +31,8 @@ export default new Vuex.Store({
     unregistered_email: "",
     unsaved_change: false,
     visitor_inventory: {},
-    filter_option: 'Customer name'
+    filter_option: 'Customer name',
+    store_slug: "",
   },
   mutations: {
     [mutationTypes.EMAIL_VERIFIED](state, data) {
@@ -53,6 +54,9 @@ export default new Vuex.Store({
     },
     [mutationTypes.SAVE_STORE](state, data) {
       state.store = data;
+    },
+    [mutationTypes.SAVE_STORE_SLUG](state, data) {
+      state.store_slug = data;
     },
     [mutationTypes.SAVE_SETTLEMENT](state, data) {
       state.settlement = data;
@@ -88,6 +92,7 @@ export default new Vuex.Store({
     getEmail: (state) => state.unregistered_email,
     getEmailStatus: (state) => state.email_verified,
     getStore: (state) => state.store,
+    getStoreSlug: (state) => state.store_slug,
     getSettlement: (state) => state.settlement,
     getInventory: (state) => state.inventory,
     getLoggedIn: (state) => state.logged_in,

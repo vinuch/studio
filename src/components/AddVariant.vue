@@ -361,7 +361,7 @@ export default {
           }
         }
       } else if (this.options_1?.length && this.options_2?.length) {
-        console.log(this.variants);
+        // console.log(this.variants);
         this.variants = {};
 
         // two variants
@@ -373,10 +373,12 @@ export default {
                 ...{
                   [`${this.options_1[i]}/${this.options_2[j]}`]: {
                     name: `${this.options_1[i]}/${this.options_2[j]}`,
+                    qty: 0,
+                    price: 0,
                   },
                 },
               };
-              console.log("2 variants", this.variants);
+              // console.log("2 variants", this.variants);
               // this.variants[this.options_1[i]] = { name: this.options_1[i] }
             }
             // let object = {
@@ -392,7 +394,13 @@ export default {
           if (!this.variants[this.options_1[i]]) {
             this.variants = {
               ...this.variants,
-              ...{ [this.options_1[i]]: { name: this.options_1[i] } },
+              ...{
+                [this.options_1[i]]: {
+                  name: this.options_1[i],
+                  qty: 0,
+                  price: 0,
+                },
+              },
             };
             // this.variants[this.options_1[i]] = { name: this.options_1[i] }
           }
@@ -403,7 +411,7 @@ export default {
         }
       }
 
-      console.log(this.variants);
+      // console.log(this.variants);
     },
     // setVarQtyAndPrice() {
     //   this.variants = {};
@@ -493,19 +501,16 @@ export default {
         }
 
         let variant_options = "";
-        for (let i = 0; i < this.variants.length; i++) {
-          let qty;
-          let price;
-          this.variants[i].qty > 0
-            ? (this.qty += parseInt(this.variants[i].qty))
-            : (qty = 0);
-          this.variants[i].qty > 0 ? (qty = this.variants[i].qty) : (qty = 0);
-          this.variants[i].price > 0
-            ? (price = this.variants[i].price)
-            : (price = 0);
-          variant_options += `${i},${qty},${price};`;
-        }
+          // console.log(this.variants)
 
+          for (const variant in this.variants) {
+          variant_options += `${variant},${parseInt(this.variants[variant].qty)},${parseInt(this.variants[variant].price)};`;
+        }
+        // console.log(this.variants, variant_options);
+        let total = 0
+        for (const key in this.variants) {
+          total = total + parseInt(this.variants[key].qty)
+        }
         let variants_data = {
           variant_1_options: variant_1_options,
           variant_2_options: variant_2_options,
@@ -513,7 +518,8 @@ export default {
           variant_name_1: this.variant_1,
           variant_name_2: this.variant_2,
           variant_name_3: this.variant_3,
-          total_stock: this.qty,
+          total_stock: total,
+          price: this.variants[Object.keys(this.variants)[0]]?.price,
           variant_options: variant_options,
         };
 
@@ -554,14 +560,7 @@ export default {
     //   deep: true,
     // }
   },
-  created() {
-    // EventBus.$on("get_variants", (payload) => {
-    //   this.options_1 = payload.options_1
-    //   this.options_2 = payload.options_2
-    //   this.options_3 = payload.options_3
-    //   this.variants = payload.variants
-    // })
-  },
+
   mounted() {
     // if (this.variant_payload) {
     // console.log("yes, there are variants")
@@ -570,7 +569,7 @@ export default {
     // this.options_3 = this.variant_payload.options_3
     // this.variants = this.variant_payload.variants
     // }
-    console.log("fvariant", this.first_variant);
+    // console.log("fvariant", this.first_variant);
 
     this.options_1 = this.first_variant
       ? this.first_variant?.split(",").filter((item) => item !== "")
@@ -628,16 +627,16 @@ export default {
     let options = this.variant_options
       ?.split(";")
       .filter((item) => item !== "");
-    console.log(options);
+    // console.log(options);
     if (!options) {
       return;
     }
     options.forEach((item) => {
-      console.log(item);
+      // console.log(item);
       let option_values = item.split(",");
-      console.log(option_values, this.options_1, item[0]);
-      this.variants[this.options_1[item[0]]] = {
-        name: this.options_1[item[0]],
+      // console.log('here ' , this.options_1, item[0]);
+      this.variants[option_values[0]] = {
+        name: option_values[0],
         qty: option_values[1],
         price: option_values[2],
       };

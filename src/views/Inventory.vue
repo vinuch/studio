@@ -53,9 +53,7 @@
         </v-col>
       </v-row> -->
         <v-row class="pa-0" style="align-items: flex-start">
-
           <v-col cols="9">
-
             <TextInput
               placeholder="Search by name"
               name="search"
@@ -108,7 +106,7 @@
       </v-container>
       <v-navigation-drawer app right :width="400" v-model="edit_product_drawer">
         <AddOrEditProduct
-        v-if="edit_product_drawer"
+          v-if="edit_product_drawer"
           :variant_payload="variant_payload"
           @back="backToProductView()"
           @close="closeAddEditDrawer()"
@@ -118,7 +116,7 @@
         <!-- @close="closeProductViewDrawer()"  -->
         <!-- :clear_variants="clear_variants" -->
         <ProductView
-        v-if="currentProduct"
+          v-if="currentProduct"
           @back="backToInventory()"
           @editProduct="editProduct($event)"
         />
@@ -136,7 +134,7 @@ import * as mutationTypes from "@/store/mutationTypes";
 import Button from "@/components/Button";
 import Inventory from "@/components/Icons/Inventory";
 import TextInput from "@/components/TextInput";
-
+import { fethcStoreInventory } from "@/services/apiServices";
 import topNav from "@/components/TopNav";
 import Product from "@/components/Product";
 import ProductView from "@/components/ProductView";
@@ -232,6 +230,7 @@ export default {
     ...mapGetters({
       inventory: "getInventory",
       store: "getStore",
+      storeSlug: "getStoreSlug",
       email_verified: "getEmailStatus",
 
       currentProduct: "getProductToBeEditted",
@@ -239,9 +238,9 @@ export default {
     }),
   },
   mounted() {
-        this.$store.commit(mutationTypes.SET_PRODUCT_TO_BE_EDITTED, null);
-
-  }
+    this.$store.commit(mutationTypes.SET_PRODUCT_TO_BE_EDITTED, null);
+    fethcStoreInventory(this.storeSlug);
+  },
 };
 </script>
 

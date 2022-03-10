@@ -244,6 +244,7 @@ export default {
             // so I included it explicitly as part of the API response hence why it needs
             // to be fetched as res.data.slug below, and then saved with the store.
             store.slug = res.data.slug;
+            localStorage.setItem("store_slug", store.slug)
 
             // fetch inventory
             fethcStoreInventory(store.slug);
@@ -253,6 +254,7 @@ export default {
 
             this.$store.commit(mutationTypes.LOGGED_IN, true);
             this.$store.commit(mutationTypes.SAVE_STORE, store);
+            this.$store.commit(mutationTypes.SAVE_STORE_SLUG, store.slug);
             this.$store.commit(mutationTypes.SAVE_SETTLEMENT, settlement);
             this.$store.commit(mutationTypes.SAVE_ACCOUNT_ID, acct_id);
 

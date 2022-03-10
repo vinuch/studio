@@ -401,13 +401,15 @@ export default {
           first_variant: this.variants_with_options.variant_1_options,
           second_variant: this.variants_with_options.variant_2_options,
           variant_options: this.variants_with_options.variant_options,
-          store: this.store.store_name
+          store: this.store.store_name,
+          price: Number(this.price),
+          total_stock: this.total_stock
         },
       };
       delete data.product_image;
       if (data.has_variant) {
-        data.price = 0;
-        data.total_stock = 0
+        // data.price = 0;
+        // data.total_stock = 0
       }
       if (this.hasDiscountError) {
         return;
@@ -438,7 +440,7 @@ export default {
             };
             EventBus.$emit("close_drawer");
             EventBus.$emit("close_drawer");
-            fethcStoreInventory(this.store.slug);
+            fethcStoreInventory(this.storeSlug);
           })
           .catch((err) => {
             console.log(err.response.data);
@@ -450,6 +452,7 @@ export default {
           })
           .finally(() => {
             this.loading = false;
+            this.currentProduct ? this.$emit("back") : this.close();
           });
       } else {
         EventBus.$emit("open_alert", "error", "please upload a product image");
@@ -462,7 +465,7 @@ export default {
       this.variant_data = variant_data;
       this.variants_with_options = variant_data;
       this.total_stock = variant_data.total_stock;
-      this.price += 1;
+      this.price = variant_data.price;
 
       // this.$nextTick(function(){
       //   this.get_variants = false
@@ -529,6 +532,7 @@ export default {
   computed: {
     ...mapGetters({
       store: "getStore",
+      storeSlug: "getStoreSlug",
       currentProduct: "getProductToBeEditted",
       unsavedChange: "getUnsavedChange",
     }),

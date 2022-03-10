@@ -88,6 +88,7 @@
                 <TextInput
                   label="Email"
                   name="email"
+                  :validate="validateInputs"
                   :validations="validations.email"
                   @update="(emailValue) => (email = emailValue)"
                 >
@@ -120,7 +121,8 @@
                 <TextInput
                   label="Password"
                   name="password"
-                  type="password"
+                  :type="showPassword ? 'text' : 'password'"
+                  :validate="validateInputs"
                   :validations="validations.password"
                   @update="(passwordvl) => (password = passwordvl)"
                 >
@@ -156,6 +158,8 @@
                   </template>
                   <template v-slot:append>
                     <svg
+                    @click="showPassword = !showPassword"
+
                       width="20"
                       height="20"
                       viewBox="0 0 21 18"
@@ -277,6 +281,9 @@ export default {
     email: "",
     password: "",
     store_type: null,
+    validateInputs: false,
+    showPassword: false,
+
     store_types: [
       // get this from API (not built yet)
       // {name: "Food", type: 0}, doesn't recognise as true
@@ -320,61 +327,73 @@ export default {
         }
       } else {
         if (this.step1 && this.step2 == true) {
-          let data = {
-            email: this.email,
-            password: this.password,
-          };
-          signUp(data)
-            .then((res) => {
-              console.log("response:", res);
-              window.sessionStorage.setItem("leyyow_token", res.data.token);
-              axios.defaults.headers.common[
-                "Authorization"
-              ] = `Token ${res.data.token}`;
+          this.validateInputs = true;
+          if (!this.v$.$error) {
+            let data = {
+              email: this.email,
+              password: this.password,
+            };
+            signUp(data)
+              .then((res) => {
+                console.log("response:", res);
+                window.sessionStorage.setItem("leyyow_token", res.data.token);
+                axios.defaults.headers.common[
+                  "Authorization"
+                ] = `Token ${res.data.token}`;
 
-              let data = {
-                store_name: this.store_name,
-                slug: this.store_slug,
-                business_type: this.store_type,
-              };
-              console.log(data);
+                let data = {
+                  store_name: this.store_name,
+                  slug: this.store_slug,
+                  business_type: this.store_type,
+                };
+                console.log(data);
 
-              createStore(data)
-                .then((createRes) => {
-                  let store = createRes?.data.store;
-                  let settlement = createRes?.data.settlement;
-                  let acct_id = createRes?.data.store.id;
-                  console.log(createRes, 'createRes');
+                createStore(data)
+                  .then((createRes) => {
+                    let store = createRes?.data.store;
+                    let settlement = createRes?.data.settlement;
+                    let acct_id = createRes?.data.store.id;
+                    console.log(createRes, "createRes");
 
-                  fethcStoreInventory(store?.slug);
-                  fetchOrders();
-                  this.$store.commit(mutationTypes.LOGGED_IN, true);
-                  this.$store.commit(mutationTypes.SAVE_STORE, store);
-                  this.$store.commit(mutationTypes.SAVE_SETTLEMENT, settlement);
-                  this.$store.commit(mutationTypes.SAVE_ACCOUNT_ID, acct_id);
-                  this.$store.commit(mutationTypes.EMAIL_VERIFIED, false);
-                })
-                .catch((err) => {
-                  console.log(err);
-                  EventBus.$emit("open_alert", "error", "Signup error");
-                })
-                .finally(() => {
-                  this.loading = false;
-                  this.$router.push("/dash");
-                });
+                    fethcStoreInventory(store?.slug);
+                    fetchOrders();
+                    console.log(data.slug);
+                    this.$store.commit(
+                      mutationTypes.SAVE_STORE_SLUG,
+                      data.slug
+                    );
 
-              // EventBus.$emit(
-              //   "open_alert",
-              //   "success",
-              //   "Sign up successful. please login"
-              // );
-            })
-            .catch((err) => {
-              console.log(err);
-              EventBus.$emit("open_alert", "error", "Signup error");
-            });
-        } else {
-          EventBus.$emit("open_alert", "error", "Sign up form incomplete");
+                    this.$store.commit(mutationTypes.LOGGED_IN, true);
+                    this.$store.commit(mutationTypes.SAVE_STORE, store);
+                    this.$store.commit(
+                      mutationTypes.SAVE_SETTLEMENT,
+                      settlement
+                    );
+                    this.$store.commit(mutationTypes.SAVE_ACCOUNT_ID, acct_id);
+                    this.$store.commit(mutationTypes.EMAIL_VERIFIED, false);
+                  })
+                  .catch((err) => {
+                    console.log(err);
+                    EventBus.$emit("open_alert", "error", "Signup error");
+                  })
+                  .finally(() => {
+                    this.loading = false;
+                    this.$router.push("/dash");
+                  });
+
+                // EventBus.$emit(
+                //   "open_alert",
+                //   "success",
+                //   "Sign up successful. please login"
+                // );
+              })
+              .catch((err) => {
+                console.log(err);
+                EventBus.$emit("open_alert", "error", "Signup error");
+              });
+          } else {
+            EventBus.$emit("open_alert", "error", "Sign up form incomplete");
+          }
         }
       }
     },

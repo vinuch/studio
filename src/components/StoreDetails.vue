@@ -194,7 +194,7 @@ export default {
       EventBus.$emit("open_alert", "info", "store url copied");
     },
     openTab() {
-      window.open("https://" + this.store.slug + ".leyyow.com", "_blank");
+      window.open("https://" + this.storeSlug + ".leyyow.com", "_blank");
     },
     uploadImage(e) {
       let form = new FormData();
@@ -301,11 +301,12 @@ export default {
   computed: {
     ...mapGetters({
       store: "getStore",
+      storeSlug: "getStoreSlug",
       settings: "getSettingsState",
     }),
     merchant_url() {
       console.log(this.store);
-      return this.store.slug + ".leyyow.com";
+      return this.storeSlug + ".leyyow.com";
     },
   },
   mounted() {
