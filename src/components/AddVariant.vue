@@ -2,14 +2,14 @@
   <div>
     <!-- variant 1 -->
     <v-sheet
-      outlined
       elevation="0"
       rounded="lg"
       class="mt-2 mb-5"
-      color="bg_grey"
+ 
     >
       <div>
-        <v-card-text class="text-left pa-0 mb-1 describe capitalise"
+        <v-card-text
+          class="text-left pa-0 mb-1 describe capitalise text-caption"
           >Enter variant type <br />
           (E.g. Colour, Material, Size, etc)</v-card-text
         >
@@ -20,7 +20,7 @@
           outlined
         ></v-text-field>
         <div v-if="variant_1">
-          <v-card-text class="text-left pa-0 mb-1 describe">
+          <v-card-text class="text-left pa-0 mb-1 describe text-caption">
             Options for
             <span class="capitalise bold">{{ variant_1 }}</span
             >:
@@ -32,11 +32,14 @@
             <p
               v-for="(option, i) in options_1"
               :key="'opt_' + i"
-              style="display: inline-block; border: 1px solid grey; padding: 5px; margin: 0 5px 5px 0; border-radius: 8px;"
+              style="display: inline-flex; border: 0.3px solid #4CAF50; font-size: 12px; padding: 5px; margin: 0 5px 5px 0; border-radius: 8px;"
             >
-              {{ option }}
-              <v-icon small @click="deleteOption(i, 'options_1', option)"
-                >mdi-delete-outline</v-icon
+              <span class="px-1">{{ option }}</span>
+              <v-icon
+                small
+                style="color: #4CAF50; font-size: 15px; font-weight: bold"
+                @click="deleteOption(i, 'options_1', option)"
+                >mdi-close</v-icon
               >
             </p>
             <input
@@ -55,14 +58,14 @@
     <div v-if="variant_count > 1">
       <v-divider class="mt-5 mb-5"></v-divider>
       <v-sheet
-        outlined
         elevation="0"
         rounded="lg"
         class="mt-2 mb-5"
-        color="bg_grey"
+      
       >
         <div>
-          <v-card-text class="text-left pa-0 mb-1 describe capitalise"
+          <v-card-text
+            class="text-left pa-0 mb-1 describe capitalise text-caption"
             >Enter variant type</v-card-text
           >
           <v-text-field
@@ -82,11 +85,15 @@
               <p
                 v-for="(option, i) in options_2"
                 :key="'opt_' + i"
-                style="display: inline-block; border: 1px solid grey; padding: 5px; margin: 0 5px 5px 0; border-radius: 8px;"
+                style="display: inline-flex; border: 0.3px solid #4CAF50; font-size: 12px; padding: 5px; margin: 0 5px 5px 0; border-radius: 8px;"
               >
-                {{ option }}
-                <v-icon small @click="deleteOption(i, 'options_2', option)"
-                  >mdi-delete-outline</v-icon
+                <span class="px-1">{{ option }}</span>
+
+                <v-icon
+                  small
+                  style="color: #4CAF50; font-size: 15px; font-weight: bold"
+                  @click="deleteOption(i, 'options_2', option)"
+                  >mdi-close</v-icon
                 >
               </p>
               <input
@@ -110,7 +117,7 @@
         elevation="0"
         rounded="lg"
         class="mt-2 mb-5"
-        color="bg_grey"
+   
       >
         <div>
           <v-card-text class="text-left pa-0 mb-1 describe capitalise"
@@ -155,8 +162,7 @@
     </div>
     <p
       v-if="variant_count < 3"
-      class="text-left mt-5 pl-5 blue_link pointer describe"
-      style="color: blue"
+      class="text-left mt-5 pl- text-color-primary pointer describe"
       @click="addVariant()"
     >
       + Add another variant
@@ -167,18 +173,19 @@
       v-if="options_1 && options_1.length"
       elevation="0"
       rounded="lg"
-      color="bg_grey"
+
       class="mt-5 pb-5"
     >
       <div>
-        <p style="text-align: left; color: #69747E; font-weight: 600;">
-          Add quantity and price
+        <p class="text-color-primaryDark" style="text-align: left;  font-weight: 600;">
+         Add Quantity per variant
         </p>
-        <p class="describe">
+        <p class="describe mb-4 text-caption">
           Enter the quantity and price for each combination of variants.
         </p>
       </div>
-      <v-simple-table>
+      <v-simple-table     style="border: 0.5px solid #E2E8F0;box-shadow: -2px 8px 16px rgba(181, 181, 181, 0.08);
+border-radius: 8px;padding: .5rem">
         <template v-slot:default>
           <thead>
             <tr>
@@ -233,6 +240,7 @@ export default {
     "second_variant",
     "third_variant",
     "variant_options",
+    "product"
   ],
   data: () => ({
     activeBorderColor: "#3A50D5",
@@ -362,6 +370,7 @@ export default {
         }
       } else if (this.options_1?.length && this.options_2?.length) {
         // console.log(this.variants);
+        let old = this.variants
         this.variants = {};
 
         // two variants
@@ -373,8 +382,8 @@ export default {
                 ...{
                   [`${this.options_1[i]}/${this.options_2[j]}`]: {
                     name: `${this.options_1[i]}/${this.options_2[j]}`,
-                    qty: 0,
-                    price: 0,
+                    qty: old[`${this.options_1[i]}/${this.options_2[j]}`]?.qty || 0,
+                    price: old[`${this.options_1[i]}/${this.options_2[j]}`]?.price || this.product.price || 0,
                   },
                 },
               };
@@ -388,6 +397,10 @@ export default {
           }
         }
       } else if (this.options_1?.length) {
+
+        let old = this.variants
+
+this.variants = {}
         for (let i = 0; i < this.options_1?.length; i++) {
           // this.variants.push({ name: this.options_1[i] });
           // console.log(this.variants,this.options_1[i])
@@ -397,8 +410,8 @@ export default {
               ...{
                 [this.options_1[i]]: {
                   name: this.options_1[i],
-                  qty: 0,
-                  price: 0,
+                  qty: old[this.options_1[i]]?.qty || 0,
+                  price: old[this.options_1[i]]?.price || this.product.price || 0,
                 },
               },
             };
@@ -501,15 +514,17 @@ export default {
         }
 
         let variant_options = "";
-          // console.log(this.variants)
+        // console.log(this.variants)
 
-          for (const variant in this.variants) {
-          variant_options += `${variant},${parseInt(this.variants[variant].qty)},${parseInt(this.variants[variant].price)};`;
+        for (const variant in this.variants) {
+          variant_options += `${variant},${parseInt(
+            this.variants[variant].qty
+          )},${parseInt(this.variants[variant].price)};`;
         }
         // console.log(this.variants, variant_options);
-        let total = 0
+        let total = 0;
         for (const key in this.variants) {
-          total = total + parseInt(this.variants[key].qty)
+          total = total + parseInt(this.variants[key].qty);
         }
         let variants_data = {
           variant_1_options: variant_1_options,
@@ -519,7 +534,7 @@ export default {
           variant_name_2: this.variant_2,
           variant_name_3: this.variant_3,
           total_stock: total,
-          price: this.variants[Object.keys(this.variants)[0]]?.price,
+          // price: this.variants[Object.keys(this.variants)[0]]?.price,
           variant_options: variant_options,
         };
 

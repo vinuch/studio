@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-card class="rounded-xl pa-4">
+    <v-card class="rounded-xl pa-3">
       <h1 class="my-4 text-capitalize">verification</h1>
 
       <v-card-text>
@@ -11,13 +11,13 @@
           <v-text-field
             id="otp_1"
             v-model="otp_1"
+            @change="e => otp_1 = e.target.value"
             outlined
             hide-details
             type="number"
             dense
             @keyup="nextDigit($event)"
             @paste="pasteOTP"
-            @focus="clearOTP"
           />
         </li>
         <li>
@@ -83,7 +83,7 @@
         :primary="true"
         size="large"
         @onClick="clearOTP"
-        
+        :containerStyle="{marginTop: '1rem'}"
       />
 
       <v-card-text>
@@ -130,7 +130,7 @@ export default {
     nextDigit(e) {
       if (this.otp.length < 5) {
         this.otp += e.key;
-        document.getElementById(`otp_${this.otp.length}`).disabled = true;
+        // document.getElementById(`otp_${this.otp.length}`).disabled = true;
         document.getElementById(`otp_${this.otp.length + 1}`).focus();
         // prevent from future focus/disable
         // except backspace conditions

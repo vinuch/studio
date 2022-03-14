@@ -40,7 +40,7 @@
           accept="image/png,image/gif,image/jpeg"
         />
 
-        <v-card-text class="text-left text-body-2 pb-0 mt-5 "
+        <v-card-text class="text-left text-body-2 pb-0 mt-5 px-0"
           >Product name</v-card-text
         >
         <v-text-field
@@ -56,9 +56,37 @@
           class="text-left text-body-2 pt-0 mt-1 mb-5 describe"
           >Give your product a short and clear name.</v-card-text
         >
+        <v-card-text class="text-left text-body-2 pb-0 mt-5 px-0"
+          >Price</v-card-text
+        >
+        <v-text-field
+          type="number"
+          outlined
+          hide-details
+          class="mt-2 mb-0"
+          @keyup="unsavedChangeMade()"
+          v-model="product.price"
+          :placeholder="!currentProduct ? '' : `${currentProduct.price}`"
+        ></v-text-field>
 
-        <v-card-text class="text-left pb-0 mt-5 describe"
-          >Description</v-card-text
+        <div v-if="!product.has_variant">
+           <v-card-text class="text-left text-body-2 pb-0 mt-5 px-0"
+          >Stock quantity</v-card-text
+        >
+        <v-text-field
+          type="number"
+          outlined
+          hide-details
+          class="mt-2 mb-0"
+          @keyup="unsavedChangeMade()"
+          v-model="total_stock"
+          :placeholder="!currentProduct ? '' : `${currentProduct.price}`"
+        ></v-text-field>
+
+        </div>
+       
+        <v-card-text class="text-left pb-0 mt-5 describe px-0"
+          >Product Description</v-card-text
         >
 
         <v-textarea
@@ -69,25 +97,29 @@
           v-model="product.description"
           :placeholder="!currentProduct ? '' : currentProduct.description"
         ></v-textarea>
-        <v-card-text class="text-left pt-0 mt-1 mb-5 describe"
-          >Provide a clear description for your customers.</v-card-text
+        <v-card-text
+          class="text-left text-capitalize text-caption pt-0 mt-1 mb-5 describe px-0"
+          >give your product a short and clear Description.</v-card-text
         >
 
         <v-sheet
           id="variants"
           elevation="0"
           rounded="lg"
-          color="bg_grey"
+          color="#FDFDFD"
           class="mb-0 pa-5"
+          style="border: 0.5px solid #F3F3F3;"
         >
           <div>
-            <p style="text-align: left; color: #69747E; font-weight: 600;">
-              <span v-if="currentProduct && product.has_variant">Variants</span>
+            <p style="text-align: left; color: #143E32; font-weight: 600;">
+              <span v-if="currentProduct && product.has_variant"
+                >Add product variants</span
+              >
               <span v-else>Add product variants</span>
               <span class="switch">
                 <v-switch
                   class="float-right mt-0 pt-0"
-                  color="success"
+                  color="#4CD964"
                   style="position: relative; right: -12px;"
                   v-model="product.has_variant"
                   inset
@@ -96,9 +128,9 @@
               </span>
             </p>
           </div>
-          <p class="describe ">
-            This product comes in variants e.g. different sizes, colours,
-            materials, etc.
+          <p class="describe text-caption ">
+            Add product variants like size, colour, etc. Separate each variant
+            option with a comma
           </p>
           <div v-for="i in variant_index" :key="i">
             <AddVariant
@@ -109,12 +141,13 @@
               :second_variant="product.second_variant"
               :third_variant="product.third_variant"
               :variant_options="product.variant_options"
+              :product="product"
             />
           </div>
         </v-sheet>
 
         <!-- non-variant qty and pricing -->
-        <v-sheet
+        <!-- <v-sheet
           v-if="!product.has_variant"
           elevation="0"
           rounded="lg"
@@ -139,14 +172,21 @@
                 :placeholder="!currentProduct ? 'Qty' : oneQty"
                 background-color="grey lighten-5"
                 hide-details="true"
-                v-model="product.total_stock"
+                v-model="total_stock"
               ></v-text-field>
             </v-col>
           </v-row>
-        </v-sheet>
+        </v-sheet> -->
 
         <!-- Discount -->
-        <v-sheet elevation="0" rounded="lg" color="bg_grey" class="mt-5 pa-5">
+        <v-sheet
+          elevation="0"
+          rounded="lg"
+          color="#fdfdfd"
+          style="border: 0.5px solid #E2E8F0;box-shadow: -2px 8px 16px rgba(181, 181, 181, 0.08);
+border-radius: 8px;padding: .5rem"
+          class="mt-5 pa-5"
+        >
           <div>
             <p
               style="text-align: left; color: #69747E; font-weight: 600; position: relative;"
@@ -202,7 +242,9 @@
           id="variants"
           elevation="0"
           rounded="lg"
-          color="bg_grey"
+          color="#fdfdfd"
+          style="border: 0.5px solid #E2E8F0;box-shadow: -2px 8px 16px rgba(181, 181, 181, 0.08);
+border-radius: 8px;padding: .5rem"
           class="mb-0 mt-5 pa-5"
         >
           <div>
@@ -328,8 +370,8 @@ export default {
     fetchVariants() {
       if (this.product.has_variant) {
         this.get_variants = true;
-      }else{
-        this.finishCreation()
+      } else {
+        this.finishCreation();
       }
       // this.get_variants = false
     },
@@ -402,8 +444,8 @@ export default {
           second_variant: this.variants_with_options.variant_2_options,
           variant_options: this.variants_with_options.variant_options,
           store: this.store.store_name,
-          price: Number(this.price),
-          total_stock: this.total_stock
+          price: Number(this.product.price),
+          total_stock: this.total_stock,
         },
       };
       delete data.product_image;
@@ -464,8 +506,10 @@ export default {
     getVariants(variant_data) {
       this.variant_data = variant_data;
       this.variants_with_options = variant_data;
-      this.total_stock = variant_data.total_stock;
-      this.price = variant_data.price;
+      if (this.product.has_variant) {
+        this.total_stock = variant_data.total_stock;
+      }
+      // this.price = variant_data.price;
 
       // this.$nextTick(function(){
       //   this.get_variants = false

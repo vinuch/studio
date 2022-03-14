@@ -624,7 +624,7 @@ export default {
   },
   mounted() {
     this.verified = this.store?.verified;
-    console.log(this.verified)
+    console.log(this.store)
 
 
     if (this.verified) {

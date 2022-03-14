@@ -60,6 +60,7 @@
             <v-icon style="float: left; top: 30px" v-else>mdi-store-remove</v-icon>
             <span class="switch">
               <v-switch
+              
               class="mt-0 pt-0 pr-2"
               color="success"
               style="position: absolute; right: -12px; bottom: 10px"

@@ -42,6 +42,7 @@
             outlined
             type="number"
             name="acc_no"
+            maxLength="10"
             v-model.trim="acc_no"
             :hint="acc_name"
             persistent-hint
@@ -49,7 +50,7 @@
           </v-text-field>
         </v-col>
       </div>
-      <setupFooter @saveSetUp="save()" />
+      <setupFooter @saveSetUp="save()" :disabled="!acc_name" />
     </v-card>
   </div>
 </template>
@@ -60,13 +61,12 @@ import { EventBus } from "@/services/eventBus";
 import {
   bankList,
   resolveAcc,
-  // createSubAcc,
+  createSubAcc,
   saveMerchSettlement,
+  updateStore,
 } from "@/services/apiServices";
 import * as mutationTypes from "@/store/mutationTypes";
 import setupFooter from "@/components/setupFooter";
-import axios from 'axios';
-import * as urls from "../services/urls";
 
 export default {
   name: "BankDetails",
@@ -87,7 +87,6 @@ export default {
       this.$store.commit(mutationTypes.SET_SETTINGS_STATE, false);
     },
     save() {
-      EventBus.$emit("dialog", "open", "success");
       let trans_data = {
         business_name: this.store.store_name, // should be business name - model not implemented
         settlement_bank: this.bank_code,
@@ -96,14 +95,8 @@ export default {
         description:
           "Creating merchant settlement account as sub account for Leyyow",
       };
-      axios({
-        method: "post",
-        url: urls.createSubAccUrl,
-        trans_data,
-        headers: {
-          Authorization: "Bearer " + this.settlement.paystack_secret_key,
-        },
-      }).then((response) => {
+      createSubAcc(trans_data, this.settlement.paystack_secret_key)
+        .then((response) => {
           let save_data = {
             acc_name: this.acc_name,
             bank: this.bank_name,
@@ -115,15 +108,32 @@ export default {
           saveMerchSettlement(save_data).then(() => {
             // this.$store.commit(mutationTypes.SAVE_STORE, response)
             EventBus.$emit("open_alert", "success", "Bank details added");
+            EventBus.$emit("dialog", "open", "success");
+
             let verified = this.store.verified;
-            verified[1] = 1;
+            let split = verified.split("");
 
-            this.$store.commit(mutationTypes.SAVE_STORE, {
-              ...this.store,
-              verified,
-            });
+            split[1] = "1";
+            split.join("");
 
-            this.$router.go(0);
+            console.log(split);
+
+            updateStore({ verified: "01100" }, this.store.id)
+              .then((res) => {
+                let store = res.data;
+                console.log(store);
+                this.$store.commit(mutationTypes.SAVE_STORE, store);
+                this.$router.go(0);
+
+                //     let verified = this.store.verified
+                //     verified[3] = 1
+
+                // this.$store.commit(mutationTypes.SAVE_STORE, {...this.store, verified})
+              })
+              .catch((err) => {
+                console.log(err);
+              })
+              .finally(() => {});
           });
         })
         .catch((err) => {
@@ -153,7 +163,7 @@ export default {
       if (this.bank_code != "" && this.acc_no.length == 10) {
         // disable input temporarily
         // show loading symbol
-        resolveAcc(this.bank_code, this.acc_no)
+        resolveAcc(this.bank_code, this.acc_no, this.settlement.paystack_secret_key)
           .then((response) => {
             this.acc_name = response.data.data.account_name;
             let the_bank = this.banks.filter((bank) => {
@@ -162,13 +172,16 @@ export default {
             this.bank_name = the_bank[0].name;
             this.acc_resolved = true;
           })
-          .catch((err) => {
+          .catch(() => {
             EventBus.$emit(
               "open_alert",
               "error",
-              "Error getting account details" + err
+              "invalid account details"
             );
           });
+      }else {
+        console.log('adlaksdjfa')
+        this.acc_name = ''
       }
     },
   },

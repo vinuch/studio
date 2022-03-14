@@ -158,8 +158,7 @@
                   </template>
                   <template v-slot:append>
                     <svg
-                    @click="showPassword = !showPassword"
-
+                      @click="showPassword = !showPassword"
                       width="20"
                       height="20"
                       viewBox="0 0 21 18"
@@ -347,9 +346,8 @@ export default {
                   business_type: this.store_type,
                 };
                 console.log(data);
-
-                createStore(data)
-                  .then((createRes) => {
+                try {
+                  createStore(data).then((createRes) => {
                     let store = createRes?.data.store;
                     let settlement = createRes?.data.settlement;
                     let acct_id = createRes?.data.store.id;
@@ -371,15 +369,14 @@ export default {
                     );
                     this.$store.commit(mutationTypes.SAVE_ACCOUNT_ID, acct_id);
                     this.$store.commit(mutationTypes.EMAIL_VERIFIED, false);
-                  })
-                  .catch((err) => {
-                    console.log(err);
-                    EventBus.$emit("open_alert", "error", "Signup error");
-                  })
-                  .finally(() => {
-                    this.loading = false;
                     this.$router.push("/dash");
+                    this.loading = false;
                   });
+                } catch (error) {
+                  this.loading = false;
+
+                  EventBus.$emit("open_alert", "error", "Signup error");
+                }
 
                 // EventBus.$emit(
                 //   "open_alert",

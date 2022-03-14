@@ -66,13 +66,14 @@ export const createStore = (data) => {
   // });
 };
 
-export const createSubAcc = (data) => {
+export const createSubAcc = (data, key) => {
+  console.log(key)
   return axios({
     method: "post",
     url: urls.createSubAccUrl,
     data,
     headers: {
-      "Authorization": "Bearer " + auth,
+      "Authorization": "Bearer " + key,
     },
   });
 };
@@ -135,12 +136,12 @@ export const requestPasswordReset = (data) => {
   })
 };
 
-export const resolveAcc = (bank_code, acc_no) => {
+export const resolveAcc = (bank_code, acc_no, key) => {
   return axios({
     method: "get",
     url: `${urls.resolveAccUrl}${acc_no}&bank_code=${bank_code}`,
     headers: {
-      "Authorization": "Bearer " + auth,
+      "Authorization": "Bearer " + key,
     },
   });
 };

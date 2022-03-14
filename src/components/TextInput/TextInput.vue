@@ -61,12 +61,15 @@ export default {
     validate: {
       type: Boolean,
     },
+    defaultValue: {
+      type: String,
+    },
   },
 
   data() {
     return {
       form: {
-        ...{ [this.name]: "" },
+        ...{ [this.name]: this.defaultValue || "" },
       },
     };
   },
@@ -80,6 +83,7 @@ export default {
     },
     catchValidations() {
       if (this.validate && this.validations) {
+        console.log('jadfka')
         return this.v$.form[this.name]?.$dirty
           ? !this.v$.form[this.name]?.$error
             ? true
@@ -106,14 +110,15 @@ export default {
   },
   watch: {
     validate() {
-      if (!this.form[this.name]) {
-        this.form[this.name] = " ";
+      let original = this.form[this.name]
+        this.form[this.name] = original + ' ';
 
         setTimeout(() => {
-          this.form[this.name] = "";
+          this.form[this.name] = original;
         }, 100);
-      }
     },
+
   },
+
 };
 </script>

@@ -129,7 +129,7 @@ export default {
 }
 .v-application {
   [class*="text-"] {
-    color: #36405a;
+
     font-family: "graphik", Helvetica, Arial, sans-serif !important;
   }
   font-family: "graphik", Helvetica, Arial, sans-serif !important;
@@ -145,6 +145,14 @@ export default {
 
 :root {
   --primary: #4caf50;
+  --primaryDark: #143E32
+}
+
+.text-color-primaryDark {
+  color: var(--primaryDark) !important;
+}
+.text-color-primary {
+  color: var(--primary) !important;
 }
 
 .v-stepper__header
