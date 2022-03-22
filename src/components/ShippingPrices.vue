@@ -129,7 +129,9 @@ export default {
         return;
       }
       // this.changeInp(e);
+      let splitText  =  e.target.value.split('')
       if (
+        splitText[splitText.length-1] === "," || 
         e.code === "Comma" ||
         e.keyCode === 188 ||
         e.which === 188 ||

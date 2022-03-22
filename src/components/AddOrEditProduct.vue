@@ -13,24 +13,75 @@
       <v-container fluid class="pa-0">
         <v-card-text
           v-if="!currentProduct"
-          class="text-left text-body-2 pb-2 mt-5 "
+          class="text-left text-body-2 pb-2 pa-0 "
           >Upload up to five product images</v-card-text
         >
 
+        <div v-if="currentProduct" class="d-flex justify-content-start">
+          <div
+            v-if="image_preview"
+            style="border-radius: 8px; display: inline-block;position: relative"
+          >
+            <div
+              @click="product.product_image = '';product.id = null"
+              style="background: black;color: white;position:absolute; top:0; right:-10px; z-index: 20; height: 20px; width: 20px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px"
+            >
+              <v-icon color="#fff" x-small>mdi-close</v-icon>
+            </div>
+            <v-img
+              :src="image_preview"
+              height="80"
+              width="80"
+              class="rounded-md"
+            ></v-img>
+          </div>
+          <div
+            v-else-if="product.product_image"
+            style="border-radius: 8px; display: inline-block;position: relative"
+          >
+            <div
+              @click="product.product_image = '';product.id = null"
+              style="background: black;color: white;position:absolute; top:0; right:-10px; z-index: 20; height: 20px; width: 20px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px"
+            >
+              <v-icon color="#fff" x-small>mdi-close</v-icon>
+            </div>
+
+            <v-img
+              :src="currentProduct.product_image"
+              height="80"
+              width="80"
+              class="rounded-md"
+            ></v-img>
+          </div>
+        </div>
+
+        <div   v-else-if="image_preview" class="d-flex justify-content-start mb-4">
+          <div
+            style="border-radius: 8px; display: inline-block;position: relative;"
+          
+          >
+            <div
+              @click="$refs.newImageInput.value = null ; image_preview = ''; product.id = null"
+              style="background: black;color: white;position:absolute; top:0; right:-10px; z-index: 20; height: 20px; width: 20px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px"
+            >
+              <v-icon color="#fff" x-small>mdi-close</v-icon>
+            </div>
+            <v-img
+              :src="image_preview"
+              height="80"
+              width="80"
+              class="rounded-md"
+            ></v-img>
+          </div>
+        </div>
+
         <input
+        ref="newImageInput"
           v-if="!currentProduct"
           type="file"
           accept="image/*"
           @change="uploadImage"
         />
-
-        <span v-if="currentProduct">
-          <v-img v-if="image_preview" :src="image_preview"></v-img>
-          <v-img v-else :src="currentProduct.product_image"></v-img>
-        </span>
-        <span v-else>
-          <v-img v-if="image_preview" :src="image_preview"></v-img>
-        </span>
 
         <input
           v-if="currentProduct"
@@ -70,21 +121,20 @@
         ></v-text-field>
 
         <div v-if="!product.has_variant">
-           <v-card-text class="text-left text-body-2 pb-0 mt-5 px-0"
-          >Stock quantity</v-card-text
-        >
-        <v-text-field
-          type="number"
-          outlined
-          hide-details
-          class="mt-2 mb-0"
-          @keyup="unsavedChangeMade()"
-          v-model="total_stock"
-          :placeholder="!currentProduct ? '' : `${currentProduct.price}`"
-        ></v-text-field>
-
+          <v-card-text class="text-left text-body-2 pb-0 mt-5 px-0"
+            >Stock quantity</v-card-text
+          >
+          <v-text-field
+            type="number"
+            outlined
+            hide-details
+            class="mt-2 mb-0"
+            @keyup="unsavedChangeMade()"
+            v-model="total_stock"
+            :placeholder="!currentProduct ? '' : `${currentProduct.price}`"
+          ></v-text-field>
         </div>
-       
+
         <v-card-text class="text-left pb-0 mt-5 describe px-0"
           >Product Description</v-card-text
         >
@@ -210,7 +260,6 @@ border-radius: 8px;padding: .5rem"
           <v-row v-if="product.has_discount" class="mt-2">
             <v-col cols="6">
               <v-select
-                label="Mode"
                 dense
                 single-line
                 hide-details="true"
@@ -221,18 +270,42 @@ border-radius: 8px;padding: .5rem"
                 :items="discount_types"
                 item-color="success"
                 background-color="grey lighten-5"
-              ></v-select>
+              >
+              </v-select>
             </v-col>
             <v-spacer></v-spacer>
             <v-col cols="6">
               <v-text-field
                 outlined
                 dense
+                type="number"
                 placeholder="Amount"
                 background-color="grey lighten-5"
                 hide-details="true"
                 v-model="product.discount"
-              ></v-text-field>
+              >
+                <template v-slot:prepend-inner>
+                  <v-icon v-if="product.discount_type == '1'"
+                    >mdi-percent</v-icon
+                  >
+                  <svg
+                    v-else
+                    class="mr-3"
+                    width="20"
+                    height="16"
+                    viewBox="0 0 20 16"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M2.85714 16H5.96857V3.73706L14.2486 16H17.7971V0H14.6857V11.5692L6.94571 0H2.85714V16Z"
+                      fill="#A1ADBA"
+                    />
+                    <path d="M0 3.7296H20V6.21601H0V3.7296Z" fill="#A1ADBA" />
+                    <path d="M0 8.70241H20V11.1888H0V8.70241Z" fill="#A1ADBA" />
+                  </svg>
+                </template>
+              </v-text-field>
             </v-col>
           </v-row>
         </v-sheet>
@@ -337,8 +410,8 @@ export default {
       discount_types: [
         // get this from API (not built yet)
         // {value: "0", type: 0}, doesn't recognise as true
-        { value: 1, type: "Percentage" },
-        { value: 2, type: "Amount" },
+        { value: "1", type: "Percentage" },
+        { value: "2", type: "Amount" },
       ],
       // display: true,
       get_variants: false,
@@ -448,6 +521,7 @@ export default {
           total_stock: this.total_stock,
         },
       };
+
       delete data.product_image;
       if (data.has_variant) {
         // data.price = 0;

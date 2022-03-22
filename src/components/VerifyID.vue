@@ -6,7 +6,9 @@
       <v-card-text>
         Enter the OTP code sent to your ({{ store.email }}) mail
       </v-card-text>
-      <ul class="otp_list pa-0">
+
+      <v-otp-input type="number" id="fields" ref="otpField"   v-model="otp" length="6"></v-otp-input>
+      <!-- <ul class="otp_list pa-0">
         <li>
           <v-text-field
             id="otp_1"
@@ -81,19 +83,20 @@
             @keyup="nextDigit($event)"
           />
         </li>
-      </ul>
+      </ul> -->
       <Button
         :block="true"
         :label="!otp_check ? 'Verify' : 'Clear'"
         :primary="true"
         size="large"
-        @onClick="clearOTP"
+        @onClick="resolveOTP"
         :containerStyle="{ marginTop: '1rem' }"
+       :disabled="otp.length < 6"
       />
 
       <v-card-text>
         Did not receive OTP?
-        <span class="pointer" @click="resendEmail()">Resend</span>
+        <span class="pointer text-color-primary text-decoration-underline" @click="resendEmail()">Resend</span>
       </v-card-text>
     </v-card>
   </div>
@@ -105,6 +108,7 @@ import { EventBus } from "@/services/eventBus";
 import { verifyEmailPhone } from "@/services/apiServices";
 import * as mutationTypes from "@/store/mutationTypes";
 import Button from "@/components/Button";
+// import v-otp-input from "vuetify"
 
 export default {
   name: "VerifyID",
@@ -113,42 +117,37 @@ export default {
   },
   data: () => ({
     otp: "",
-    otp_1: "",
-    otp_2: "",
-    otp_3: "",
-    otp_4: "",
-    otp_5: "",
-    otp_6: "",
+ 
     otp_check: false,
   }),
   methods: {
     clearOTP() {
       this.otp = "";
-      this.otp_1 = "";
-      this.otp_2 = "";
-      this.otp_3 = "";
-      this.otp_4 = "";
-      this.otp_5 = "";
-      this.otp_6 = "";
-      this.otp_check = false;
+  
     },
-    nextDigit(e) {
-      if (this.otp.length < 5) {
-        this.otp += e.key;
+    // nextDigit(e) {
+    //   console.log(e.keyCode);
+    //   if (e.keyCode == 8) {
+    //     console.log(this.otp);
+    //     document.getElementById(`otp_${this.otp.length - 1}`).focus();
+    //   } else {
+    //     if (this.otp.length < 5) {
+    //       this.otp += e.key;
 
-        console.log(this.otp);
-        if (this.otp.length > 5) {
-          this.resolveOTP();
-        }
+    //       console.log(this.otp);
+    //       if (this.otp.length > 5) {
+    //         this.resolveOTP();
+    //       }
 
-        // document.getElementById(`otp_${this.otp.length}`).disabled = true;
-        document.getElementById(`otp_${this.otp.length + 1}`).focus();
-        // prevent from future focus/disable
-        // except backspace conditions
-      } else {
-        this.resolveOTP();
-      }
-    },
+    //       // document.getElementById(`otp_${this.otp.length}`).disabled = true;
+    //       document.getElementById(`otp_${this.otp.length + 1}`).focus();
+    //       // prevent from future focus/disable
+    //       // except backspace conditions
+    //     } else {
+    //       this.resolveOTP();
+    //     }
+    //   }
+    // },
     pasteOTP(e) {
       e.stopPropagation();
       e.preventDefault();
@@ -173,7 +172,7 @@ export default {
     resolveOTP() {
       verifyEmailPhone(this.otp, this.store.email) // modify to use account email not store email
         .then((res) => {
-          console.log(res);
+          // console.log(res);
           if (res.data.status == "Success") {
             this.otp = "";
             this.$store.commit(mutationTypes.EMAIL_VERIFIED, true);
@@ -181,6 +180,7 @@ export default {
             EventBus.$emit("open_alert", "success", "Email verified.");
             EventBus.$emit("dialog", "close", "");
           } else {
+            this.clearOTP()
             EventBus.$emit(
               "open_alert",
               "danger",
@@ -198,6 +198,9 @@ export default {
       store: "getStore",
     }),
   },
+  mounted() {
+      
+  }
 };
 </script>
 

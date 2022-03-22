@@ -60,7 +60,13 @@
                 <TextInput
                   label="Store Name"
                   name="storeName"
-                  @update="(vl) => (store_name = vl)"
+                  @update="
+                    (vl) => {
+                      store_name = vl;
+                      store_slug = vl.replaceAll(' ', '-');
+                      cleanStoreUrl('blur');
+                    }
+                  "
                 ></TextInput>
 
                 <v-text-field
@@ -346,36 +352,42 @@ export default {
                   business_type: this.store_type,
                 };
                 console.log(data);
-                try {
-                  createStore(data).then((createRes) => {
-                    let store = createRes?.data.store;
-                    let settlement = createRes?.data.settlement;
-                    let acct_id = createRes?.data.store.id;
-                    console.log(createRes, "createRes");
 
-                    fethcStoreInventory(store?.slug);
-                    fetchOrders();
-                    console.log(data.slug);
-                    this.$store.commit(
-                      mutationTypes.SAVE_STORE_SLUG,
-                      data.slug
-                    );
+                if (res.status == 200 || res.status == 201) {
+                  try {
+                    createStore(data).then((createRes) => {
+                      let store = createRes?.data.store;
+                      let settlement = createRes?.data.settlement;
+                      let acct_id = createRes?.data.store.id;
+                      console.log(createRes, "createRes");
 
-                    this.$store.commit(mutationTypes.LOGGED_IN, true);
-                    this.$store.commit(mutationTypes.SAVE_STORE, store);
-                    this.$store.commit(
-                      mutationTypes.SAVE_SETTLEMENT,
-                      settlement
-                    );
-                    this.$store.commit(mutationTypes.SAVE_ACCOUNT_ID, acct_id);
-                    this.$store.commit(mutationTypes.EMAIL_VERIFIED, false);
-                    this.$router.push("/dash");
+                      fethcStoreInventory(store?.slug);
+                      fetchOrders();
+                      console.log(data.slug);
+                      this.$store.commit(
+                        mutationTypes.SAVE_STORE_SLUG,
+                        data.slug
+                      );
+
+                      this.$store.commit(mutationTypes.LOGGED_IN, true);
+                      this.$store.commit(mutationTypes.SAVE_STORE, store);
+                      this.$store.commit(
+                        mutationTypes.SAVE_SETTLEMENT,
+                        settlement
+                      );
+                      this.$store.commit(
+                        mutationTypes.SAVE_ACCOUNT_ID,
+                        acct_id
+                      );
+                      this.$store.commit(mutationTypes.EMAIL_VERIFIED, false);
+                      this.$router.push("/dash");
+                      this.loading = false;
+                    });
+                  } catch (error) {
                     this.loading = false;
-                  });
-                } catch (error) {
-                  this.loading = false;
 
-                  EventBus.$emit("open_alert", "error", "Signup error");
+                    EventBus.$emit("open_alert", "error", "Signup error");
+                  }
                 }
 
                 // EventBus.$emit(

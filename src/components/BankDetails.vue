@@ -26,7 +26,16 @@
       </v-card-text>
       <div>
         <v-col class="d-flex pa-5 pt-0 pb-0">
-          <v-select
+          <v-autocomplete
+            v-model="bank_code"
+            :items="banks"
+            label="Select bank"
+            item-text="name"
+            item-value="code"
+            item-color="success"
+            outlined
+          ></v-autocomplete>
+          <!-- <v-select
             item-text="name"
             item-value="code"
             v-model="bank_code"
@@ -34,7 +43,7 @@
             label="Select bank"
             item-color="success"
             outlined
-          ></v-select>
+          ></v-select> -->
         </v-col>
         <v-col class="d-flex pa-5 pt-0 pb-0 mb-2">
           <v-text-field
@@ -163,7 +172,11 @@ export default {
       if (this.bank_code != "" && this.acc_no.length == 10) {
         // disable input temporarily
         // show loading symbol
-        resolveAcc(this.bank_code, this.acc_no, this.settlement.paystack_secret_key)
+        resolveAcc(
+          this.bank_code,
+          this.acc_no,
+          this.settlement.keys.paystack_secret_key
+        )
           .then((response) => {
             this.acc_name = response.data.data.account_name;
             let the_bank = this.banks.filter((bank) => {
@@ -173,15 +186,11 @@ export default {
             this.acc_resolved = true;
           })
           .catch(() => {
-            EventBus.$emit(
-              "open_alert",
-              "error",
-              "invalid account details"
-            );
+            EventBus.$emit("open_alert", "error", "invalid account details");
           });
-      }else {
-        console.log('adlaksdjfa')
-        this.acc_name = ''
+      } else {
+        console.log("adlaksdjfa");
+        this.acc_name = "";
       }
     },
   },

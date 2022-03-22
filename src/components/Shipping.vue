@@ -98,7 +98,7 @@
                 >
                 <v-select
                   dense
-                  multiple
+                  
                   single-line
                   hide-details="true"
                   v-model="location.lga"
@@ -109,7 +109,8 @@
                   background-color="grey lighten-5"
                 ></v-select>
                 <v-card-text class="text-left pa-0 my-3">Street</v-card-text>
-                <v-text-field type="number" outlined> </v-text-field>
+                <v-text-field type="text" v-model="location.street" outlined>
+                </v-text-field>
               </template>
               <!-- <p class="delete text-left my-3">
                 <v-icon class="delete">
@@ -238,7 +239,7 @@ export default {
     shipping_mode: "in_house",
     stringify: false,
     shipping_mode_in_house: false,
-    locations: [{ state: "", lga: "" }],
+    locations: [{ state: "", lga: "", street: "" }],
   }),
   methods: {
     changer() {
@@ -278,7 +279,8 @@ export default {
       if (this.delivery_opt === "pickup") {
         let stringifiedLocations = "pickup;";
         this.locations.forEach((location) => {
-          stringifiedLocations += location.state + "," + location.lga + ";";
+          stringifiedLocations +=
+            location.state + "," + location.lga + ";" + location.street + ";";
         });
 
         this.saveLocations(stringifiedLocations);
@@ -322,16 +324,13 @@ export default {
       if (locations) {
         console.log(locations);
         let computedLocations = [];
-
-        for (let index = 1; index < locations.length; index++) {
-          const [state, ...others] = locations[index].split(",");
-          computedLocations.push({
-            state: state,
-            lga: others,
-          });
-        }
-
-        console.log(computedLocations);
+        let locationSplit = locations[1].split(",");
+        let obj = {
+          state: locationSplit[0],
+          lga: locationSplit[1],
+          street: locations[2],
+        };
+        computedLocations.push(obj);
 
         this.locations = computedLocations;
       }
@@ -354,6 +353,8 @@ ul {
 }
 .del_ops {
   margin-bottom: 1rem;
+  display: flex;
+  justify-content: space-between;
 }
 .del_ops li {
   display: inline-block;
@@ -364,7 +365,6 @@ ul {
   border: 1px solid #e2e8f0;
   border-radius: 8px;
   width: 85px;
-  margin-right: 20px;
   padding: 15px;
   /* height: 100%; */
   cursor: pointer;

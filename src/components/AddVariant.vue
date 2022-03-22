@@ -202,21 +202,25 @@ border-radius: 8px;padding: .5rem">
           </thead>
           <tbody>
             <tr v-for="vars in variants" :key="vars.name">
-              <td class="pr-0 text-left">{{ vars.name }}</td>
-              <td class="pl-0">
+              <td class="pr-0 text-left" style="max-width: 70px;word-break: break-all;">{{ vars.name }}</td>
+              <td class="pl-0 pr-0">
                 <input
                   placeholder="0"
                   v-model="vars.qty"
-                  style="max-width: 30px;"
+                  style="max-width: 70px;border: 1px solid #E5E9F2; border-radius: 8px"
+                  class="px-2 py-1"
                   type="number"
+                  @click="e => e.target.select()"
                 />
               </td>
               <td class="pl-0 pr-0">
                 <input
                   placeholder="0"
                   v-model="vars.price"
-                  style="max-width: 60px;"
+                   style="max-width: 70px;border: 1px solid #E5E9F2; border-radius: 8px"
+                  class="px-2 py-1"
                   type="number"
+                  @click="e => e.target.select()"
                 />
               </td>
             </tr>

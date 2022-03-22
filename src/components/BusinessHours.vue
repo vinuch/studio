@@ -62,7 +62,7 @@
           style="color: #4CAF50"
           @click="addPeriod()"
         >
-          + specify more days and times {{ allDaysSet }}
+          + specify more days and times
         </p>
         <!-- <p
           v-if="always_open != true && set_indexes.length <= days.length"
@@ -157,27 +157,27 @@ export default {
     },
     addPeriod() {
       this.preSave();
-      if (
-        !this.periods[this.periods.length - 1].close ||
-        !this.periods[this.periods.length - 1].open
-      ) {
-        EventBus.$emit(
-          "open_alert",
-          "error",
-          "Set an opening time | Set a closing time ser"
-        );
-      } else if (this.set_indexes.length < this.days.length) {
-        this.periods.push({ days: [], open: null, close: null });
-        this.open = null;
-        this.close = null;
-        this.disable_set_days = false; // in case not already false
+      if (this.stringifyBizHrs()) {
+        if (
+          !this.periods[this.periods.length - 1].close ||
+          !this.periods[this.periods.length - 1].open
+        ) {
+          EventBus.$emit(
+            "open_alert",
+            "error",
+            "Set an opening time | Set a closing time ser"
+          );
+        } else if (this.set_indexes.length < this.days.length) {
+          this.periods.push({ days: [], open: null, close: null });
+          this.open = null;
+          this.close = null;
+          this.disable_set_days = false; // in case not already false
 
-        this.$nextTick(function() {
-          this.disable_set_days = true;
-          this.isset_status = false;
-        });
-
-        this.stringifyBizHrs();
+          this.$nextTick(function() {
+            this.disable_set_days = true;
+            this.isset_status = false;
+          });
+        }
       } else {
         // EventBus.$emit(
         //   "open_alert",
@@ -320,7 +320,6 @@ export default {
     },
     setSelectedDay(param) {
       let { day, period } = param;
-
       if (day.isset && this.periods[period].days.includes(day.day)) {
         const index = this.periods[period].days.indexOf(day.day);
         if (index > -1) {
@@ -339,7 +338,6 @@ export default {
       // } else if (day.selected == false && day.isset == false) {
       //   day.selected = true;
       // }
-      
     },
     stringifyBizHrs() {
       let error = false;
@@ -383,6 +381,7 @@ export default {
           });
         }
       }
+      
 
       if (error) {
         return false;
@@ -413,7 +412,10 @@ export default {
     }),
     allDaysSet() {
       let result = this.days[0].isset;
-   
+      this.days.map((item) => {
+        result = result && item.isset_status;
+      });
+      //  console.log(this.periods, this.days)
       return result;
     },
   },
@@ -453,6 +455,7 @@ export default {
       // console.log(reconstructedPeriod);
 
       this.periods = reconstructedPeriod;
+      console.log(this.periods, this.days);
     }
   },
 };

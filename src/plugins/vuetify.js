@@ -1,5 +1,5 @@
 import Vue from 'vue';
-import Vuetify from 'vuetify/lib';
+import Vuetify from 'vuetify';
 import ArrowDown from '@/components/Icons/ArrowDown.vue'
 import CurvedGraph from '@/components/Icons/CurvedGraph.vue'
 import Filter from '@/components/Icons/Filter.vue'
