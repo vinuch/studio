@@ -42,6 +42,8 @@
     >
       <input v-model="delivery_details.address" name="address" />
     </FloatingLabel>
+
+    <!-- {{zones}} -->
     <FloatingLabel
       :config="{
         label: 'Select shipping area',
@@ -127,14 +129,17 @@ export default {
       settlement: "getStoreSettlement",
     }),
     zones() {
-      let zone = this.storeInfo.default_shipping.split(",")
+      let zone = this.storeInfo.default_shipping.split(";")
       let zones = []
       for (let i = 0; i < zone.length; i += 2) {
         let object = {};
-        object["zone"] = zone[i]
-        object["price"] = Number(zone[i + 1])
+        let splitZone = zone[i].split(',')
+        object["zone"] = splitZone[i + 1]
+        object["price"] = Number(splitZone[i])
         zones.push(object);
       }
+        console.log('hi', zones)
+
       return zones
     },
     cartItems() {
@@ -240,6 +245,7 @@ export default {
         });
     },
     createOrderItems() {
+      // console.log(this.cart_meta.preShipTotal , this.city , 100)
       createOrder(this.order)
         .then(() => {
           this.payWithPaystack();
@@ -259,7 +265,7 @@ export default {
       var handler = PaystackPop.setup({
         key: this.settlement.paystack_public_key,
         email: this.delivery_details.email,
-        amount: (parseFloat(this.cart_meta.preShipTotal) + parseFloat(this.city.price)) * 100,
+        amount: (parseFloat(this.cart_meta.preShipTotal) + (parseFloat(this.city.price) || 0)) * 100,
         currency: "NGN",
         ref: this.orderID,
         metadata: {

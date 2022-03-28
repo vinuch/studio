@@ -4,6 +4,9 @@ import * as urls from "./urls";
 import * as mutationTypes from "../store/mutationTypes";
 import store from "../store/index";
 
+axios.defaults.headers.common['Access-Control-Allow-Origin'] = '*';
+
+
 export const joinWaitlist = (data) => {
   return axios({
     method: "post",
