@@ -172,10 +172,11 @@ export default {
       if (this.bank_code != "" && this.acc_no.length == 10) {
         // disable input temporarily
         // show loading symbol
+        console.log(this.settlement)
         resolveAcc(
           this.bank_code,
           this.acc_no,
-          this.settlement.keys.paystack_secret_key
+          this.settlement.paystack_secret_key || this.settlement.keys.paystack_secret_key
         )
           .then((response) => {
             this.acc_name = response.data.data.account_name;
