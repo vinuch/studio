@@ -125,9 +125,8 @@ export default {
             split[1] = "1";
             split.join("");
 
-            console.log(split);
 
-            updateStore({ verified: "01100" }, this.store.id)
+            updateStore({ verified: split }, this.store.id)
               .then((res) => {
                 let store = res.data;
                 console.log(store);

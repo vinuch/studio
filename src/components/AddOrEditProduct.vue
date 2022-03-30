@@ -517,7 +517,7 @@ export default {
           second_variant: this.variants_with_options.variant_2_options,
           variant_options: this.variants_with_options.variant_options,
           store: this.store.store_name,
-          price: Number(this.product.price),
+          price: Number(this.product.price+'00'),
           total_stock: this.total_stock,
         },
       };
