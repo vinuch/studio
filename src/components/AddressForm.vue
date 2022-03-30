@@ -27,11 +27,12 @@
     >
       <input
         v-model.trim="delivery_details.phone"
-        maxlength="11" pattern="[0-9]*"
+        maxlength="11"
+        pattern="[0-9]*"
         inputmode="numeric"
         name="phone"
         @keypress="numberOnly($event)"
-        >
+      />
     </FloatingLabel>
     <FloatingLabel
       :config="{
@@ -61,15 +62,15 @@
         name="shipping"
       >
         <option v-for="zone in zones" :key="zone.zone" :value="zone">
-          {{zone.zone}}
+          {{ zone.zone }}
         </option>
       </select>
     </FloatingLabel>
     <Checkout
-    :address="true"
-    :shipping="city.price"
-    :city="city.zone"
-    @submit="saveOrderHandler()"
+      :address="true"
+      :shipping="city.price"
+      :city="city.zone"
+      @submit="saveOrderHandler()"
     />
   </div>
 </template>
@@ -87,9 +88,7 @@ export default {
     FloatingLabel,
     Checkout,
   },
-  mixins: [
-    numberOnly
-  ],
+  mixins: [numberOnly],
   data() {
     return {
       loading: false,
@@ -129,18 +128,32 @@ export default {
       settlement: "getStoreSettlement",
     }),
     zones() {
-      let zone = this.storeInfo.default_shipping.split(";")
-      let zones = []
-      for (let i = 0; i < zone.length; i += 2) {
-        let object = {};
-        let splitZone = zone[i].split(',')
-        object["zone"] = splitZone[i + 1]
-        object["price"] = Number(splitZone[i])
-        zones.push(object);
-      }
-        console.log('hi', zones)
+      let zone = this.storeInfo.default_shipping
+        .split(";")
+        .filter((item) => item !== "");
+      let zones = [];
 
-      return zones
+      if (zone[0] == "pickup") {
+        zones = [{ zone: zone.join(" "), price: 0 }];
+      } else {
+        for (let i = 0; i < zone.length; i++) {
+          let splitZone = zone[i].split(",");
+          let price = Number(splitZone[0]);
+          let others = splitZone.slice(1);
+
+          others.forEach((element) => {
+            let object = {};
+
+            object["zone"] = element;
+            object["price"] = price;
+            zones.push(object);
+          });
+        }
+      }
+
+      console.log("hi", zones, this.storeInfo.default_shipping);
+
+      return zones;
     },
     cartItems() {
       return this.cart;
@@ -217,13 +230,14 @@ export default {
         email: this.delivery_details.email,
         full_name: this.delivery_details.full_name,
         items_count: this.cart_meta.cartCount,
-        total_amount: parseFloat(this.cart_meta.preShipTotal) + parseFloat(this.city.price),
+        total_amount:
+          parseFloat(this.cart_meta.preShipTotal) + parseFloat(this.city.price),
         unique_items: this.cart.length,
         order_ref: this.orderID,
         phone: this.delivery_details.phone,
         city: this.city.zone,
         products_total: this.numeral(this.cart_meta.preShipTotal).format("0,0"),
-        shipping: this.numeral(this.city.price).format("0,0"),
+        shipping: this.numeral(this.city.price).format("0,0") || 0,
         store: this.storeInfo.id,
       };
       if (Object.values(data).includes("")) {
@@ -251,7 +265,7 @@ export default {
           this.payWithPaystack();
         })
         .catch((err) => {
-          console.log(err)
+          console.log(err);
           EventBus.$emit(
             "open_alert",
             "error",
@@ -265,7 +279,10 @@ export default {
       var handler = PaystackPop.setup({
         key: this.settlement.paystack_public_key,
         email: this.delivery_details.email,
-        amount: (parseFloat(this.cart_meta.preShipTotal) + (parseFloat(this.city.price) || 0)) * 100,
+        amount:
+          (parseFloat(this.cart_meta.preShipTotal) +
+            (parseFloat(this.city.price) || 0)) *
+          100,
         currency: "NGN",
         ref: this.orderID,
         metadata: {
