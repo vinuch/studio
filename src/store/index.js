@@ -20,6 +20,7 @@ export default new Vuex.Store({
     store_info: {},
     store_name: "",
     completed_order_info: {},
+    variantInCartCount: {}
   },
   mutations: {
     [mutationTypes.SAVE_STORE](state, data) {
@@ -46,6 +47,9 @@ export default new Vuex.Store({
     [mutationTypes.COMPLETED_ORDER_INFO](state, data) {
       state.completed_order_info = data;
     },
+    [mutationTypes.SET_VARIANT_IN_CART_COUNT](state, data) {
+      state.variantInCartCount = data;
+    },
   },
   getters: {
     getStoreSettlement: (state) => state.settlement,
@@ -55,6 +59,7 @@ export default new Vuex.Store({
     getCart: (state) => state.cart,
     getCartMeta: (state) => state.cart_meta,
     getStoreName: (state) => state.store_name,
+    getVariantInCartCount: (state) => state.variantInCartCount,
     getCompletedOrderInfo: (state) => state.completed_order_info,
   },
   actions: {},

@@ -40,7 +40,7 @@
         :key="`link${i}`"
       >
         <div class="badge" v-if="link.text === 'Cart'">
-          {{ cart_meta.cartCount }}
+          {{ cart.length }}
         </div>
         <span class="span" @click="jumpTo(i)">
           <span
@@ -139,7 +139,7 @@ export default {
   },
   computed: {
     ...mapGetters({
-      cart_meta: "getCartMeta",
+      cart: "getCart",
       store_name: "getStoreName",
       storeInfo: "getStoreInfo",
     }),
@@ -319,7 +319,7 @@ export default {
         height: 15px;
         font-size: 10px;
         border-radius: 5px;
-        background-color: red;
+        background-color: #B90505;
         color: #fff;
         opacity: 1 !important;
         display: flex;
@@ -357,7 +357,7 @@ export default {
         flex-direction: column;
         // border-top: 4px solid #10102c;
         &.blur {
-          opacity: 0.5;
+          // opacity: 0.5;
           // border-bottom: 4px solid #10102c;
         }
         .badge {
