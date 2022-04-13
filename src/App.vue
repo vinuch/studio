@@ -1,21 +1,31 @@
 <template>
-  <v-app id="app">
-    <Snackbar
-      v-if="show_alert"
-      :message="message"
-      :alert_type="alert_type"
-      :action="action"
-    />
+  <v-app id="app" class="mobileHide">
+    <div id="main-content">
+      <Snackbar
+        v-if="show_alert"
+        :message="message"
+        :alert_type="alert_type"
+        :action="action"
+      />
 
-    <Dialog v-if="dialog == true" :modal="modal" :phone="phone" :name="name"  @closeDialog="closeDialog()" />
+      <Dialog
+        v-if="dialog == true"
+        :modal="modal"
+        :phone="phone"
+        :name="name"
+        @closeDialog="closeDialog()"
+      />
 
-    <div class="mb-5">
-      <v-main>
-        <router-view />
-      </v-main>
+      <div class="mb-5">
+        <v-main>
+          <router-view />
+        </v-main>
+      </div>
+
+      <BottomNav v-if="logged_in" />
     </div>
 
-    <BottomNav v-if="logged_in" />
+    <div class="d-flex justify-center align-center" style="height: 100%">Please view this site on a mobile device to continue.</div>
   </v-app>
 </template>
 
@@ -39,8 +49,8 @@ export default {
     action: "",
     alert_type: "", // colour theme e.g. success, etc
     dialog: false,
-    phone: '',
-    name: '',
+    phone: "",
+    name: "",
     message: "",
     modal: "",
     show_alert: false,
@@ -51,10 +61,9 @@ export default {
     }),
   },
   mounted() {
-    console.log(this.logged_in)
+    console.log(this.logged_in);
   },
   created() {
-    
     let token = window.sessionStorage.getItem("leyyow_token");
     if (token) {
       this.$store.commit(mutationTypes.LOGGED_IN, true);
@@ -81,8 +90,8 @@ export default {
       EventBus.$on("dialog", (state, modal, phone, name) => {
         state == "open" ? (this.dialog = true) : (this.dialog = false);
         modal == "" ? (this.modal = "") : (this.modal = modal);
-        phone ? this.phone = phone: null
-        name ? this.name = name : null
+        phone ? (this.phone = phone) : null;
+        name ? (this.name = name) : null;
       });
   },
 };
@@ -127,9 +136,16 @@ export default {
   font-weight: 400;
   font-style: normal;
 }
+
+/* use a media query to filter small devices */
+@media (min-width: 801px) {
+  /* show the popup */
+  #main-content {
+    display: none;
+  }
+}
 .v-application {
   [class*="text-"] {
-
     font-family: "graphik", Helvetica, Arial, sans-serif !important;
   }
   font-family: "graphik", Helvetica, Arial, sans-serif !important;
@@ -145,7 +161,7 @@ export default {
 
 :root {
   --primary: #4caf50;
-  --primaryDark: #143E32
+  --primaryDark: #143e32;
 }
 
 .text-color-primaryDark {

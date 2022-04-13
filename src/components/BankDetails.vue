@@ -123,8 +123,8 @@ export default {
             let split = verified.split("");
 
             split[1] = "1";
-            split.join("");
-
+            split = split.join("");
+            
 
             updateStore({ verified: split }, this.store.id)
               .then((res) => {

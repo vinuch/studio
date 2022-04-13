@@ -130,7 +130,7 @@
             hide-details
             class="mt-2 mb-0"
             @keyup="unsavedChangeMade()"
-            v-model="total_stock"
+            v-model="product.total_stock"
             :placeholder="!currentProduct ? '' : `${currentProduct.price}`"
           ></v-text-field>
         </div>
@@ -335,6 +335,7 @@ border-radius: 8px;padding: .5rem"
               </span>
             </p>
             <p class="describe ">
+              {{product.display}}
               Products displayed in your gallery are available for purchase. Set
               display to "off" to make them unavailable.
             </p>
@@ -399,6 +400,7 @@ export default {
   data: () => {
     return {
       product: {
+
         first_variant: [],
         second_variant: [],
         third_variant: [],
@@ -425,7 +427,7 @@ export default {
       // product_name: "",
       // product_image: "",
       loading: false,
-      total_stock: "",
+      total_stock: 0,
       uploading_image: false, // implement loading icon
       variants_with_options: [],
       variant_index: 1, // not zero indexed
@@ -689,8 +691,8 @@ export default {
         discount: "",
         id: null,
         price: 0,
-        total_stock: null,
-        display: false,
+        total_stock: 0,
+        display: true,
       };
     }
 

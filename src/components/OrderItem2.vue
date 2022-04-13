@@ -30,11 +30,11 @@
               
             "
           >
-            <p class="caption" style="width: 5rem; whiteSpace: nowrap;">
+            <p class="caption" style="width: 5rem; whiteSpace: nowrap; margin: 0">
               # {{ order.order_ref }}
             </p>
 
-            <p class="" style="margin: 0.5rem 0">
+            <p class="caption" style="margin: 0.5rem 0">
               <span>{{ order_date }}</span
               ><sup>{{ ordinal_suffix }}</sup>
               <span> {{ parseInt(order.created.substring(0, 4)) }}</span>
@@ -48,14 +48,15 @@
           <p class="text-right text-body-2 mb-0">
             {{ order.fulfilled }}/{{ order.items_count }}
           </p>
+          <p class="text-right" v-if="orderItems.length" >{{ orderItems[0].status ? 'fulfilled' : 'Pending'  }}</p>
         </v-col>
       </v-row>
       <p
         v-if="orderItems.length"
-        class="text-left text-caption mb-0"
+        class="text-left caption mb-0"
         style="color: #445b54"
       >
-        {{ orderItems[0].product_name }}({{ orderItems[0].qty }})
+        {{ orderItems[0].product_name }}({{ orderItems[0].qty }}) 
         {{
           orderItems.length > 1 ? `& ${orderItems.length - 1} 0ther items` : ""
         }}
@@ -441,11 +442,12 @@ export default {
         return months[order_month] + " " + order_date;
       } else if (difference > 1) {
         if (this_day - difference < 0) {
-          return days[7 + this_day - difference] + " - " + order_date;
+          //  months[order_month] +  " - " +
+          return  months[order_month] + " " +  order_date;
         }
-        return days[this_day - difference] + " - " + order_date;
+        return months[order_month] + days[this_day - difference] + " - " + order_date;
       } else {
-        return ty[difference] + " - " + order_date;
+        return  months[order_month] + ty[difference] + " - " + order_date;
       }
     },
     ordinal_suffix() {

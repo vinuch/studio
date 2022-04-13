@@ -119,7 +119,7 @@
                 color="success"
                 style=""
                 id="switch"
-                v-model="display"
+                v-model="currentProduct.display"
                 inset
                 disabled
               >
