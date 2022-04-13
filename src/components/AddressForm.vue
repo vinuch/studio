@@ -52,6 +52,7 @@
         hasContent: true,
       }"
     >
+    <!-- {{zones}} -->
       <select
         style="width: 100%;
           height: 100%;
@@ -61,6 +62,7 @@
         v-model="city"
         name="shipping"
       >
+
         <option v-for="zone in zones" :key="zone.zone" :value="zone">
           {{ zone.zone }}
         </option>
@@ -127,7 +129,13 @@ export default {
       storeInfo: "getStoreInfo",
       settlement: "getStoreSettlement",
     }),
+     preshipTotal() {
+      console.log(this.cart)
+      return this.cart.reduce((prev, current) => prev +( current?.count * current?.price), 0)
+    },
     zones() {
+      console.log(this.storeInfo.default_shipping)
+
       let zone = this.storeInfo.default_shipping
         .split(";")
         .filter((item) => item !== "");
@@ -280,7 +288,7 @@ export default {
         key: this.settlement.paystack_public_key,
         email: this.delivery_details.email,
         amount:
-          (parseFloat(this.cart_meta.preShipTotal) +
+          (parseFloat(this.preshipTotal) +
             (parseFloat(this.city.price) || 0)) *
           100,
         currency: "NGN",

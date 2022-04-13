@@ -49,20 +49,22 @@ export const fethcProducts = async (slug) => {
     url: `${urls.inventoryUrl}${slug}/`,
   })
   .then((res) => {
+    // console.log(res.data)
     for (let i = 0; i < res.data.length; i++) {
 
       let itm = res.data[i]
       let localVariants = []
       let localCount = []
-      let split_options = itm.variant_options.split(",")
+      let split_options = itm.variant_options.split(";")
 
       let getCount = () => {
-        itm.second_variant ? countBothVariants() : countVariant1()
+        itm.second_variant ? countBothVariants() : countBothVariants()
         itm.variant_options = localVariants;
       }
 
       let countVariant1 = () => {
         for (let j = 0; j < split_options.length; j += 2) {
+          console.log()
           let object = {};
           object[split_options[j]] = split_options[j + 1];
           localVariants.push(object);
@@ -73,12 +75,15 @@ export const fethcProducts = async (slug) => {
       }
 
       let countBothVariants = () => {
-        for (let j = 0; j < split_options.length; j += 3) {
+        for (let j = 0; j < split_options.length; j++) {
+        let singleSplitOption = split_options[j].split(',')
           let object = {
-            variant1: split_options[j],
-            variant2: split_options[j + 1],
-            quantity: split_options[j + 2],
+            name: singleSplitOption[0],
+            qty: Number(singleSplitOption[ 1]),
+            price: singleSplitOption[2],
           };
+
+
             localVariants.push(object)
         }
         itm.multiple_variants = true;
@@ -94,6 +99,8 @@ export const fethcProducts = async (slug) => {
 
       itm.picked_variant_value = []
     }
+    console.log(res.data)
+ 
     store.commit(mutationTypes.SAVE_PRODUCTS, res.data);
   })
 };

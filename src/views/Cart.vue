@@ -175,26 +175,39 @@ export default {
     backToStore() {
       this.$router.push({name: 'Gallery'})
     },
-    checkStock(product) { // refactor - also in product
-      if(product.combo_qty) {
-        if (product.combo_qty > product.count) {
-          return true
+    checkStock(product) {
+        // refactor (use mixin?)
+        console.log(product);
+        let variantOption =
+          product.has_variant && product.variant_options !== ""
+            ? product.variant_options.find(
+                (item) =>
+                  `${product.selected_option}/${product.selected_option2}` ==
+                  item.name
+              )
+            : null;
+    
+        //  console.log(product.variant_options, this.selected_option2, this.selected_option)
+        if (variantOption ) {
+          if (variantOption.qty > product.count) {
+            return true;
+          }
+        } else if (product.this_stock) {
+          if (product.this_stock > product.count) {
+            return true;
+          }
+        } else {
+          if (product.total_stock > product.count) {
+            return true;
+          }
         }
-      } else if(product.this_stock) {
-        if (product.this_stock > product.count) {
-          return true
-        }
-      } else {
-        if(product.total_stock > product.count) {
-          return true
-        }
-      }
-      alert("All available stock is already in your cart.")
-      return false
-    },
+        alert("All available stock is already in your cart or not available.");
+        return false;
+      },
     increaseInCart(index) {
     // Increases product count while viewing cart
       let product = this.cart[index]
+      console.log(product)
       if (this.checkStock(product)) {
         product.count++
         product.subTotal = product.discountAmt

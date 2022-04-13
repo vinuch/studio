@@ -7,7 +7,7 @@
             Subtotal ({{ this.cart_meta.cartCount }}
             item<span v-if="this.cart.length > 1">s</span>)
           </p>
-          <p>₦{{ numeral(cart_meta.preShipTotal).format("0,0") }}</p>
+          <p>₦{{ numeral(preshipTotal).format("0,0") }}</p>
         </div>
         <div class="subs">
           <p v-if="address">
@@ -21,7 +21,7 @@
         <div class="subs">
           <p v-if="address">Total</p>
           <p v-if="address">₦{{
-            numeral(cart_meta.preShipTotal + shipping).format("0,0")
+            numeral(preshipTotal + shipping).format("0,0")
           }}</p>
         </div>
         <button @click="submit">Place order</button>
@@ -65,6 +65,10 @@ export default {
     drawerWidth() {
       return window.innerWidth > 640 ? 640 : window.innerWidth;
     },
+    preshipTotal() {
+      console.log(this.cart)
+      return this.cart.reduce((prev, current) => prev +( current?.count * current?.price), 0)
+    }
   },
   mounted() {
     EventBus.$on("closeDrawer", () => this.closeDrawer());

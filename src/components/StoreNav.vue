@@ -40,7 +40,7 @@
         :key="`link${i}`"
       >
         <div class="badge" v-if="link.text === 'Cart'">
-          {{ cart_meta.cartCount }}
+          {{ cart.length }}
         </div>
         <span class="span" @click="jumpTo(i)">
           <span
@@ -139,7 +139,7 @@ export default {
   },
   computed: {
     ...mapGetters({
-      cart_meta: "getCartMeta",
+      cart: "getCart",
       store_name: "getStoreName",
       storeInfo: "getStoreInfo",
     }),
