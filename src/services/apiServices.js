@@ -54,7 +54,7 @@ export const fethcProducts = async (slug) => {
 
       let itm = res.data[i]
       let localVariants = []
-      let localCount = []
+      // let localCount = []
       let split_options = itm.variant_options.split(";")
 
       let getCount = () => {
@@ -62,17 +62,17 @@ export const fethcProducts = async (slug) => {
         itm.variant_options = localVariants;
       }
 
-      let countVariant1 = () => {
-        for (let j = 0; j < split_options.length; j += 2) {
-          console.log()
-          let object = {};
-          object[split_options[j]] = split_options[j + 1];
-          localVariants.push(object);
-          localCount.push(split_options[j + 1]);
-        }
-        itm.multiple_variants = false;
-        itm.all_stock_count = localCount;
-      }
+      // let countVariant1 = () => {
+      //   for (let j = 0; j < split_options.length; j += 2) {
+      //     console.log()
+      //     let object = {};
+      //     object[split_options[j]] = split_options[j + 1];
+      //     localVariants.push(object);
+      //     localCount.push(split_options[j + 1]);
+      //   }
+      //   itm.multiple_variants = false;
+      //   itm.all_stock_count = localCount;
+      // }
 
       let countBothVariants = () => {
         for (let j = 0; j < split_options.length; j++) {
