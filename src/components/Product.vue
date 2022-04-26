@@ -126,7 +126,7 @@
     },
     mounted() {
       this.display = this.product.display
-      console.log(this.product)
+      // console.log(this.product)
     }
   }
 </script>

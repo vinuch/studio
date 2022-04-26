@@ -58,6 +58,7 @@
               placeholder="Search by name"
               name="search"
               inputStyles="background-color: #FDFDFD; margin-bottom: 0 !important;"
+              @update="handleSearch"
             >
               <!-- <template v-slot:prepend-inner>
                 <Search />
@@ -96,7 +97,7 @@
           "
         >
           <Product
-            v-for="(product, i) in inventory"
+            v-for="(product, i) in (filteredInventory || inventory)"
             :key="i"
             class="mb-5 cursor"
             :product="product"
@@ -160,6 +161,7 @@ export default {
       edit_product_drawer: false,
       view_product_drawer: false,
       variant_payload: {},
+      filteredInventory: null
       // inventory: [{
       //   has_variant: false,
       //   id: 1,
@@ -169,7 +171,9 @@ export default {
     };
   },
   methods: {
-    search() {},
+    handleSearch(e) {
+      this.filteredInventory = this.inventory.filter(item => item.product_name.toLowerCase().includes(e.toLowerCase()));
+    },
     addProduct() {
       this.edit_product_drawer = true;
     },

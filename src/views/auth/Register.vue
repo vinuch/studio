@@ -355,38 +355,52 @@ export default {
 
                 if (res.status == 200 || res.status == 201) {
                   try {
-                    createStore(data).then((createRes) => {
-                      let store = createRes?.data.store;
-                      let settlement = createRes?.data.settlement;
-                      let acct_id = createRes?.data.store.id;
-                      console.log(createRes, "createRes");
+                    createStore(data)
+                      .then((createRes) => {
+                        let store = createRes?.data.store;
+                        let settlement = createRes?.data.settlement;
+                        let acct_id = createRes?.data.store.id;
+                        console.log(createRes, "createRes");
 
-                      fethcStoreInventory(store?.slug);
-                      fetchOrders();
-                      console.log(data.slug);
-                      this.$store.commit(
-                        mutationTypes.SAVE_STORE_SLUG,
-                        data.slug
-                      );
+                        fethcStoreInventory(store?.slug);
+                        fetchOrders();
+                        console.log(data.slug);
+                        this.$store.commit(
+                          mutationTypes.SAVE_STORE_SLUG,
+                          data.slug
+                        );
 
-                      this.$store.commit(mutationTypes.LOGGED_IN, true);
-                      this.$store.commit(mutationTypes.SAVE_STORE, store);
-                      this.$store.commit(
-                        mutationTypes.SAVE_SETTLEMENT,
-                        settlement
-                      );
-                      this.$store.commit(
-                        mutationTypes.SAVE_ACCOUNT_ID,
-                        acct_id
-                      );
-                      this.$store.commit(mutationTypes.EMAIL_VERIFIED, false);
-                      this.$router.push("/dash");
-                      this.loading = false;
-                    });
+                        this.$store.commit(mutationTypes.LOGGED_IN, true);
+                        this.$store.commit(mutationTypes.SAVE_STORE, store);
+                        this.$store.commit(
+                          mutationTypes.SAVE_SETTLEMENT,
+                          settlement
+                        );
+                        this.$store.commit(
+                          mutationTypes.SAVE_ACCOUNT_ID,
+                          acct_id
+                        );
+                        this.$store.commit(mutationTypes.EMAIL_VERIFIED, false);
+                        this.$router.push("/dash");
+                        this.loading = false;
+                      })
+                      .catch((error) => {
+                        this.loading = false;
+
+                        console.log(error.response);
+                        if (error.response.status == 500) {
+                          this.previousStep()
+                          EventBus.$emit(
+                            "open_alert",
+                            "error",
+                            "that store link or store name is already in use"
+                          );
+                        }
+                      });
                   } catch (error) {
                     this.loading = false;
 
-                    EventBus.$emit("open_alert", "error", "Signup error");
+                    // EventBus.$emit("open_alert", "error", "Signup error");
                   }
                 }
 
@@ -397,8 +411,12 @@ export default {
                 // );
               })
               .catch((err) => {
-                console.log(err);
-                EventBus.$emit("open_alert", "error", "Signup error");
+                console.log();
+                EventBus.$emit(
+                  "open_alert",
+                  "error",
+                  Object.values(err.response.data)[0][0]
+                );
               });
           } else {
             EventBus.$emit("open_alert", "error", "Sign up form incomplete");

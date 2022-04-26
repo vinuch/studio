@@ -25,7 +25,7 @@
       <BottomNav v-if="logged_in" />
     </div>
 
-    <div class="d-flex justify-center align-center" style="height: 100%">Please view this site on a mobile device to continue.</div>
+    <div class=" justify-center align-center d-none d-sm-flex" style="height: 100%">Please view this site on a mobile device to continue.</div>
   </v-app>
 </template>
 

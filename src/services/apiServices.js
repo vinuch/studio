@@ -103,7 +103,7 @@ export const fethcStoreInventory = (slug) => {
     url: `${urls.inventoryUrl}${slug}/`,
   })
     .then((res) => {
-      console.log(res.data)
+      // console.log(res.data)
          store.commit(mutationTypes.SAVE_VISITOR_INVENTORY, res.data)
          store.commit(mutationTypes.SAVE_INVENTORY, res.data);
     })

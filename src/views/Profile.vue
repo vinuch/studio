@@ -1,5 +1,5 @@
 <template>
-  <div class="pa-5">
+  <div class="pa-5" style="min-height: 100vh">
     <topNav>Manage</topNav>
 
     <div
@@ -11,9 +11,9 @@
     ></div>
     <v-card
       class="elevation-0  pa-3 rounded-xl"
-      style="border: 1px solid #F3F3F3; text-align: left;"
+      style="border: 1px solid #F3F3F3; text-align: left; min-height: 80vh"
     >
-      <p class="text-left; b">Your Profile</p>
+      <p class="text-left text-caption b">Your Profile</p>
 
       <div style="overflow-y: scroll">
         <div>
@@ -46,14 +46,26 @@
           <h5
             class="text-color-primaryDark text-subtitle-2 font-weight-medium "
           >
-            Full name
+           Phone number
           </h5>
           <p class="text-caption">Customize your account name</p>
 
           <v-card-text class="text-left text-body-2 text-color-primaryDark pa-0"
-            >First Name
+            >Update Password
           </v-card-text>
           <v-text-field outlined class="mt-2"></v-text-field>
+        </div>
+
+        <div class="mb-3">
+          <h5
+            class="text-color-primaryDark text-subtitle-2 font-weight-medium "
+          >
+           Update Password
+          </h5>
+          <p class="text-caption">Change your old password to a new one</p>
+
+          
+          <Button :primaryLight="true" label="Change Password"  :containerStyle="{ marginTop: '2rem' }" size="default"/>
         </div>
       </div>
     </v-card>
@@ -63,9 +75,10 @@
 <script>
 import topNav from "@/components/TopNav";
 import { mapGetters } from "vuex";
+import Button from "../components/Button/Button.vue";
 
 export default {
-  components: { topNav },
+  components: { topNav, Button },
   computed: {
     ...mapGetters({
       email_verified: "getEmailStatus",
