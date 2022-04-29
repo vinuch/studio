@@ -76,7 +76,7 @@ export const fethcProducts = async (slug) => {
 
       let countBothVariants = () => {
         for (let j = 0; j < split_options.length; j++) {
-        let singleSplitOption = split_options[j].split(',')
+        let singleSplitOption = split_options[j].split(',').filter(item => item !== '')
           let object = {
             name: singleSplitOption[0],
             qty: Number(singleSplitOption[ 1]),

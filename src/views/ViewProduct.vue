@@ -2,7 +2,7 @@
   <div class="view-product">
     <StoreNav />
     <div class="page-content">
-      <router-link :to="`/`">
+      <router-link :to="`/gallery`">
         <p class="back">
           <svg
             width="6"
@@ -52,7 +52,7 @@
               {{ currentItem.description }}
             </p>
 
-            <div class="selects">
+            <!-- <div class="selects">
               <FloatingLabel
                 v-for="(variant, i) in itemVariants(currentItem)"
                 :key="'variant' + i"
@@ -80,21 +80,59 @@
                   >
                 </select>
               </FloatingLabel>
+            </div> -->
+
+            <div
+              class="options"
+              style="display: flex; justify-content: space-between"
+            >
+              <div v-if="currentItem.second_variant != ''">
+                <select
+                  name="second-variant"
+                  v-model="selected_option2"
+                  style="min-width: 100px"
+                >
+                  <option v-for="item in secondVariants" :key="item.id">
+                    {{ item }}
+                  </option>
+                </select>
+              </div>
+
+              <div v-if="currentItem.first_variant != ''">
+                <select
+                  name="first-variant"
+                  v-model="selected_option"
+                  style="min-width: 100px"
+                >
+                  <option v-for="item in firstVariants" :key="item.id">
+                    {{ item }}
+                  </option>
+                </select>
+              </div>
             </div>
 
-            <button
+            <!-- {{ cartItem }} -->
+            <div @click="takeToCart(currentItem)" style="margin: 2rem 0;">
+              <AddToCartButton
+                :product="currentItem"
+                logo=""
+                :count="cartItem ? cartItem.count : 0"
+              />
+            </div>
+
+            <!-- <button
               @click="pushToCart(currentItem)"
               :class="addedToCart(currentItem.id) ? 'main-btn' : 'main-btn-bd'"
             >
               {{
                 addedToCart(currentItem.id) ? "Added to cart" : "Add to cart"
               }}
-            </button>
+            </button> -->
           </div>
         </a-col>
       </a-row>
 
-      <!-- <div v-if="otherItems.length">
+      <div v-if="otherItems.length">
         <p class="back" style="margin-top: 100px">
           MORE PRODUCTS
         </p>
@@ -127,7 +165,7 @@
                   </p>
 
                   <div class="selects">
-                    <FloatingLabel
+                    <!-- <FloatingLabel
                       v-for="(variant, j) in itemVariants(otherItem)"
                       :key="'variant' + j"
                       style="width: 120px; margin-right: 20px"
@@ -153,19 +191,13 @@
                           >{{ option.value }}</option
                         >
                       </select>
-                    </FloatingLabel>
+                    </FloatingLabel> -->
 
                     <button
-                      @click="pushToCart(otherItem)"
-                      :class="
-                        addedToCart(otherItem.id) ? 'main-btn' : 'main-btn-bd'
-                      "
+                      @click="$router.push(`/store-item/${otherItem.id}`)"
+                      class="main-btn-bd"
                     >
-                      {{
-                        addedToCart(otherItem.id)
-                          ? "Added to cart"
-                          : "Add to cart"
-                      }}
+                      View Product
                     </button>
                   </div>
                 </div>
@@ -173,21 +205,25 @@
             </a-row>
           </a-col>
         </a-row>
-      </div> -->
+      </div>
     </div>
   </div>
 </template>
 <script>
-import FloatingLabel from "vue-simple-floating-labels";
+// import FloatingLabel from "vue-simple-floating-labels";
 import { mapGetters } from "vuex";
 import StoreNav from "../components/StoreNav";
 import { EventBus } from "../services/eventBus";
 import * as mutationTypes from "../store/mutationTypes";
+import AddToCartButton from "../components/AddToCartButton";
+
 import numeral from "numeral";
 export default {
   // props: ["addedToCart"],
   data() {
     return {
+      selected_option: "",
+      selected_option2: "",
       floatingConfig: {
         hasClearButton: false,
         line: false,
@@ -206,8 +242,9 @@ export default {
     };
   },
   components: {
-    FloatingLabel,
+    // FloatingLabel,
     StoreNav,
+    AddToCartButton,
   },
   computed: {
     ...mapGetters({
@@ -218,18 +255,170 @@ export default {
     currentItem() {
       return this.inventory.find((itm) => itm.id == this.$route.params.item_id);
     },
+    filteredInventory() {
+      if (this.inventory) {
+        return this.inventory.filter((product) => {
+          if (product.display) {
+            return product;
+          }
+        });
+      }
+      return [];
+    },
     otherItems() {
-      return this.inventory
-        .filter((itm) => itm.id != this.$route.params.item_id)
+      return this.filteredInventory
+        .filter(
+          (itm) => itm.id != this.$route.params.item_id && itm.total_stock > 0
+        )
         .slice(0, 2);
+    },
+
+    firstVariants() {
+      return this.currentItem.first_variant
+        .split(",")
+        .filter((item) => item !== "");
+    },
+    secondVariants() {
+      return this.currentItem.second_variant
+        .split(",")
+        .filter((item) => item !== "");
+    },
+    cartItem() {
+      return (
+        this.cart.find(
+          (item) =>
+            item.id == this.currentItem.id &&
+            ((item.selected_option == this.selected_option &&
+              item.selected_option2 == this.selected_option2) ||
+              (item.selected_option == this.selected_option &&
+                item.selected_option2 == ""))
+        ) || null
+      );
     },
   },
   methods: {
     numeral,
-    addedToCart(id) {
-      let itm = this.cart.find((itm) => itm.id === id);
-      return itm ? true : false;
+    addToCart(product) {
+      let id = product.id;
+      let option1 = this.selected_option;
+      let option2 = this.selected_option2;
+
+      this.product_meta = {
+        id: id,
+        option1: option1,
+        option2: option2,
+      };
+
+      let itemInCart = this.cart.find(
+        (item) =>
+          item.id == product.id &&
+          item.selected_option == option1 &&
+          item.selected_option2 == option2
+      );
+      // console.log(itemInCart)
+
+      let checkStock = (product) => {
+        // refactor (use mixin?)
+        let variantOption =
+          product.has_variant && product.variant_options !== ""
+            ? product.variant_options.find(
+                (item) =>
+                  `${this.selected_option}/${this.selected_option2}` ==
+                    item.name || `${this.selected_option}` == item.name
+              )
+            : null;
+
+        //  console.log(product.variant_options, this.selected_option2, this.selected_option)
+        if (variantOption) {
+          if (variantOption.qty > product.count) {
+            return true;
+          }
+        } else if (product.this_stock) {
+          if (product.this_stock > product.count) {
+            return true;
+          }
+        } else {
+          if (product.total_stock > product.count) {
+            return true;
+          }
+        }
+        alert("All available stock is already in your cart or not available.");
+        return false;
+      };
+
+      if (!itemInCart) {
+        let cartItem = {
+          ...this.currentItem,
+          selected_option: option1,
+          selected_option2: option2,
+          count: 0,
+        };
+        if (checkStock(cartItem)) {
+          this.$store.commit(mutationTypes.SAVE_CART, [
+            ...this.cart,
+            {
+              ...cartItem,
+              count: 1,
+            },
+          ]);
+        }
+        return;
+      }
+
+      if (checkStock(itemInCart)) {
+        let copyCart = [...this.cart];
+
+        copyCart[copyCart.indexOf(itemInCart)].count++;
+        this.$store.commit(mutationTypes.SAVE_CART, copyCart);
+      }
     },
+    ensureVariantsSelected(product) {
+      let check1Variant = (product) => {
+        this.selected_option
+          ? this.addToCart(product, "1variant")
+          : alert("please select a " + product.first_variant_name);
+      };
+
+      let check2Variants = (product) => {
+        check1of2Variants(product);
+      };
+
+      let check1of2Variants = (product) => {
+        this.selected_option
+          ? check2of2Variants(product)
+          : alert("please select a " + product.first_variant_name);
+      };
+
+      let check2of2Variants = (product) => {
+        this.selected_option2
+          ? this.addToCart(product, "2variants")
+          : alert("please select a " + product.second_variant_name);
+      };
+
+      !product.second_variant
+        ? check1Variant(product)
+        : check2Variants(product);
+    },
+
+    takeToCart(product) {
+      // console.log(
+      //   product,
+      //   this.cart,
+      //   this.selected_option,
+      //   this.selected_option2
+      // );
+      // this.btn_id = i;
+      product.has_variant
+        ? this.ensureVariantsSelected(product)
+        : this.addToCart(product, "no_variant");
+    },
+    // addedToCart(id) {
+    //   if(!this.cart.length){
+    //     return false
+    //   }
+    //   let itm = this.cart.find((itm) => itm.id === id);
+    //   return itm ? true : false;
+    // },
     pushToCart(product) {
       if (
         (product.has_variant &&
@@ -280,6 +469,8 @@ export default {
     },
   },
   mounted() {
+    this.selected_option2 = this.secondVariants[0];
+    this.selected_option = this.firstVariants[0];
     if (!this.inventory.length) {
       this.$router.push(`/`);
     }
@@ -308,6 +499,7 @@ export default {
         background-position: center;
       }
       .product-details {
+        width: 100%;
         margin-top: 10px;
         text-align: left;
         .name {
@@ -385,6 +577,16 @@ export default {
         }
       }
     }
+  }
+
+  @media (min-width: 800px) {
+      .page-content {
+        .product-data {
+          .product-details {
+            width: 80% !important;
+          }
+        }
+      }
   }
 
   @media (max-width: 767px) {

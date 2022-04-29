@@ -37,7 +37,6 @@ import * as mutationTypes from "@/store/mutationTypes";
 export default {
   data() {
     return {
-      widthOverLength: true,
       isAbout: true,
       loadingStore: false,
       floatStyle: "left",
@@ -135,9 +134,9 @@ export default {
       this.$store.commit(mutationTypes.SAVE_PRODUCTS, []);
     }
 
-    if (window.innerWidth > 600) {
-      this.$router.push({name: 'DeskGallery'}); // No front page yet for desktop
-    }
+    // if (window.innerWidth > 600) {
+    //   this.$router.push({name: 'DeskGallery'}); // No front page yet for desktop
+    // }
   },
 };
 </script>

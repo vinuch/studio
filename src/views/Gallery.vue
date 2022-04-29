@@ -1,7 +1,10 @@
 <template>
   <div>
     <StoreNav @show_thumbnail="showThumbnail()" />
-    <div :class="display == 'thumbnail' ? 'prod_img' : 'prod_detail'">
+    <div
+      v-if="isMobile"
+      :class="display == 'thumbnail' ? 'prod_img' : 'prod_detail'"
+    >
       <div class="empty" v-if="!filteredInventory.length">
         <img src="../assets/discount.svg" alt="" />
         <p v-if="storeInfo.id">
@@ -31,6 +34,7 @@
 
       <div v-if="blankThumbnail == 2" class="thumbnail"></div>
     </div>
+    <DeskGallery v-else />
     <div class="prop"></div>
   </div>
 </template>
@@ -39,13 +43,17 @@
 import { mapGetters } from "vuex";
 import Product from "@/components/Product";
 import StoreNav from "@/components/StoreNav";
+import DeskGallery from "@/components/DeskGallery";
 export default {
   components: {
     StoreNav,
     Product,
+    DeskGallery,
   },
   data() {
     return {
+      // window: window,
+      isMobile: false,
       search: "", // product search/filtering
       display: "thumbnail", // or detail
     };
@@ -56,14 +64,21 @@ export default {
       storeInfo: "getStoreInfo",
       visitedStoreName: "getStoreName",
     }),
+    // isMobile() {
+    //   return window.innerWidth < 504;
+
+    // },
     filteredInventory() {
-      return this.inventory.filter((product) => {
-        if (product.display) {
-          return product.product_name
-            .toLowerCase()
-            .match(this.search.toLowerCase());
-        }
-      });
+      if (this.inventory) {
+        return this.inventory.filter((product) => {
+          if (product.display) {
+            return product.product_name
+              .toLowerCase()
+              .match(this.search.toLowerCase());
+          }
+        });
+      }
+      return [];
     },
     blankThumbnail() {
       return this.filteredInventory.length % 3;
@@ -114,9 +129,21 @@ export default {
   },
   mounted() {
     console.log(this.filteredInventory);
+    if (window.innerWidth < 504) {
+      this.isMobile = true;
+    } else {
+      this.isMobile = false;
+    }
+    window.addEventListener("resize", () => {
+      if (window.innerWidth < 504) {
+        this.isMobile = true;
+      } else {
+        this.isMobile = false;
+      }
+    });
   },
   watch: {
-    window_width() {
+    window() {
       // if (window.innerWidth > 600) {
       //   console.log("larger")
       //   this.$router.push({name: 'DeskGallery'})

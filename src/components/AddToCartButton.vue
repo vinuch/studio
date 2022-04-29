@@ -3,7 +3,7 @@
   class="add_to_cart">
     <button>
       <img v-if="logo" class="store_logo" :src="logo">
-      <p>Add to cart</p>
+      <p style="font-size: 18px">Add to cart</p>
       <div>
         <span class="btn_item_count" :id="'btn_' + btn_index">{{ count }}</span>
         <svg width="35" height="38" viewBox="0 0 24 28" fill="none" xmlns="http://www.w3.org/2000/svg">
