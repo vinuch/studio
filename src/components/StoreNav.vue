@@ -32,7 +32,7 @@
       @click="enterShop">Shop Now
     </button>
 
-    <div class="links" v-if="!isAbout && location != 'cart'">
+    <div class="links" v-if="!isAbout ">
       <div
         class="link"
         v-for="(link, i) in links"
@@ -154,7 +154,7 @@ export default {
         {
           icon: "tag",
           text: "Store",
-          to: `/`,
+          to: `/gallery`,
         },
         {
           icon: "cart",
