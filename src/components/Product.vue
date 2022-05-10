@@ -1,5 +1,5 @@
 <template>
-  <div :id="'section_' + i" class="product_detail">
+  <div v-if="isMobile" :id="'section_' + i" class="product_detail">
     <h1 class="product_name">{{ product.product_name }}</h1>
     <img :src="product.product_image" alt="Image" />
 
@@ -216,6 +216,65 @@
       </div>
     </div>
   </div>
+  
+    <div v-else class="item">
+    <div 
+      class="image"
+      @click="goToProduct()"
+      :style="{ backgroundImage: `url('${product.product_image}')` }"
+      title="click for more details"
+    ></div>
+    <div class="item-body">
+      <div class="details">
+        <p
+          class="name utm"
+          @click="goToProduct()"
+          title="click for more details"
+        >
+          {{ product.product_name || "---" }}
+        </p>
+        <div class="price">
+          <div class="crossed" v-if="product.has_discount">
+            ₦{{ numeral(product.price).format("0,0") }}
+          </div>
+          
+          <span
+            >₦{{
+              numeral(product.price - (product.discountAmt || 0)).format("0,0")
+            }}</span
+          >
+           <!-- {{product.total_stock}} {{product.discountAmt}} -->
+        </div>
+        <div class="options" style="display: flex; justify-content: space-between">
+          <div v-if="product.second_variant != ''">
+            <select name="second-variant" v-model="selected_option2" style="min-width: 100px">
+              <option v-for="item in secondVariants" :key="item.id">
+                {{ item }}
+              </option>
+            </select>
+          </div>
+
+          <div v-if="product.first_variant != ''">
+            <select name="first-variant" v-model="selected_option" style="min-width: 100px">
+              <option v-for="item in firstVariants" :key="item.id">
+                {{ item }}
+              </option>
+            </select>
+          </div>
+       
+        </div>
+        <div @click="takeToCart(product, i)" style="position: absolute; bottom: 1rem; width: 95%; left: .5rem">
+          <AddToCartButton
+            :product="product"
+            :btn_index="i"
+            :btn_state="btn_state"
+            logo=""
+            :count="cartItem ? cartItem.count : 0"
+          />
+        </div>
+      </div>
+    </div>
+  </div>
 </template>
 <script>
 import { mapGetters } from "vuex";
@@ -242,6 +301,7 @@ export default {
       // selected: "Select",
       // open: false,
       // optionIndex: null,
+      isMobile: false,
       selected_option: "",
       selected_option2: "",
       btn_state: false,
@@ -264,11 +324,11 @@ export default {
       return (
         this.cart.find(
           (item) =>
-            (item.selected_option == this.selected_option &&
+            item.id == this.product.id && ((item.selected_option == this.selected_option &&
               item.selected_option2 == this.selected_option2) ||
             (item.selected_option == this.selected_option &&
               item.selected_option2 == "")
-        ) || null
+        )) || null
       );
     },
 
@@ -299,7 +359,7 @@ export default {
 
       let itemInCart = this.cart.find(
         (item) =>
-          // item.id == product.id &&
+          item.id == product.id &&
           item.selected_option == option1 && item.selected_option2 == option2
       );
 
@@ -592,6 +652,18 @@ export default {
 
     this.selected_option = this.firstVariants[0];
     this.selected_option2 = this.secondVariants[0];
+      if (window.innerWidth < 504) {
+        this.isMobile = true;
+      } else {
+        this.isMobile = false;
+      }
+    window.addEventListener("resize", () => {
+      if (window.innerWidth < 504) {
+        this.isMobile = true;
+      } else {
+        this.isMobile = false;
+      }
+    });
   },
   watch: {
     // cart: {
@@ -751,5 +823,53 @@ ul {
 .fade-leave-to {
   transform: translateY(-20%);
   opacity: 0;
+}
+
+
+.item {
+  position: relative;
+  border: 1px solid #e6e9ef;
+  border-radius: 4px;
+  margin-bottom: 40px;
+  cursor: pointer;
+  height: 350px;
+  .image {
+    width: 100%;
+    height: 160px;
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+  }
+  .item-body {
+    padding: 20px;
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    .details {
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+      text-align: left;
+      .name {
+        font-size: 16px;
+        line-height: 20px;
+        color: #2b2b2b;
+        margin-bottom: 5px;
+        height: 25px;
+        overflow: hidden;
+      }
+      .price {
+        line-height: 150%;
+        color: #4d5868;
+        margin-bottom: 5px;
+        margin-top: 5px;
+      }
+      .main-btn,
+      .main-btn-bd {
+        width: 130px;
+        height: 32px;
+      }
+    }
+  }
 }
 </style>

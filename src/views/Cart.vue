@@ -1,8 +1,6 @@
 <template>
   <div class="store-cart">
-    <StoreNav
-      :location="'cart'"
-    />
+    <StoreNav :location="'cart'" />
 
     <div class="empty" v-if="!cart.length">
       <img src="../assets/discount.svg" alt="" />
@@ -21,29 +19,32 @@
           YOU’RE BUYING
         </p>
         <div class="cart-item" v-for="(item, i) in cart" :key="i">
-
           <div class="fascia">
             <div
               class="image"
-              :style="{ backgroundImage: `url('${item.product_image}')` }">
-            </div>
+              :style="{ backgroundImage: `url('${item.product_image}')` }"
+            ></div>
             <div>
               <p class="name utm">{{ item.product_name }}</p>
               <p class="price_group">
                 <span v-if="item.has_discount" class="item_price">
-                  ₦{{ numeral(item.price - item.discountAmt).format("0,0")}}
+                  ₦{{ numeral(item.price - item.discountAmt).format("0,0") }}
                 </span>
                 <span
-                  :class="item.has_discount
-                  ? 'item_discount_price'
-                  : 'item_price'"
+                  :class="
+                    item.has_discount ? 'item_discount_price' : 'item_price'
+                  "
                 >
                   ₦{{ numeral(item.price).format("0,0") }}
                 </span>
               </p>
               <p class="item_subtotal">
                 <span v-if="item.has_discount">
-                  ₦{{ numeral((item.price - item.discountAmt) * item.count).format("0,0")}}
+                  ₦{{
+                    numeral(
+                      (item.price - item.discountAmt) * item.count
+                    ).format("0,0")
+                  }}
                 </span>
                 <span v-else>
                   ₦{{ numeral(item.price * item.count).format("0,0") }}
@@ -53,20 +54,20 @@
           </div>
           <div class="info">
             <div v-if="item.first_variant_name" class="desc">
-              <p>Options: </p>
+              <p>Options:</p>
               <p>
                 <span v-if="item.first_variant_name">
                   {{ item.selected_option }}
                 </span>
                 <span v-if="item.second_variant_name">
-                  {{", " + item.selected_option2 }}
+                  {{ ", " + item.selected_option2 }}
                 </span>
               </p>
             </div>
             <!-- <div class="details"> -->
             <div
               class="count"
-              :style="!item.first_variant_name ? 'margin-top: 15px;' : '' "
+              :style="!item.first_variant_name ? 'margin-top: 15px;' : ''"
             >
               <img
                 @click="removeFromCart(i)"
@@ -113,8 +114,10 @@
             <!-- </div> -->
           </div>
         </div>
-        <div class="cart_prop">
-        </div>
+        <div class="cart_prop"></div>
+      </a-col>
+      <a-col :sm="24" :md="12" class="checkout">
+        <Checkout @submit="setVisible" />
       </a-col>
     </a-row>
 
@@ -139,7 +142,7 @@
         Back to cart
       </p>
     </a-drawer>
-    <Checkout @submit="setVisible" />
+
     <p v-if="cart.length" class="back" @click="backToStore">Back to store</p>
   </div>
 </template>
@@ -156,7 +159,7 @@ export default {
   components: {
     StoreNav,
     Checkout,
-    AddressForm
+    AddressForm,
   },
   mixins: [
     // checkStock,
@@ -173,63 +176,63 @@ export default {
       this.visible = false;
     },
     backToStore() {
-      this.$router.push({name: 'Gallery'})
+      this.$router.push({ name: "Gallery" });
     },
     checkStock(product) {
-        // refactor (use mixin?)
-        console.log(product);
-        let variantOption =
-          product.has_variant && product.variant_options !== ""
-            ? product.variant_options.find(
-                (item) =>
-                  `${product.selected_option}/${product.selected_option2}` ==
-                  item.name
-              )
-            : null;
-    
-        //  console.log(product.variant_options, this.selected_option2, this.selected_option)
-        if (variantOption ) {
-          if (variantOption.qty > product.count) {
-            return true;
-          }
-        } else if (product.this_stock) {
-          if (product.this_stock > product.count) {
-            return true;
-          }
-        } else {
-          if (product.total_stock > product.count) {
-            return true;
-          }
+      // refactor (use mixin?)
+      console.log(product);
+      let variantOption =
+        product.has_variant && product.variant_options !== ""
+          ? product.variant_options.find(
+              (item) =>
+                `${product.selected_option}/${product.selected_option2}` ==
+                item.name
+            )
+          : null;
+
+      //  console.log(product.variant_options, this.selected_option2, this.selected_option)
+      if (variantOption) {
+        if (variantOption.qty > product.count) {
+          return true;
         }
-        alert("All available stock is already in your cart or not available.");
-        return false;
-      },
+      } else if (product.this_stock) {
+        if (product.this_stock > product.count) {
+          return true;
+        }
+      } else {
+        if (product.total_stock > product.count) {
+          return true;
+        }
+      }
+      alert("All available stock is already in your cart or not available.");
+      return false;
+    },
     increaseInCart(index) {
-    // Increases product count while viewing cart
-      let product = this.cart[index]
-      console.log(product)
+      // Increases product count while viewing cart
+      let product = this.cart[index];
+      console.log(product);
       if (this.checkStock(product)) {
-        product.count++
+        product.count++;
         product.subTotal = product.discountAmt
-          ? (product.count * (product.price - product.discountAmt))
-          : (product.count * product.price)
-        this.$store.commit(mutationTypes.SAVE_CART, this.cart)
+          ? product.count * (product.price - product.discountAmt)
+          : product.count * product.price;
+        this.$store.commit(mutationTypes.SAVE_CART, this.cart);
       }
     },
     reduceInCart(index) {
-    // Reduces product count while viewing cart
-      let product = this.cart[index]
+      // Reduces product count while viewing cart
+      let product = this.cart[index];
       if (product.count > 1) {
-        product.count--
+        product.count--;
         product.subTotal = product.discountAmt // refactor this - used elsewhere
-          ? (product.count * (product.price - product.discountAmt))
-          : (product.count * product.price)
-        this.$store.commit(mutationTypes.SAVE_CART, this.cart)
+          ? product.count * (product.price - product.discountAmt)
+          : product.count * product.price;
+        this.$store.commit(mutationTypes.SAVE_CART, this.cart);
       }
     },
     removeFromCart(i) {
       // Deletes all instances of a product while viewing cart
-      this.cart.splice(i, 1)
+      this.cart.splice(i, 1);
       this.$store.commit(mutationTypes.SAVE_CART, this.cart);
     },
     setVisible() {
@@ -250,16 +253,16 @@ export default {
   watch: {
     cart: {
       handler() {
-        let total = 0
-        let cart_count = 0
-        let curr = this.cart
+        let total = 0;
+        let cart_count = 0;
+        let curr = this.cart;
         for (let i = 0; i < curr.length; i++) {
-          total += curr[i].subTotal
-          cart_count += curr[i].count
+          total += curr[i].subTotal;
+          cart_count += curr[i].count;
         }
-        this.cart_meta.preShipTotal = total
-        this.cart_meta.cartCount = cart_count
-        this.$store.commit(mutationTypes.SAVE_CART_META, this.cart_meta)
+        this.cart_meta.preShipTotal = total;
+        this.cart_meta.cartCount = cart_count;
+        this.$store.commit(mutationTypes.SAVE_CART_META, this.cart_meta);
       },
       deep: true,
     },
@@ -281,20 +284,23 @@ export default {
   }
 }
 .store-cart {
-  .cart_prop { // pushes up the bottom most item in cart
-    height:160px;
+  .cart_prop {
+    // pushes up the bottom most item in cart
+    height: 160px;
     width: 100%;
   }
   .cart_summary {
     width: 100%;
-    position: fixed;
+
+    position: relative;
+    left: 0;
     bottom: 40px;
-    background: #FFF;
-    padding: 0 15px;
+    background: #fff;
+    padding: 50px 15px;
   }
   .back {
     width: 100%;
-    background: #FFF;
+    background: #fff;
     position: fixed;
     bottom: 0;
     right: 0;
@@ -322,7 +328,8 @@ export default {
     .name {
       font-size: 20px;
     }
-    .price_group, .item_subtotal {
+    .price_group,
+    .item_subtotal {
       font-size: 16px;
       font-weight: 600;
       position: absolute;
@@ -332,21 +339,22 @@ export default {
       margin: 0;
     }
     .item_price {
-      color: #3A50D5;
+      color: #3a50d5;
     }
     .item_discount_price {
-      color: #919EAB;
+      color: #919eab;
       text-decoration: line-through;
     }
     .item_subtotal {
       right: 0;
     }
   }
-  .desc, .count {
+  .desc,
+  .count {
     display: flex;
     justify-content: space-between;
     padding: 10px 0;
-    border-top: 1px solid #E6E9EF;
+    border-top: 1px solid #e6e9ef;
     // border-top: 1px solid #F8F9FA;
   }
   .desc {
@@ -371,7 +379,7 @@ export default {
       width: 120px;
       right: 0;
       bottom: 7px;
-      background: #E6E9EF;
+      background: #e6e9ef;
       border-radius: 4px;
       display: inline-flex;
       justify-content: space-between;
@@ -379,8 +387,6 @@ export default {
       margin-left: 5px;
     }
   }
-
-
 
   .inner {
     padding: 50px 100px;
@@ -416,7 +422,7 @@ export default {
     .cart-item {
       position: relative;
       // border: 1px solid #E6E9EF;
-      background: #F8F9FA;
+      background: #f8f9fa;
       // background: #E6E9EF;
       // -moz-box-shadow: 0 0 5px #E6E9EF;
       // -webkit-box-shadow: 0 0 5px #E6E9EF;
@@ -441,6 +447,11 @@ export default {
   }
 
   @media (max-width: 767px) {
+ 
+     .cart_summary {
+      position: fixed;
+
+    }
     .inner {
       padding: 15px !important;
     }

@@ -1,6 +1,6 @@
 <template>
   <div class="store-view">
-    <StoreNav />
+    <!-- <StoreNav /> -->
     <div v-if="loadingStore" style="padding-top: 20%">
       <a-icon type="loading" style="font-size: 40px; margin: 20px" />
       <p>
@@ -26,10 +26,11 @@
             :sm="12"
             :md="8"
             :lg="6"
-            v-for="(item, i) in inventory"
+            v-for="(product, i) in filteredInventory"
             :key="'item' + i"
           >
-            <StoreItem :product="item" />
+            <!-- <StoreItem :product="item"  :i="i" /> -->
+            <Product v-if="product.display" :product="product" :i="i" logo="" />
           </a-col>
         </a-row>
       </div>
@@ -38,8 +39,10 @@
 </template>
 <script>
 import { mapGetters } from "vuex";
-import StoreItem from "@/components/StoreItem";
-import StoreNav from "@/components/StoreNav";
+import Product from "@/components/Product";
+
+// import StoreItem from "@/components/StoreItem";
+// import StoreNav from "@/components/StoreNav";
 
 export default {
   data() {
@@ -62,8 +65,9 @@ export default {
     };
   },
   components: {
-    StoreItem,
-    StoreNav,
+    Product,
+    // StoreItem,
+    // StoreNav,
   },
   computed: {
     ...mapGetters({
@@ -71,9 +75,19 @@ export default {
       visitedStoreInfo: "getStoreInfo",
       visitedStoreName: "getStoreName",
     }),
+    filteredInventory() {
+      if (this.inventory) {
+        return this.inventory.filter((product) => {
+          if (product.display) {
+            return product;
+          }
+        });
+      }
+      return []
+    },
   },
   methods: {
-    onResize(){
+    onResize() {
       // if (window.innerWidth > 504) {
       //   this.display = "not_mobile"
       // } else  {
