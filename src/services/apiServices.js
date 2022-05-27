@@ -5,6 +5,8 @@ import * as mutationTypes from "@/store/mutationTypes";
 // import { EventBus } from "@/services/eventBus"
 import store from "@/store/index";
 
+axios.defaults.headers.common['Access-Control-Allow-Origin'] = '*';
+
 try {
   var auth = store.getters.getSettlement.paystack_secret_key
 } catch {null}
@@ -106,6 +108,18 @@ export const fethcStoreInventory = (slug) => {
       // console.log(res.data)
          store.commit(mutationTypes.SAVE_VISITOR_INVENTORY, res.data)
          store.commit(mutationTypes.SAVE_INVENTORY, res.data);
+    })
+    .catch(() => {
+    });
+};
+export const fetchStore = () => {
+  axios({
+    method: "get",
+    url: `${urls.storeUrl}`,
+  })
+    .then((res) => {
+      console.log(res.data)
+     
     })
     .catch(() => {
     });

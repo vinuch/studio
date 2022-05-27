@@ -335,7 +335,7 @@ export default {
           this.validateInputs = true;
           if (!this.v$.$error) {
             let data = {
-              email: this.email,
+              email: this.email.trim().toLowerCase(),
               password: this.password,
             };
             signUp(data)

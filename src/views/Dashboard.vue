@@ -185,6 +185,7 @@ import Arrows from "@/components/Icons/Arrows.vue";
 import Transaction from "@/components/Icons/Transaction.vue";
 import Sale from "@/components/Icons/Sale.vue";
 import Cart from "@/components/Icons/Cart.vue";
+import { fetchStore } from "@/services/apiServices";
 
 export default {
   name: "Dashboard",
@@ -625,6 +626,8 @@ export default {
     },
   },
   mounted() {
+    fetchStore()
+    
     this.verified = this.store?.verified;
     console.log(this.store)
 

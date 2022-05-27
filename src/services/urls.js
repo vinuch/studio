@@ -38,3 +38,7 @@ export const updateOrderStatus = `${prefix}api/inventory/order_item/update/`;
 
 // Merchant payments
 export const saveBankUrl = `${prefix}api/settlement/bank/create/`;
+
+// Store
+export const storeUrl = `${prefix}api/account/store/gadgets`;
+

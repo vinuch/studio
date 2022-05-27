@@ -227,7 +227,7 @@ export default {
 
       if (!this.v$.$error) {
         let data = {
-          username: this.username,
+          username: this.username.trim().toLowerCase(),
           password: this.password,
         };
         // this.loading = true;
