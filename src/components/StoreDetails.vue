@@ -134,7 +134,8 @@
 
         <v-card-text class="text-left pa-0">Instagram</v-card-text>
 
-        <TextInput
+        <input type="text" maxlength="32" placeholder="Enter your Instagram handle" class="bare-input" v-model="store.instagram">
+        <!-- <TextInput
           label=""
           name="instagram"
           :defaultValue="store.instagram"
@@ -158,10 +159,12 @@
               />
             </svg>
           </template>
-        </TextInput>
+        </TextInput> -->
 
         <v-card-text class="text-left pa-0">Twitter</v-card-text>
-        <TextInput
+        <input type="text" maxlength="32" placeholder="Enter your Twitter handle" class="bare-input" v-model="store.twitter">
+
+        <!-- <TextInput
           label=""
           name="twitter"
           :defaultValue="store.twitter"
@@ -185,10 +188,12 @@
               />
             </svg>
           </template>
-        </TextInput>
+        </TextInput> -->
 
         <v-card-text class="text-left pa-0">Facebook</v-card-text>
-        <TextInput
+        <input type="text" maxlength="32" placeholder="Enter your Facebook name" class="bare-input" v-model="store.facebook">
+
+        <!-- <TextInput
           label=""
           name="facebook"
           :defaultValue="store.facebook"
@@ -212,7 +217,7 @@
               />
             </svg>
           </template>
-        </TextInput>
+        </TextInput> -->
 
         <!-- <v-sheet
           elevation="0"
@@ -248,13 +253,13 @@ import * as mutationTypes from "@/store/mutationTypes";
 import useVuelidate from "@vuelidate/core";
 
 import setupFooter from "@/components/setupFooter";
-import TextInput from "@/components/TextInput";
+// import TextInput from "@/components/TextInput";
 
 export default {
   name: "StoreDetails",
   components: {
     setupFooter,
-    TextInput,
+    // TextInput,
   },
   setup() {
     return { v$: useVuelidate() };
@@ -440,5 +445,12 @@ li {
   text-align: left;
   color: #848b91;
   margin-bottom: 0;
+}
+.bare-input {
+      width: 100%;
+    padding: 15px;
+    border: 1px solid #e5e5e5;
+    border-radius: 8px;
+    margin: 0.5rem 0;
 }
 </style>
