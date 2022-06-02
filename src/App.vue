@@ -65,7 +65,7 @@ export default {
     // this is something to help me work in development without swithing the subdomain logic
     let stName =
       process.env.NODE_ENV === "development"
-        ? "gadgets"
+        ? "winnies-jewelry"
         : parts.length > 2
         ? sub
         : "";

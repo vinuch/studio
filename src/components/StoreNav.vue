@@ -184,8 +184,8 @@ export default {
       this.$emit("setIsAbout", false)
     },
     jumpTo(i) {
-      this.currentLink = i; // what is currentLInk?
-      this.links[i].to == '/'
+      // this.currentLink = i; // what is currentLInk?
+      this.currentRoute == '/gallery'
         ? this.$emit('show_thumbnail')
         : this.$router.push(`${this.links[i].to}`);
     },

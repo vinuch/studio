@@ -13,14 +13,14 @@
       @click="open = !open"
       v-on:clickout="open = false"
     >
-      {{ selected }}
+      {{ selectedOption }}
     </div>
     <transition name="fade">
-      <ul v-if="open">
+      <ul v-if="open" >
         <li
           v-for="(option, i) in variants"
           :key="i"
-          @click="setOption(option, i)"
+          @click="setOption(option)"
         >
           {{ option }}
         </li>
@@ -35,10 +35,11 @@ import { mapGetters } from "vuex"
 export default {
   // name: 'HelloWorld',
   props: {
-    "variant": String,
+    "variants": Array,
     "name": String,
     "options": [Array, String],
-    "prodIndex": Number,
+    "selectedOption": String,
+    // "prodIndex": Number,
   },
   data(){
     return {
@@ -48,60 +49,58 @@ export default {
     }
   },
   methods: {
-    getQty(product) {
-      let option1 = this.inventory[product].selected_option;
-      let option2 = this.inventory[product].selected_option2;
+    // getQty(product) {
+    //   let option1 = this.inventory[product].selected_option;
+    //   let option2 = this.inventory[product].selected_option2;
 
-      if (this.inventory[product].multiple_variants == true) {
-        if (
-          option1 != "" &&
-          typeof option1 != "undefined" &&
-          option2 != "" && typeof option2 != "undefined"
-        ) {
-          let variant_options = this.inventory[product].variant_options;
-          // variant_options is an array of all variant combinations including qty
-          for (let i = 0; i < variant_options.length; i++) {
-            if (
-              variant_options[i].variant1 == option1 &&
-              variant_options[i].variant2 == option2
-            ) {
-              // check combination qty
-              if (variant_options[i].quantity == 0) {
-                this.inventory[product].combo_qty = 0;
-              } else {
-                this.inventory[product].combo_qty =
-                  variant_options[i].quantity;
-              }
-            }
-          }
-        }
-      }
-    },
-    setOption(option, i) {
-      this.selected = option
-      this.open = false
+    //   if (this.inventory[product].multiple_variants == true) {
+    //     if (
+    //       option1 != "" &&
+    //       typeof option1 != "undefined" &&
+    //       option2 != "" && typeof option2 != "undefined"
+    //     ) {
+    //       let variant_options = this.inventory[product].variant_options;
+    //       // variant_options is an array of all variant combinations including qty
+    //       for (let i = 0; i < variant_options.length; i++) {
+    //         if (
+    //           variant_options[i].variant1 == option1 &&
+    //           variant_options[i].variant2 == option2
+    //         ) {
+    //           // check combination qty
+    //           if (variant_options[i].quantity == 0) {
+    //             this.inventory[product].combo_qty = 0;
+    //           } else {
+    //             this.inventory[product].combo_qty =
+    //               variant_options[i].quantity;
+    //           }
+    //         }
+    //       }
+    //     }
+    //   }
+    // },
+    // setOption(option, i) {
+    //   this.selected = option
+    //   this.open = false
 
-      let k = this.inventory[this.prodIndex]
-      if (this.variant == "variant1") {
-        k.selected_option = option;
-        try { k.this_stock = k.all_stock_count[i] } catch {null}
-      } else {
-        k.selected_option2 = option
-        this.getQty(this.prodIndex)
-      }
-    },
+    //   let k = this.inventory[this.prodIndex]
+    //   if (this.variant == "variant1") {
+    //     k.selected_option = option;
+    //     try { k.this_stock = k.all_stock_count[i] } catch {null}
+    //   } else {
+    //     k.selected_option2 = option
+    //     this.getQty(this.prodIndex)
+    //   }
+    // },
+
+    setOption(option){
+      this.$emit('change', option)
+    }
   },
   computed: {
     ...mapGetters({
       inventory: "getProducts",
     }),
-    variants() {
-      if (Array.isArray(this.options)) {
-        return
-      } else {
-        return this.options.split(",")
-      }
-    }
+
   }
 }
 </script>
@@ -128,7 +127,7 @@ export default {
     position: absolute;
     z-index: 1;
     background-color: #fff;
-    width: 100%;
+    width: 10rem;
 
     li {
       padding: .5rem .5rem;

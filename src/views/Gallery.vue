@@ -24,7 +24,7 @@
         <!-- should be direct child of prod_img/prod_detail because flex -->
         <Product
           v-if="
-            product.total_stock > 0 && display != 'thumbnail' && product.display
+            display != 'thumbnail' 
           "
           :product="product"
           :i="i"

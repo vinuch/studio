@@ -146,19 +146,22 @@
 
       <div class="options">
         <div v-if="product.second_variant != ''">
-          <select name="second-variant" v-model="selected_option2">
+          <SelectOption @change="v => selected_option2 = v" :variants="secondVariants" :name="product.second_variant_name" :selectedOption="selected_option2" />
+          <!-- <select name="second-variant" v-model="selected_option2">
             <option v-for="item in secondVariants" :key="item.id">
               {{ item }}
             </option>
-          </select>
+          </select> -->
         </div>
 
         <div v-if="product.first_variant != ''">
-          <select name="first-variant" v-model="selected_option">
+          <SelectOption @change="v => selected_option = v" :variants="firstVariants" :name="product.first_variant_name" :selectedOption="selected_option"/>
+
+          <!-- <select name="first-variant" v-model="selected_option">
             <option v-for="item in firstVariants" :key="item.id">
               {{ item }}
             </option>
-          </select>
+          </select> -->
         </div>
         <!-- <SelectOption
           :options="product.second_variant"
@@ -278,7 +281,7 @@
 </template>
 <script>
 import { mapGetters } from "vuex";
-// import SelectOption from "@/components/SelectOption";
+import SelectOption from "@/components/SelectOption";
 import AddToCartButton from "@/components/AddToCartButton";
 import * as mutationTypes from "@/store/mutationTypes";
 import numeral from "numeral";
@@ -286,7 +289,7 @@ import numeral from "numeral";
 export default {
   components: {
     AddToCartButton,
-    // SelectOption,
+    SelectOption,
   },
   mixins: [
     // checkStock,
