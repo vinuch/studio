@@ -5,7 +5,7 @@ import * as mutationTypes from "@/store/mutationTypes";
 // import { EventBus } from "@/services/eventBus"
 import store from "@/store/index";
 
-axios.defaults.headers.common['Access-Control-Allow-Origin'] = '*';
+// axios.defaults.headers.common['Access-Control-Allow-Origin'] = '*';
 
 try {
   var auth = store.getters.getSettlement.paystack_secret_key
