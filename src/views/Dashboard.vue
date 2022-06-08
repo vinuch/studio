@@ -366,14 +366,14 @@ export default {
         let changeInSales = todaySalesTotal - yesterdaySalesTotal;
         let changeInSalesCount = todaySalesCount - yesterdaySalesCount;
 
-        let avgCheckoutSize = totalSales / ordersCount;
+        // let avgCheckoutSize = totalSales / ordersCount;
         let todayAvgCheckoutSize = todaySalesCount
           ? todaySalesTotal / todaySalesCount
           : 0;
         let yesterdayAvgCheckoutSize =
           yesterdaySalesTotal / yesterdaySalesCount;
-        let changeInAvgCheckoutSize =
-          todayAvgCheckoutSize - yesterdayAvgCheckoutSize;
+        // let changeInAvgCheckoutSize =
+        //   todayAvgCheckoutSize - yesterdayAvgCheckoutSize;
         return [
           {
             title: "Total sales",
@@ -466,15 +466,15 @@ export default {
         let changeInSales = thisMonthSalesTotal - lastMonthSalesTotal;
         let changeInSalesCount = thisMonthSalesCount - lastMonthSalesCount;
 
-        let avgCheckoutSize = totalSales / ordersCount;
+        // let avgCheckoutSize = totalSales / ordersCount;
         let thisMonthAvgCheckoutSize = thisMonthSalesCount
           ? thisMonthSalesTotal / thisMonthSalesCount
           : 0;
         let lastMonthAvgCheckoutSize =
           lastMonthSalesTotal / lastMonthSalesCount;
 
-        let changeInAvgCheckoutSize =
-          thisMonthAvgCheckoutSize - lastMonthAvgCheckoutSize;
+        // let changeInAvgCheckoutSize =
+        //   thisMonthAvgCheckoutSize - lastMonthAvgCheckoutSize;
         // console.log(thisMonthSalesTotal, lastMonthSalesTotal);
         // console.log(lastMonthSalesCount, changeInSalesCount )
 
@@ -568,14 +568,14 @@ export default {
         let changeInSales = thisYearSalesTotal - lastYearSalesTotal;
         let changeInSalesCount = thisYearSalesCount - lastYearSalesCount;
 
-        let avgCheckoutSize = totalSales / ordersCount;
+        // let avgCheckoutSize = totalSales / ordersCount;
         let thisYearAvgCheckoutSize = thisYearSalesCount
           ? thisYearSalesTotal / thisYearSalesCount
           : 0;
         let lastYearAvgCheckoutSize = lastYearSalesTotal / lastYearSalesCount;
 
-        let changeInAvgCheckoutSize =
-          thisYearAvgCheckoutSize - lastYearAvgCheckoutSize;
+        // let changeInAvgCheckoutSize =
+        //   thisYearAvgCheckoutSize - lastYearAvgCheckoutSize;
         return [
           {
             title: "Total sales",
