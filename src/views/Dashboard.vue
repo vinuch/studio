@@ -335,7 +335,7 @@ export default {
           (order) => order.isYesterday
         );
 
-        let ordersCount = this.reshapedOrders.length;
+        // let ordersCount = this.reshapedOrders.length;
         let todaySalesCount = this.reshapedOrders.filter(
           (order) => order.isToday
         ).length;
@@ -344,10 +344,10 @@ export default {
         ).length;
 
 
-        let totalSales = this.reshapedOrders.reduce((agg, curr) => {
-          agg += curr.products_total / 100;
-          return agg;
-        }, 0);
+        // let totalSales = this.reshapedOrders.reduce((agg, curr) => {
+        //   agg += curr.products_total / 100;
+        //   return agg;
+        // }, 0);
         // console.log('today', todayOrders, 'yesterday', yesterdayOrders, totalSales)
 
         let todaySalesTotal = todayOrders.length
@@ -367,11 +367,11 @@ export default {
         let changeInSalesCount = todaySalesCount - yesterdaySalesCount;
 
         // let avgCheckoutSize = totalSales / ordersCount;
-        let todayAvgCheckoutSize = todaySalesCount
-          ? todaySalesTotal / todaySalesCount
-          : 0;
-        let yesterdayAvgCheckoutSize =
-          yesterdaySalesTotal / yesterdaySalesCount;
+        // let todayAvgCheckoutSize = todaySalesCount
+        //   ? todaySalesTotal / todaySalesCount
+        //   : 0;
+        // let yesterdayAvgCheckoutSize =
+        //   yesterdaySalesTotal / yesterdaySalesCount;
         // let changeInAvgCheckoutSize =
         //   todayAvgCheckoutSize - yesterdayAvgCheckoutSize;
         return [
@@ -438,7 +438,7 @@ export default {
         );
 
 
-        let ordersCount = this.reshapedOrders.length;
+        // let ordersCount = this.reshapedOrders.length;
         let thisMonthSalesCount = this.reshapedOrders.filter(
           (order) => order.isThisMonth
         ).length;
@@ -446,10 +446,10 @@ export default {
           (order) => order.isLastMonth
         ).length;
 
-        let totalSales = this.reshapedOrders.reduce((agg, curr) => {
-          agg += curr.total_amount / 100;
-          return agg;
-        }, 0);
+        // let totalSales = this.reshapedOrders.reduce((agg, curr) => {
+        //   agg += curr.total_amount / 100;
+        //   return agg;
+        // }, 0);
         let thisMonthSalesTotal = thisMonthOrders.length
           ? thisMonthOrders.reduce((agg, curr) => {
               agg += curr.products_total;
@@ -467,11 +467,11 @@ export default {
         let changeInSalesCount = thisMonthSalesCount - lastMonthSalesCount;
 
         // let avgCheckoutSize = totalSales / ordersCount;
-        let thisMonthAvgCheckoutSize = thisMonthSalesCount
-          ? thisMonthSalesTotal / thisMonthSalesCount
-          : 0;
-        let lastMonthAvgCheckoutSize =
-          lastMonthSalesTotal / lastMonthSalesCount;
+        // let thisMonthAvgCheckoutSize = thisMonthSalesCount
+        //   ? thisMonthSalesTotal / thisMonthSalesCount
+        //   : 0;
+        // let lastMonthAvgCheckoutSize =
+        //   lastMonthSalesTotal / lastMonthSalesCount;
 
         // let changeInAvgCheckoutSize =
         //   thisMonthAvgCheckoutSize - lastMonthAvgCheckoutSize;
@@ -540,7 +540,7 @@ export default {
           (order) => order.isLastYear
         );
 
-        let ordersCount = this.reshapedOrders.length;
+        // let ordersCount = this.reshapedOrders.length;
         let thisYearSalesCount = this.reshapedOrders.filter(
           (order) => order.isThisYear
         ).length;
@@ -548,10 +548,10 @@ export default {
           (order) => order.isLastYear
         ).length;
 
-        let totalSales = this.reshapedOrders.reduce((agg, curr) => {
-          agg += Number(curr.products_total);
-          return agg;
-        }, 0);
+        // let totalSales = this.reshapedOrders.reduce((agg, curr) => {
+        //   agg += Number(curr.products_total);
+        //   return agg;
+        // }, 0);
         let thisYearSalesTotal = thisYearOrders.length
           ? thisYearOrders.reduce((agg, curr) => {
               agg += Number(curr.products_total) ;
@@ -569,10 +569,10 @@ export default {
         let changeInSalesCount = thisYearSalesCount - lastYearSalesCount;
 
         // let avgCheckoutSize = totalSales / ordersCount;
-        let thisYearAvgCheckoutSize = thisYearSalesCount
-          ? thisYearSalesTotal / thisYearSalesCount
-          : 0;
-        let lastYearAvgCheckoutSize = lastYearSalesTotal / lastYearSalesCount;
+        // let thisYearAvgCheckoutSize = thisYearSalesCount
+        //   ? thisYearSalesTotal / thisYearSalesCount
+        //   : 0;
+        // let lastYearAvgCheckoutSize = lastYearSalesTotal / lastYearSalesCount;
 
         // let changeInAvgCheckoutSize =
         //   thisYearAvgCheckoutSize - lastYearAvgCheckoutSize;
