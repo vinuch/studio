@@ -86,29 +86,25 @@
               class="options"
               style="display: flex; justify-content: space-between"
             >
-              <div v-if="currentItem.second_variant != ''">
-                <select
-                  name="second-variant"
-                  v-model="selected_option2"
-                  style="min-width: 100px"
-                >
-                  <option v-for="item in secondVariants" :key="item.id">
-                    {{ item }}
-                  </option>
-                </select>
-              </div>
+          
+              <div v-if="currentItem.second_variant != ''" style="width: 49%;">
+          <SelectOption @change="v => selected_option2 = v" :variants="secondVariants" :name="currentItem.second_variant_name" :selectedOption="selected_option2" />
+          <!-- <select name="second-variant" v-model="selected_option2">
+            <option v-for="item in secondVariants" :key="item.id">
+              {{ item }}
+            </option>
+          </select> -->
+        </div>
 
-              <div v-if="currentItem.first_variant != ''">
-                <select
-                  name="first-variant"
-                  v-model="selected_option"
-                  style="min-width: 100px"
-                >
-                  <option v-for="item in firstVariants" :key="item.id">
-                    {{ item }}
-                  </option>
-                </select>
-              </div>
+        <div v-if="currentItem.first_variant != ''" style="width: 49%;">
+          <SelectOption @change="v => selected_option = v" :variants="firstVariants" :name="currentItem.first_variant_name" :selectedOption="selected_option"/>
+
+          <!-- <select name="first-variant" v-model="selected_option">
+            <option v-for="item in firstVariants" :key="item.id">
+              {{ item }}
+            </option>
+          </select> -->
+        </div>
             </div>
 
             <!-- {{ cartItem }} -->
@@ -216,6 +212,7 @@ import StoreNav from "../components/StoreNav";
 import { EventBus } from "../services/eventBus";
 import * as mutationTypes from "../store/mutationTypes";
 import AddToCartButton from "../components/AddToCartButton";
+import SelectOption from "@/components/SelectOption";
 
 import numeral from "numeral";
 export default {
@@ -243,6 +240,7 @@ export default {
   },
   components: {
     // FloatingLabel,
+    SelectOption,
     StoreNav,
     AddToCartButton,
   },

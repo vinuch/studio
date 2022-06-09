@@ -108,7 +108,7 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss" scoped>
 .variant {
-  width: 160px;
+  // width: 45%;
   text-align: left;
   p {
     font-weight: bold;

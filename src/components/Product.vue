@@ -249,20 +249,24 @@
            <!-- {{product.total_stock}} {{product.discountAmt}} -->
         </div>
         <div class="options" style="display: flex; justify-content: space-between">
-          <div v-if="product.second_variant != ''">
-            <select name="second-variant" v-model="selected_option2" style="min-width: 100px">
+          <div v-if="product.second_variant != ''" style="width: 49%;">
+            <!-- <select name="second-variant" v-model="selected_option2" style="min-width: 100px">
               <option v-for="item in secondVariants" :key="item.id">
                 {{ item }}
               </option>
-            </select>
+            </select> -->
+          <SelectOption @change="v => selected_option2 = v" :variants="secondVariants" :name="product.second_variant_name" :selectedOption="selected_option2" />
+
           </div>
 
-          <div v-if="product.first_variant != ''">
-            <select name="first-variant" v-model="selected_option" style="min-width: 100px">
+          <div v-if="product.first_variant != ''" style="width: 49%;">
+          <SelectOption @change="v => selected_option = v" :variants="firstVariants" :name="product.first_variant_name" :selectedOption="selected_option"/>
+
+            <!-- <select name="first-variant" v-model="selected_option" style="min-width: 100px">
               <option v-for="item in firstVariants" :key="item.id">
                 {{ item }}
               </option>
-            </select>
+            </select> -->
           </div>
        
         </div>
@@ -775,7 +779,7 @@ export default {
 }
 
 .variant {
-  width: 160px;
+  // width: 160px;
   text-align: left;
   p {
     font-weight: bold;
@@ -834,14 +838,16 @@ ul {
   border: 1px solid #e6e9ef;
   border-radius: 4px;
   margin-bottom: 40px;
-  cursor: pointer;
-  height: 350px;
+  // cursor: pointer;
+  padding-bottom: 4rem;
+  height: 400px;
   .image {
     width: 100%;
     height: 160px;
     background-position: center;
     background-size: cover;
     background-repeat: no-repeat;
+    cursor: pointer;
   }
   .item-body {
     padding: 20px;
