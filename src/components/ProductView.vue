@@ -13,7 +13,7 @@
       @click="close"
     >mdi-close-thick</v-icon> -->
     <!-- <v-divider></v-divider> -->
-    <div class="pa-5">
+    <div class="pa-5" style="padding-bottom: 6rem !important;">
       <v-container fluid class="pa-0">
         <v-img
           :src="currentProduct.product_image"

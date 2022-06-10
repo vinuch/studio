@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div style="padding-bottom: 5rem">
     <h2 class="text-left text-h6 ma-5" @click="back()">
       <v-icon>mdi-chevron-left</v-icon>
       <span v-if="currentProduct">Edit {{ currentProduct.product_name }}</span>
@@ -520,7 +520,7 @@ export default {
           variant_options: this.variants_with_options.variant_options,
           store: this.store.store_name,
           price: Number(this.product.price+'00'),
-          total_stock: this.total_stock,
+          total_stock: this.product.total_stock,
         },
       };
 
@@ -583,8 +583,9 @@ export default {
       this.variant_data = variant_data;
       this.variants_with_options = variant_data;
       if (this.product.has_variant) {
-        this.total_stock = variant_data.total_stock;
+        this.product.total_stock = variant_data.total_stock;
       }
+      
       // this.price = variant_data.price;
 
       // this.$nextTick(function(){

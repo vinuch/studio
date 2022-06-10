@@ -2,7 +2,6 @@
   <div class="pa-5 mb-5">
     <topNav>Dashboard</topNav>
 
-
     <div
       :style="
         `width: 100%; height: 4em;marginBottom: .8rem; ${
@@ -159,10 +158,17 @@
                       fill="#FF0000"
                     />
                   </svg>
-                   {{data.up ? '+' : '-'}} {{ data.percent }}
+                  {{ data.up ? "+" : "-" }} {{ data.percent }}
                 </span>
               </p>
-              <div class="text-left caption">vs {{  timeFrame === 'Today' ? 'Yesterday' : `last ${timeFrame.split(' ')[1]} `}}</div>
+              <div class="text-left caption">
+                vs
+                {{
+                  timeFrame === "Today"
+                    ? "Yesterday"
+                    : `last ${timeFrame.split(" ")[1]} `
+                }}
+              </div>
             </v-col>
           </v-row>
         </div>
@@ -315,8 +321,15 @@ export default {
             new Date().getTime() - new Date(date).getTime() <=
             new Date().getDate() * 24 * 60 * 60 * 1000,
           isLastMonth:
-            new Date(date).getTime() < new Date(new Date().getFullYear(), new Date().getMonth(), 1).getTime() &&  new Date(date).getTime() >= new Date(new Date().getFullYear(), new Date().getMonth(), 1) - 2629746000
-,
+            new Date(date).getTime() <
+              new Date(
+                new Date().getFullYear(),
+                new Date().getMonth(),
+                1
+              ).getTime() &&
+            new Date(date).getTime() >=
+              new Date(new Date().getFullYear(), new Date().getMonth(), 1) -
+                2629746000,
           isThisYear:
             new Date().getTime() - new Date(date).getTime() <=
             new Date().getDOY() * 24 * 60 * 60 * 1000,
@@ -342,7 +355,6 @@ export default {
         let yesterdaySalesCount = this.reshapedOrders.filter(
           (order) => order.isYesterday
         ).length;
-
 
         // let totalSales = this.reshapedOrders.reduce((agg, curr) => {
         //   agg += curr.products_total / 100;
@@ -391,9 +403,10 @@ export default {
             title: "Number of transactions",
             data: todaySalesCount,
             percent: `${
-              isNaN(Math.abs(changeInSalesCount / yesterdaySalesCount))
+              isNaN(Math.abs(changeInSalesCount / (yesterdaySalesCount || 1)))
                 ? 0
-                : Math.abs(changeInSalesCount / yesterdaySalesCount) * 100
+                : Math.abs(changeInSalesCount / (yesterdaySalesCount || 1)) *
+                  100
             }%`,
             icon: Transaction,
             colour: "#FFC35014",
@@ -402,8 +415,8 @@ export default {
           {
             title: "Number of store visit",
             // data: `NGN ${numeral(avgCheckoutSize).format("0,0")}`,
-            data: '--',
-            percent: '--%',
+            data: "--",
+            percent: "--%",
             // percent: `${
             //   isNaN(
             //     Math.abs(changeInAvgCheckoutSize / yesterdayAvgCheckoutSize)
@@ -419,7 +432,7 @@ export default {
           },
           {
             title: "Number of return visit",
-            data: '--',
+            data: "--",
             percent: "--%",
             icon: Arrows,
             colour: "#FFC35014",
@@ -436,7 +449,6 @@ export default {
         let lastMonthOrders = this.reshapedOrders.filter(
           (order) => order.isLastMonth
         );
-
 
         // let ordersCount = this.reshapedOrders.length;
         let thisMonthSalesCount = this.reshapedOrders.filter(
@@ -496,11 +508,11 @@ export default {
           {
             title: "Number of transactions",
             data: thisMonthSalesCount,
-            percent: `${(isNaN(
-              Math.abs(changeInSalesCount / lastMonthSalesCount)
-            )
-              ? 0
-              : Math.abs(changeInSalesCount / lastMonthSalesCount)) * 100}%`,
+            percent: `${
+              isNaN(Math.abs(changeInSalesCount))
+                ? 0
+                : Math.abs(changeInSalesCount) * 100
+            }%`,
             icon: Transaction,
             colour: "#FFC35014",
             up: changeInSalesCount >= 0,
@@ -508,8 +520,8 @@ export default {
           {
             title: "Number of store visit",
             // data: `NGN ${numeral(avgCheckoutSize).format("0,0")}`,
-            data: '--',
-            percent: '--',
+            data: "--",
+            percent: "--",
             // percent: `${(isNaN(
             //   Math.abs(changeInAvgCheckoutSize / lastMonthAvgCheckoutSize)
             // )
@@ -523,7 +535,7 @@ export default {
           },
           {
             title: "Number of return visit",
-            data: '--',
+            data: "--",
             percent: "--",
             icon: Arrows,
             colour: "#FFC35014",
@@ -554,13 +566,13 @@ export default {
         // }, 0);
         let thisYearSalesTotal = thisYearOrders.length
           ? thisYearOrders.reduce((agg, curr) => {
-              agg += Number(curr.products_total) ;
+              agg += Number(curr.products_total);
               return agg;
             }, 0)
           : 0;
         let lastYearSalesTotal = lastYearOrders.length
           ? lastYearOrders.reduce((agg, curr) => {
-              agg += Number(curr.products_total) ;
+              agg += Number(curr.products_total);
               return agg;
             }, 0)
           : 0;
@@ -597,7 +609,9 @@ export default {
             percent: `${
               isNaN(Math.abs(changeInSalesCount / lastYearSalesCount))
                 ? 0
-                : Math.floor(Math.abs(changeInSalesCount / lastYearSalesCount) * 100)
+                : Math.floor(
+                    Math.abs(changeInSalesCount / lastYearSalesCount) * 100
+                  )
             }%`,
             icon: Transaction,
             colour: "#FFC35014",
@@ -606,8 +620,8 @@ export default {
           {
             title: "Number of store visit",
             // data: `NGN ${numeral(avgCheckoutSize).format("0,0")}`,
-            data: '--',
-            percent: '--',
+            data: "--",
+            percent: "--",
             // percent: `${
             //   isNaN(Math.abs(changeInAvgCheckoutSize / lastYearAvgCheckoutSize))
             //     ? 0
@@ -621,7 +635,7 @@ export default {
           },
           {
             title: "Number of return visit",
-            data: '--',
+            data: "--",
             percent: "--",
             icon: Arrows,
             colour: "#FFC35014",
@@ -634,11 +648,10 @@ export default {
     },
   },
   mounted() {
-    fetchStore()
-    
+    fetchStore();
+
     this.verified = this.store?.verified;
     // console.log(this.store)
-
 
     if (this.verified) {
       for (var i = 1; i < this.verified.length; i++) {
