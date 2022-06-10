@@ -113,7 +113,7 @@ export default {
       return style;
     },
     zoomTo(section) {
-      console.log(section);
+      // console.log(section);
       setTimeout(() => {
         let element = document.getElementById(section);
         let headerOffset = 0;
@@ -128,7 +128,7 @@ export default {
     },
   },
   mounted() {
-    console.log(this.filteredInventory);
+    // console.log(this.filteredInventory);
     if (window.innerWidth < 504) {
       this.isMobile = true;
     } else {

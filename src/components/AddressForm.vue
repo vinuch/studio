@@ -130,11 +130,11 @@ export default {
       settlement: "getStoreSettlement",
     }),
      preshipTotal() {
-      console.log(this.cart)
+      // console.log(this.cart)
       return this.cart.reduce((prev, current) => prev +( current?.count * current?.price), 0)
     },
     zones() {
-      console.log(this.storeInfo.default_shipping)
+      // console.log(this.storeInfo.default_shipping)
 
       let zone = this.storeInfo.default_shipping
         .split(";")
@@ -176,7 +176,7 @@ export default {
         order_item.selected_option2 = item.selected_option2;
         order_item.qty = item.count;
         order_item.productid = item.id;
-        order_item.sub_total = this.numeral(item.subTotal).format("0,0");
+        order_item.sub_total = this.numeral(item.price * item.count).format("0,0");
         order_item.image_url = item.product_image;
         return order_item;
       });
@@ -237,17 +237,18 @@ export default {
         address: this.delivery_details.address,
         email: this.delivery_details.email,
         full_name: this.delivery_details.full_name,
-        items_count: this.cart_meta.cartCount,
+        items_count: this.cart.length,
         total_amount:
-          parseFloat(this.cart_meta.preShipTotal) + parseFloat(this.city.price),
+          this.numeral(this.preshipTotal + this.city.price).format("0,0"),
         unique_items: this.cart.length,
         order_ref: this.orderID,
         phone: this.delivery_details.phone,
         city: this.city.zone,
-        products_total: this.numeral(this.cart_meta.preShipTotal).format("0,0"),
+        products_total: this.numeral(this.preshipTotal).format("0,0"),
         shipping: this.numeral(this.city.price).format("0,0") || 0,
         store: this.storeInfo.id,
       };
+      // console.log(this.cartItems)
       if (Object.values(data).includes("")) {
         EventBus.$emit("open_alert", "error", "Please fill in all fields");
         return;
@@ -308,7 +309,7 @@ export default {
             orderID: this.orderID,
           });
           this.orderID = "";
-          EventBus.$emit("closeDrawer");
+          // EventBus.$emit("closeDrawer");
           this.$router.push("/confirmation");
         },
         onClose: function() {

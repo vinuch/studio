@@ -193,7 +193,7 @@ export default {
                 `${this.selected_option2}/${this.selected_option}` == item.name
             )
           : null;
-      console.log(variantOption);
+      // console.log(variantOption);
       if (variantOption && variantOption.qty) {
         if (variantOption.qty > product.count) {
           return true;

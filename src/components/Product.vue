@@ -372,7 +372,7 @@ export default {
 
       let checkStock = (product) => {
         // refactor (use mixin?)
-        console.log(product);
+        // console.log(product);
         let variantOption =
           product.has_variant && product.variant_options !== ""
             ? product.variant_options.find(
