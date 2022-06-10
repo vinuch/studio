@@ -1,11 +1,11 @@
 <template>
-  <div class="nav" :class="{homenav: isAbout}">
-    <div class="logo-wrap" :class="{aboutus: isAbout}">
+  <div class="nav" :class="{ homenav: isAbout }">
+    <div class="logo-wrap" :class="{ aboutus: isAbout }">
       <div class="">
         <img :src="storeInfo.logo" height="40px" alt="" />
       </div>
       <div class="info">
-        <p class="name utm" :class="{darktxt: isAbout}">{{ store_name }}</p>
+        <p class="name utm" :class="{ darktxt: isAbout }">{{ store_name }}</p>
         <p class="view utm" v-if="!isAbout" @click="aboutUs()">
           About Us
           <!-- <svg
@@ -26,13 +26,9 @@
       </div>
     </div>
 
-    <button
-      v-if="isAbout"
-      class="shopnow"
-      @click="enterShop">Shop Now
-    </button>
+    <button v-if="isAbout" class="shopnow" @click="enterShop">Shop Now</button>
 
-    <div class="links" v-if="!isAbout ">
+    <div class="links" v-if="!isAbout">
       <div
         class="link"
         v-for="(link, i) in links"
@@ -129,8 +125,8 @@ import { mapGetters } from "vuex";
 import { EventBus } from "../services/eventBus";
 export default {
   props: [
-    'isAbout', // from Home view
-    'location' // from Cart view
+    "isAbout", // from Home view
+    "location", // from Cart view
   ],
   data() {
     return {
@@ -177,16 +173,16 @@ export default {
       }
     },
     aboutUs() {
-      this.$router.push({name: 'Home'})
+      this.$router.push({ name: "Home" });
     },
     enterShop() {
-      this.$router.push({name: 'Gallery'});
-      this.$emit("setIsAbout", false)
+      this.$router.push({ name: "Gallery" });
+      this.$emit("setIsAbout", false);
     },
     jumpTo(i) {
       // this.currentLink = i; // what is currentLInk?
-      this.currentRoute == '/gallery'
-        ? this.$emit('show_thumbnail')
+      this.links[i].to == "/gallery" && this.currentRoute == this.links[i].to
+        ? this.$emit("show_thumbnail")
         : this.$router.push(`${this.links[i].to}`);
     },
     getImg(name) {
@@ -319,7 +315,7 @@ export default {
         height: 15px;
         font-size: 10px;
         border-radius: 5px;
-        background-color: #B90505;
+        background-color: #b90505;
         color: #fff;
         opacity: 1 !important;
         display: flex;
@@ -373,7 +369,7 @@ export default {
   }
 }
 .homenav {
-  background: #FFF;
+  background: #fff;
 }
 .shopnow {
   position: absolute;
@@ -387,7 +383,7 @@ export default {
   border: none;
   border-radius: 3px;
   background: #000;
-  color: #DDD;
+  color: #ddd;
   font-size: 16px;
   font-weight: bold;
   text-transform: uppercase;
