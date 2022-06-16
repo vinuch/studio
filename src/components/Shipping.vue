@@ -98,7 +98,6 @@
                 >
                 <v-select
                   dense
-                  
                   single-line
                   hide-details="true"
                   v-model="location.lga"
@@ -163,6 +162,14 @@
               <p class="caption">Let us handle shipping for you</p>
             </div> -->
           </div>
+
+          <div
+            v-if="!shipping_mode_in_house"
+            :style="{background: '#4CAF50', color: '#fff', borderRadius: '8px', padding: '.8rem', backgroundImage: `url(${require('../assets/banner.png')})`, backgroundRepeat: 'no-repeat', backgroundPosition: 'right', backgroundSize: 'contain'}"
+          >
+            <h2>Coming Soon</h2>
+            <p style="margin: 0;">We will notify you when it is live</p>
+          </div>
           <!-- <v-sheet
             :style="shipping_mode == 'in_house' ? {borderColor: activeBorderColor} : ''"
             outlined
@@ -207,7 +214,11 @@
           />
         </div>
       </div>
-      <setupFooter @saveSetUp="stringifyLocations()" :modal="modal">
+      <setupFooter
+        @saveSetUp="stringifyLocations()"
+        :modal="modal"
+        :disabled="!shipping_mode_in_house"
+      >
         Save Shipping
       </setupFooter>
     </v-card>

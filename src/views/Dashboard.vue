@@ -391,9 +391,9 @@ export default {
             title: "Total sales",
             // data: `NGN ${numeral(totalSales).format("0,0")}`,
             data: Math.round(todaySalesTotal).toLocaleString("en-US"),
-            percent: `${(isNaN(Math.abs(changeInSales / yesterdaySalesTotal))
+            percent: `${(isNaN(Math.abs(changeInSales / (yesterdaySalesTotal || 1)))
               ? 0
-              : Math.abs(changeInSales / yesterdaySalesTotal)) * 100}%`,
+              : Math.abs(changeInSales / (yesterdaySalesTotal || 1))) * 100}%`,
             icon: Sale,
             colour: "#FFC35014",
             currency: "",

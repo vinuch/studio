@@ -25,7 +25,12 @@
       <BottomNav v-if="logged_in" />
     </div>
 
-    <div class=" justify-center align-center d-none d-sm-flex" style="height: 100%">Please view this site on a mobile device to continue.</div>
+    <div
+      class=" justify-center align-center d-none d-sm-flex"
+      style="height: 100%"
+    >
+      Please view this site on a mobile device to continue.
+    </div>
   </v-app>
 </template>
 
@@ -99,6 +104,10 @@ export default {
 
 <style lang="scss">
 @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600&display=swap");
+
+* {
+  font-family: "graphik", Helvetica, Arial, sans-serif !important;
+}
 
 @font-face {
   font-family: "graphik";

@@ -30,7 +30,10 @@
               
             "
           >
-            <p class="caption" style="width: 5rem; whiteSpace: nowrap; margin: 0">
+            <p
+              class="caption"
+              style="width: 5rem; whiteSpace: nowrap; margin: 0"
+            >
               # {{ order.order_ref }}
             </p>
 
@@ -48,7 +51,9 @@
           <p class="text-right text-body-2 mb-0">
             {{ order.fulfilled }}/{{ order.items_count }}
           </p>
-          <p class="text-right" v-if="orderItems.length" >{{ orderItems[0].status ? 'fulfilled' : 'Pending'  }}</p>
+          <p class="text-right" v-if="orderItems.length">
+            {{ orderItems[0].status ? "fulfilled" : "Pending" }}
+          </p>
         </v-col>
       </v-row>
       <p
@@ -56,7 +61,7 @@
         class="text-left caption mb-0"
         style="color: #445b54"
       >
-        {{ orderItems[0].product_name }}({{ orderItems[0].qty }}) 
+        {{ orderItems[0].product_name }}({{ orderItems[0].qty }})
         {{
           orderItems.length > 1 ? `& ${orderItems.length - 1} 0ther items` : ""
         }}
@@ -93,8 +98,9 @@
         @click="markAsCompleted(orderItem)"
       >
         <v-col cols="3">
+          <!-- {{orderItem}} -->
           <v-img
-            :src="orderItem.product_image"
+            :src="orderItem.image_url"
             lazy-src="https://picsum.photos/id/11/100/60"
             height="80"
             width="80"
@@ -188,21 +194,32 @@
             <li class="pb-3">
               <v-icon size="16">$vuetify.icons.profile</v-icon>
               <span class="ml-3">{{ order.full_name }}</span>
-              <v-icon style="float: right; font-size: 18px"
+              <!-- <v-btn elevation="0" style="float: right" icon>
+                <v-icon style="font-size: 18px; color:  #757575; "
+                  >mdi-content-copy</v-icon
+                >
+              </v-btn> -->
+              <v-icon
+                style="float: right; font-size: 18px"
+                @click="copyToClipBoard(order.full_name)"
                 >mdi-content-copy</v-icon
               >
             </li>
             <li class="pb-3">
               <v-icon size="16">$vuetify.icons.message</v-icon>
               <span class="ml-3">{{ order.email }}</span>
-              <v-icon style="float: right; font-size: 18px"
+              <v-icon
+                style="float: right; font-size: 18px"
+                @click="copyToClipBoard(order.email)"
                 >mdi-content-copy</v-icon
               >
             </li>
             <li class="pb-3">
               <v-icon size="16">$vuetify.icons.phone</v-icon>
               <span class="ml-3">{{ order.phone }}</span>
-              <v-icon style="float: right; font-size: 18px"
+              <v-icon
+                style="float: right; font-size: 18px"
+                @click="copyToClipBoard(order.phone)"
                 >mdi-content-copy</v-icon
               >
             </li>
@@ -211,7 +228,9 @@
               <p style=" margin-left: 12px;  display: inline">
                 {{ order.address }}
               </p>
-              <v-icon style="float: right; font-size: 18px"
+              <v-icon
+                style="float: right; font-size: 18px"
+                @click="copyToClipBoard(order.address)"
                 >mdi-content-copy</v-icon
               >
             </li>
@@ -223,6 +242,7 @@
             size="default"
             :containerStyle="{ margin: '1.5rem 0' }"
             :primaryLight="true"
+            @onClick="shareOrder(order)"
           />
         </v-sheet>
       </v-row>
@@ -310,6 +330,41 @@ export default {
   },
   props: ["order"],
   methods: {
+    shareOrder(order) {
+      let shareData = {
+        title: "MDN",
+        text: `Name: ${order.full_name} \nEmail: ${order.email} \nPhone: ${order.phone}  \nAddress: ${order.address}`,
+      };
+
+      // const btn = document.querySelector("button");
+      // const resultPara = document.querySelector(".result");
+      if (navigator.share) {
+        navigator
+          .share(shareData)
+          .then(() => console.log("MDN shared successfully"))
+          .catch((e) => "Error: " + e);
+      } else {
+        navigator.clipboard.writeText(`Name: ${order.full_name} \nEmail: ${order.email} \nPhone: ${order.phone}  \nAddress: ${order.address}`);
+      this.$toast.open("Order info copied successfully ");
+
+      }
+    },
+    copyToClipBoard(text) {
+      /* Get the text field */
+      // var copyText = document.getElementById("myInput");
+
+      // /* Select the text field */
+      // copyText.select();
+      // copyText.setSelectionRange(0, 99999); /* For mobile devices */
+
+      /* Copy the text inside the text field */
+      navigator.clipboard.writeText(text);
+      // toas
+
+      /* Alert the copied text */
+      // alert("Copied the text: " + text);
+      this.$toast.open("Copied successfully ");
+    },
     handleDeliveryConfirmed() {
       this.complete();
     },
@@ -443,11 +498,13 @@ export default {
       } else if (difference > 1) {
         if (this_day - difference < 0) {
           //  months[order_month] +  " - " +
-          return  months[order_month] + " " +  order_date;
+          return months[order_month] + " " + order_date;
         }
-        return months[order_month] + days[this_day - difference] + " - " + order_date;
+        return (
+          months[order_month] + days[this_day - difference] + " - " + order_date
+        );
       } else {
-        return  months[order_month] + ty[difference] + " - " + order_date;
+        return months[order_month] + ty[difference] + " - " + order_date;
       }
     },
     ordinal_suffix() {
