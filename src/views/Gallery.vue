@@ -44,6 +44,14 @@ import { mapGetters } from "vuex";
 import Product from "@/components/Product";
 import StoreNav from "@/components/StoreNav";
 import DeskGallery from "@/components/DeskGallery";
+import * as mutationTypes from "@/store/mutationTypes";
+import {
+  fethcProducts,
+  fetchStoreInfo,
+  fetchStoreSettlement
+} from "@/services/apiServices";
+import { EventBus } from "@/services/eventBus";
+
 export default {
   components: {
     StoreNav,
@@ -63,6 +71,7 @@ export default {
       inventory: "getProducts",
       storeInfo: "getStoreInfo",
       visitedStoreName: "getStoreName",
+       storeName: "getStoreName",
     }),
     // isMobile() {
     //   return window.innerWidth < 504;
@@ -141,6 +150,49 @@ export default {
         this.isMobile = false;
       }
     });
+
+
+    var full = window.location.host;
+    var parts = full.split(".");
+    var sub = parts[0];
+
+    let stName =
+      process.env.NODE_ENV === "development"
+        ? "vincent"
+        : parts.length > 2
+        ? sub
+        : "";
+
+    if (this.storeName === stName) {
+      // console.log("has been visited");
+    } else {
+      // call api to update storevisit count
+      // console.log("first visit");
+      this.loadingStore = true;
+    }
+
+    if (this.storeName) {
+      fetchStoreInfo(this.storeName);
+      fethcProducts(this.storeName, 1);
+      fetchStoreSettlement(this.storeName) // fetch nearer to checkout
+        .catch(() => {
+          EventBus.$emit(
+            "open_alert",
+            "error",
+            "An error occured. Please confirm the store url and try again"
+          );
+        })
+        .finally(() => (this.loadingStore = false));
+    } else {
+      this.$store.commit(mutationTypes.SAVE_STORE_INFO, {});
+      this.$store.commit(mutationTypes.SAVE_SETTLEMENT, {}); // see fetchStoreSettlement comment
+      this.$store.commit(mutationTypes.SAVE_PRODUCTS, []);
+    }
+
+    // if (window.innerWidth > 600) {
+    //   this.$router.push({name: 'DeskGallery'}); // No front page yet for desktop
+    // }
+  
   },
   watch: {
     window() {

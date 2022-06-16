@@ -103,7 +103,7 @@ export default {
 
     let stName =
       process.env.NODE_ENV === "development"
-        ? "olawalle"
+        ? "vincent"
         : parts.length > 2
         ? sub
         : "";
