@@ -69,7 +69,6 @@ export const createStore = (data) => {
 };
 
 export const createSubAcc = (data, key) => {
-  console.log(key)
   return axios({
     method: "post",
     url: urls.createSubAccUrl,

@@ -95,9 +95,9 @@ export default {
       let store = {};
       sessionStorage.clear();
       localStorage.clear();
-      localStorage.setItem("leyyow", {});
+      window.localStorage.removeItem('leyyow')
       this.$store.commit(mutationTypes.LOGGED_IN, false);
-      this.$store.commit(mutationTypes.LOGOUT, store); // this should be the whole state not just store
+      // this.$store.commit(mutationTypes.LOGOUT, store); // this should be the whole state not just store
 
       this.$router.push("/login");
     },

@@ -73,6 +73,7 @@ import {
   createSubAcc,
   saveMerchSettlement,
   updateStore,
+  // fetchStore
 } from "@/services/apiServices";
 import * as mutationTypes from "@/store/mutationTypes";
 import setupFooter from "@/components/setupFooter";
@@ -104,7 +105,7 @@ export default {
         description:
           "Creating merchant settlement account as sub account for Leyyow",
       };
-      createSubAcc(trans_data, this.settlement.paystack_secret_key)
+      createSubAcc(trans_data, this.settlement.keys.paystack_secret_key)
         .then((response) => {
           let save_data = {
             acc_name: this.acc_name,
@@ -114,10 +115,13 @@ export default {
             subaccount: response.data.data.subaccount_code,
             store: this.store.store_name,
           };
-          saveMerchSettlement(save_data).then(() => {
+          saveMerchSettlement(save_data).then((res) => {
             // this.$store.commit(mutationTypes.SAVE_STORE, response)
+            this.$store.commit(mutationTypes.SAVE_SETTLEMENT, res.data);
+
             EventBus.$emit("open_alert", "success", "Bank details added");
             EventBus.$emit("dialog", "open", "success");
+
 
             let verified = this.store.verified;
             let split = verified.split("");
@@ -129,9 +133,9 @@ export default {
             updateStore({ verified: split }, this.store.id)
               .then((res) => {
                 let store = res.data;
-                console.log(store);
                 this.$store.commit(mutationTypes.SAVE_STORE, store);
-                this.$router.go(0);
+
+                // this.$router.go(0);
 
                 //     let verified = this.store.verified
                 //     verified[3] = 1
@@ -171,7 +175,6 @@ export default {
       if (this.bank_code != "" && this.acc_no.length == 10) {
         // disable input temporarily
         // show loading symbol
-        console.log(this.settlement)
         resolveAcc(
           this.bank_code,
           this.acc_no,
@@ -189,12 +192,13 @@ export default {
             EventBus.$emit("open_alert", "error", "invalid account details");
           });
       } else {
-        console.log("adlaksdjfa");
         this.acc_name = "";
       }
     },
   },
-  mounted() {
+  async mounted() {
+      this.$store.commit(mutationTypes.SET_SETTINGS_STATE, true);
+
     if (this.store.verified[1] == 1) {
       this.acc_set = true;
     }

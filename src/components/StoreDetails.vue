@@ -59,7 +59,7 @@
         />
 
         <v-card-text class="text-left pa-0 "
-          >Store logo (max size: 1mb)</v-card-text
+          >Store logo (max size: 1mb) </v-card-text
         >
         <div style="display: flex;background: #f6f8fa">
           <img
@@ -421,8 +421,8 @@ export default {
   },
   mounted() {
     this.inputFields = this.store;
-    this.logo = this.store.logo;
-    this.background = this.store.background;
+    this.logo = this.store.logo && this.store.logo; 
+    this.background = this.store.background && this.store.background;
   },
 };
 </script>

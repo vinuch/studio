@@ -66,7 +66,7 @@ export default {
     }),
   },
   mounted() {
-    console.log(this.logged_in);
+    // console.log(this.logged_in);
   },
   created() {
     let token = window.sessionStorage.getItem("leyyow_token");

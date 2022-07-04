@@ -1,6 +1,6 @@
 // General
 export const baseUrl = process.env.VUE_APP_API_BASE_URL
-console.log(process.env.NODE_ENV, baseUrl)
+// console.log(process.env.NODE_ENV, baseUrl)
 const prefix = process.env.NODE_ENV === 'development' ? '/' : baseUrl
 
 // Signup and registration

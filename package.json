@@ -10,11 +10,14 @@
     "build-storybook": "build-storybook"
   },
   "dependencies": {
+    "@cypress/vue": "^4.0.0",
+    "@cypress/webpack-dev-server": "^2.0.0",
     "@vue/composition-api": "^1.4.3",
     "@vuelidate/core": "^2.0.0-alpha.33",
     "@vuelidate/validators": "^2.0.0-alpha.26",
     "axios": "^0.21.4",
     "core-js": "^3.6.5",
+    "cypress": "^10.3.0",
     "dayjs": "^1.10.7",
     "jshint": "^2.13.1",
     "naija-state-local-government": "^1.1.2",

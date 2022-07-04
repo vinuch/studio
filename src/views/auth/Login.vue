@@ -33,6 +33,7 @@
               :class="{ form_lg: !$vuetify.breakpoint.xs }"
             >
               <TextInput
+                data-test="login-email"
                 label="Email"
                 name="email"
                 :validations="validations.email"
@@ -66,6 +67,7 @@
                 </template>
               </TextInput>
               <TextInput
+                data-test="login-password"
                 label="Password"
                 name="password"
                 :type="showPassword ? 'text' : 'password'"
@@ -153,6 +155,8 @@
               </p>
 
               <Button
+                data-test="login-submit"
+
                 size="large"
                 label="Login"
                 :block="true"
@@ -237,6 +241,8 @@ export default {
             axios.defaults.headers.common[
               "Authorization"
             ] = `Token ${res.data.token}`;
+
+            localStorage.setItem("leyyow", res.data);
             let store = res.data.store;
             let settlement = res.data.settlement;
             let acct_id = res.data.account_id;
