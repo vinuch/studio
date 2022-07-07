@@ -80,7 +80,7 @@
           "
         >
           <OrderItem
-            v-for="(order, i) in computedOrders"
+            v-for="(order, i) in (computedOrders || orders)"
             :key="'order' + i"
             :order="order"
           />
@@ -128,19 +128,21 @@ export default {
     };
   },
   methods: {
+
     openDialog(setup) {
       this.$store.commit(mutationTypes.SET_SETTINGS_STATE, false);
       EventBus.$emit("dialog", "open", setup);
     },
     searchOrders(term) {
+
       if (term) {
         this.computedOrders = this.orders.filter((item) =>
-          item.full_name.toLowerCase().includes(term.toLowerCase())
+          item[this.filterOption == 'Customer name' ? 'full_name' : this.filterOption == 'phone number' ? 'phone' : this.filterOption == 'Order number' ? 'order_ref' : ''].toLowerCase().includes(term.toLowerCase())
         );
       } else {
-        this.computedOrders = this.orders;
+        this.computedOrders = null;
       }
-      console.log(this.computedOrders);
+      // console.log(this.computedOrders);
     },
     // openCollapse(i) {
     //   if (this.activeKey === i) {
@@ -195,7 +197,7 @@ export default {
     // },
   },
   mounted() {
-    this.computedOrders = this.orders;
+    // this.computedOrders = this.orders;
   },
 };
 </script>

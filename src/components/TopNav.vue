@@ -92,7 +92,7 @@ export default {
   data: () => ({}),
   methods: {
     logout() {
-      let store = {};
+      // let store = {};
       sessionStorage.clear();
       localStorage.clear();
       window.localStorage.removeItem('leyyow')

@@ -40,7 +40,7 @@
             <p class="caption" style="margin: 0.5rem 0">
               <span>{{ order_date }}</span
               ><sup>{{ ordinal_suffix }}</sup>
-              <span> {{ parseInt(order.created.substring(0, 4)) }}</span>
+              <span> {{ order_date == 'Today' || order_date == 'Yesterday' ? '' :parseInt(order.created.substring(0, 4)) }}</span>
             </p>
           </div>
         </v-col>
@@ -344,9 +344,10 @@ export default {
           .then(() => console.log("MDN shared successfully"))
           .catch((e) => "Error: " + e);
       } else {
-        navigator.clipboard.writeText(`Name: ${order.full_name} \nEmail: ${order.email} \nPhone: ${order.phone}  \nAddress: ${order.address}`);
-      this.$toast.open("Order info copied successfully ");
-
+        navigator.clipboard.writeText(
+          `Name: ${order.full_name} \nEmail: ${order.email} \nPhone: ${order.phone}  \nAddress: ${order.address}`
+        );
+        this.$toast.open("Order info copied successfully ");
       }
     },
     copyToClipBoard(text) {
@@ -504,7 +505,7 @@ export default {
           months[order_month] + days[this_day - difference] + " - " + order_date
         );
       } else {
-        return months[order_month] + ty[difference] + " - " + order_date;
+        return ty[difference];
       }
     },
     ordinal_suffix() {
@@ -519,6 +520,9 @@ export default {
       }
       if (j == 3 && k != 13) {
         return "rd";
+      }
+      if(this.order_date == 'Today' || this.order_date == 'Yesterday'){
+        return ''
       }
       return "th";
     },

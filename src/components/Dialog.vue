@@ -32,7 +32,7 @@
           <StoreDetails v-if="propModal == 'store_details'" />
           <Shipping v-if="propModal == 'shipping'" :modal="true" />
           <SuccessModal v-if="propModal == 'success'" />
-          <FilterOrdersModal v-if="propModal == 'filter_orders'" />
+          <FilterOrdersModal v-if="propModal == 'filter_orders'" @close="closeDialog" />
           <CallCustomer
             v-if="propModal == 'call_customer'"
             :phone="phone"

@@ -19,7 +19,7 @@
           ></v-select>
         </v-col>
         <!-- <v-col cols="12" class=" pa-5 pt-0 pb-0 mb-2"> -->
-        <p class="text-left text-body-2 font-weight-bold px-5">Order Dates</p>
+        <!-- <p class="text-left text-body-2 font-weight-bold px-5">Order Dates</p> -->
 
         <Button
           :block="true"
@@ -27,10 +27,7 @@
           label="Apply"
           size="large"
           :containerStyle="{ margin: '1rem ' }"
-          @onClick="
-            {
-            }
-          "
+          @onClick="$emit('close')"
         />
         <!-- </v-col> -->
       </div>
@@ -87,7 +84,7 @@ export default {
   created() {},
   watch: {
     selectedFilterOption() {
-      console.log(this.selectedFilterOption)
+      // console.log(this.selectedFilterOption)
       this.$store.commit(mutationTypes.SET_FILTER_OPTION, this.selectedFilterOption);
     },
   },
