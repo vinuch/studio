@@ -70,7 +70,7 @@ const routes = [
   },
   {
     name: "Register",
-    path: "/register",
+    path: "/admin/register",
     component: () =>
       import(/* webpackChunkName: "register" */ "../views/auth/Register.vue"),
   },
@@ -88,7 +88,7 @@ router.beforeEach((to, from, next) => {
   let whitelist = [
     "/",
     "/login",
-    "/register",
+    "/admin/register",
     "/forgot_password", // "/set-new-password/"
   ];
   // let whitelist = [
