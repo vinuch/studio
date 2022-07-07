@@ -283,7 +283,7 @@ export default {
       this.$emit("editProduct", this.variants);
     },
     deleteProduct(id) {
-      deleteProduct(id).then((res) => {
+      deleteProduct(id).then(() => {
         // console.log(res);
       });
     },

@@ -623,7 +623,7 @@ export default {
           });
       } else {
         updateProduct(this.product, this.product.id)
-          .then((res) => {
+          .then(() => {
             // EventBus.$emit(
             //   "open_alert",
             //   "success",
@@ -634,7 +634,7 @@ export default {
             // EventBus.$emit("close_drawer");
             fethcStoreInventory(this.store.slug);
           })
-          .catch((err) => {
+          .catch(() => {
             // console.log(err);
           })
           .finally(() => {

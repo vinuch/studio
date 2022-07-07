@@ -12,7 +12,8 @@
          Delivery 
         </h3>
         <span class="body-2" style="color: #646464;">
-          {{all ? 'Have all products been delivered?' :'Has this product been delivered' }}
+
+          {{all ? (activeItem.activeItem.fulfilled == 0 ?  'Have all products been delivered?' : 'Have all products not been delivered?') : activeItem.activeItem.status == 0 ? 'Has this product been delivered?' : 'Has this product not been delivered?'  }}
         </span>
       </div>
       <v-card-actions class="justify-center mb-2">
@@ -52,7 +53,7 @@ export default {
   components: {
     Button,
   },
-  props: ['all'],
+  props: ['all', 'activeItem'],
   data: () => ({
     acc_name: "",
     acc_no: "",

@@ -116,7 +116,7 @@ export const fetchStore = () => {
     method: "get",
     url: `${urls.storeUrl}`,
   })
-    .then((res) => {
+    .then(() => {
       // console.log(res.data)
      
     })

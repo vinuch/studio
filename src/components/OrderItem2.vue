@@ -275,6 +275,7 @@
           </v-btn>
 
           <ConfirmDelivery
+          :activeItem={activeItem}
             :all="all"
             v-if="showConfirm"
             @close="showConfirm = false"
@@ -453,6 +454,7 @@ export default {
     markAll() {
       this.all = true;
       this.showConfirm = true;
+      this.activeItem = this.order
     },
   },
   computed: {
