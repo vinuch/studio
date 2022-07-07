@@ -80,8 +80,8 @@ export default new Vuex.Store({
       state.settings = data;
     },
     [mutationTypes.UPDATE_EMAIL_VERIFIED](state, data) {
-      // state.email_verified = data;
-      console.log(state, data)
+      state.email_verified = data;
+      // console.log(state, data)
     },
     [mutationTypes.SET_FILTER_OPTION](state, data) {
       state.filter_option = data;

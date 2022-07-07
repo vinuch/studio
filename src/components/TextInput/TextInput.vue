@@ -83,7 +83,6 @@ export default {
     },
     catchValidations() {
       if (this.validate && this.validations) {
-        console.log('jadfka')
         return this.v$.form[this.name]?.$dirty
           ? !this.v$.form[this.name]?.$error
             ? true

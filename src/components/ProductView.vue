@@ -284,7 +284,7 @@ export default {
     },
     deleteProduct(id) {
       deleteProduct(id).then((res) => {
-        console.log(res);
+        // console.log(res);
       });
     },
     toggleDisplay() {

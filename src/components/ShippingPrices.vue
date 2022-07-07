@@ -115,7 +115,7 @@ export default {
       } else {
         EventBus.$emit("open_alert", "error", "Enter a price");
       }
-      console.log(this.band);
+      // console.log(this.band);
     },
     changeInp() {
       // this.$store.commit(mutationTypes.UNSAVED_CHANGE, true);
@@ -173,7 +173,7 @@ export default {
           stringified_locations += ";";
         }
       }
-      console.log(stringified_locations);
+      // console.log(stringified_locations);
       this.$emit("getLocations", stringified_locations);
       this.$emit("resetStringify");
     },

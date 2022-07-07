@@ -255,8 +255,6 @@ export default {
             // fetch inventory
             fethcStoreInventory(store.slug);
             fetchOrders();
-            console.log("hi", res);
-            console.log(store.verified[0] == 0, store.verified[0]);
 
             this.$store.commit(mutationTypes.LOGGED_IN, true);
             this.$store.commit(mutationTypes.SAVE_STORE, store);
@@ -265,7 +263,6 @@ export default {
             this.$store.commit(mutationTypes.SAVE_ACCOUNT_ID, acct_id);
 
             if (store.verified[0] == 0) {
-              console.log("adafa");
               this.$store.commit(mutationTypes.EMAIL_VERIFIED, false);
             }
             this.$router.push("/dash");

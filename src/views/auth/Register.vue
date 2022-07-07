@@ -340,7 +340,6 @@ export default {
             };
             signUp(data)
               .then((res) => {
-                console.log("response:", res);
                 window.sessionStorage.setItem("leyyow_token", res.data.token);
                 axios.defaults.headers.common[
                   "Authorization"
@@ -351,7 +350,6 @@ export default {
                   slug: this.store_slug,
                   business_type: this.store_type,
                 };
-                console.log(data);
 
                 if (res.status == 200 || res.status == 201) {
                   try {
@@ -360,11 +358,9 @@ export default {
                         let store = createRes?.data.store;
                         let settlement = createRes?.data.settlement;
                         let acct_id = createRes?.data.store.id;
-                        console.log(createRes, "createRes");
 
                         fethcStoreInventory(store?.slug);
                         fetchOrders();
-                        console.log(data.slug);
                         this.$store.commit(
                           mutationTypes.SAVE_STORE_SLUG,
                           data.slug
@@ -387,7 +383,6 @@ export default {
                       .catch((error) => {
                         this.loading = false;
 
-                        console.log(error.response);
                         if (error.response.status == 500) {
                           this.previousStep()
                           EventBus.$emit(
@@ -411,7 +406,6 @@ export default {
                 // );
               })
               .catch((err) => {
-                console.log();
                 EventBus.$emit(
                   "open_alert",
                   "error",

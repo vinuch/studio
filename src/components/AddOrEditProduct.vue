@@ -533,7 +533,7 @@ export default {
         return;
       }
       if (this.product.id) {
-        console.log(data, this.variants_with_options);
+        // console.log(data, this.variants_with_options);
         updateProduct(data, this.product.id)
           .then(() => {
             EventBus.$emit(
@@ -561,7 +561,7 @@ export default {
             fethcStoreInventory(this.storeSlug);
           })
           .catch((err) => {
-            console.log(err.response.data);
+            // console.log(err.response.data);
             EventBus.$emit(
               "open_alert",
               "error",
@@ -609,7 +609,6 @@ export default {
             this.product.product_image = res.data.product_image;
             this.product.id = res.data.id;
             this.product.temp_id = res.data.id;
-            console.log(res);
           })
           .catch((err) => {
             this.image_preview = "";
@@ -625,7 +624,6 @@ export default {
       } else {
         updateProduct(this.product, this.product.id)
           .then((res) => {
-            console.log(res);
             // EventBus.$emit(
             //   "open_alert",
             //   "success",
@@ -637,7 +635,7 @@ export default {
             fethcStoreInventory(this.store.slug);
           })
           .catch((err) => {
-            console.log(err);
+            // console.log(err);
           })
           .finally(() => {
             this.loading = false;
@@ -676,7 +674,7 @@ export default {
   mounted() {
     // console.log(this.currentProducct);
     EventBus.$on("get_variants", () => {
-      console.log("get variants activated from edit product");
+      // console.log("get variants activated from edit product");
     });
 
     if (this.currentProduct) {

@@ -167,7 +167,7 @@ export default {
       this.otp.length > 5 ? this.resolveOTP() : "";
     },
     resendEmail() {
-      console.log("resend email");
+      // console.log("resend email");
     },
     resolveOTP() {
       verifyEmailPhone(this.otp, this.store.email) // modify to use account email not store email

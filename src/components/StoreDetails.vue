@@ -304,7 +304,7 @@ export default {
       updateStore(form, this.store.id)
         .then((res) => {
           let store = res.data;
-          console.log(store);
+          // console.log(store);
           this.background = store.background;
           this.$store.commit(mutationTypes.SAVE_STORE, store);
         })
@@ -374,7 +374,7 @@ export default {
       // console.log(payload)
       // const data = {...this.store, ...{about, email, phone1, phone2, address, platforms}}
 
-      console.log(this.inputFields);
+      // console.log(this.inputFields);
       // this.about.trim() != this.store.about.trim() ? data.about = this.about : ""
       // this.email.trim() != this.store.email.trim() ? data.email = this.email : ""
       // this.phone1.trim() != this.store.phone1.trim() ? data.phone1 = this.phone1 : ""
@@ -385,7 +385,7 @@ export default {
       // this.platforms[2].handle.trim() != this.store.facebook.trim() ? data.facebook = this.platforms[2].handle : ""
       this.v$.$touch();
       this.validateInputs = true;
-      console.log(!this.v$.$error);
+      // console.log(!this.v$.$error);
       if (!this.v$.$error) {
         let data = this.inputFields;
         delete data.logo;
@@ -415,7 +415,7 @@ export default {
       settings: "getSettingsState",
     }),
     merchant_url() {
-      console.log(this.store);
+      // console.log(this.store);
       return this.storeSlug + ".leyyow.com";
     },
   },

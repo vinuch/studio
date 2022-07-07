@@ -321,7 +321,7 @@ export default {
         ? "pickup"
         : "delivery";
 
-    console.log(this.delivery_opt);
+    // console.log(this.delivery_opt);
 
     if (this.store.default_shipping.split(",")[1] == "0") {
       return;
@@ -333,7 +333,7 @@ export default {
         .filter((item) => item !== "");
 
       if (locations) {
-        console.log(locations);
+        // console.log(locations);
         let computedLocations = [];
         let locationSplit = locations[1].split(",");
         let obj = {

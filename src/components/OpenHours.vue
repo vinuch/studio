@@ -131,7 +131,7 @@ export default {
       this.$emit("setSelectedDay", { day: day, period: this.period });
     },
     setCloseTime() {
-      console.log("setclose");
+      // console.log("setclose");
       this.$emit("setCloseTime", {
         time: this.close_time,
         period: this.period,

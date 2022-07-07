@@ -49,7 +49,7 @@ export default {
             "Avoided redundant navigation to current location"
           )
         ) {
-          console.log(err);
+          // console.log(err);
         }
       });
     },

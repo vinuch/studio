@@ -672,7 +672,6 @@ this.variants = {}
       // this.variants[option_values[0]] ? this.variants[option_values[0]].price = option_values[2] : null
     });
 
-    console.log(this.variants);
     // this.variants = temp;
 
     if (this.currentProduct) {

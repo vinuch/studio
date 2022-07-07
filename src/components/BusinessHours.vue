@@ -455,7 +455,7 @@ export default {
       // console.log(reconstructedPeriod);
 
       this.periods = reconstructedPeriod;
-      console.log(this.periods, this.days);
+      // console.log(this.periods, this.days);
     }
   },
 };
