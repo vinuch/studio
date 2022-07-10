@@ -1,6 +1,6 @@
 <template>
   <div class="rounded-xl ">
-    <div v-if="settings" class="pa-5 pt-0">
+    <div v-if="settings" class="pa-5 ">
       <div v-if="acc_set">
         <div class="pa-3 rounded-xl" style="border: 1px solid black;">
           <p @click="addAccount()">+ <br />Change bank account</p>
@@ -12,30 +12,30 @@
             <p class="text-right" style="float: right">{{ settlement.bank }}</p>
           </div>
         </v-card>
+        
       </div>
-    </div>
-    <v-card v-else class="elevation-0 overflow-hidden">
-      <v-card-text>
-        <v-card-title
-          class=" justify-center"
-          style="font-weight:600; font-size:1.3rem"
-        >
-          Settlement Account
-        </v-card-title>
-        Provide your bank account details so you can receive payments.
-      </v-card-text>
-      <div>
-        <v-col class="d-flex pa-5 pt-0 pb-0">
-          <v-autocomplete
-            v-model="bank_code"
-            :items="banks"
-            label="Select bank"
-            item-text="name"
-            item-value="code"
-            item-color="success"
-            outlined
-          ></v-autocomplete>
-          <!-- <v-select
+      <v-card v-else class="elevation-0 overflow-hidden">
+        <v-card-text>
+          <v-card-title
+            class=" justify-center"
+            style="font-weight:600; font-size:1.3rem"
+          >
+            Settlement Account
+          </v-card-title>
+          Provide your bank account details so you can receive payments.
+        </v-card-text>
+        <div>
+          <v-col class="d-flex pa-5 pt-0 pb-0">
+            <v-autocomplete
+              v-model="bank_code"
+              :items="banks"
+              label="Select bank"
+              item-text="name"
+              item-value="code"
+              item-color="success"
+              outlined
+            ></v-autocomplete>
+            <!-- <v-select
             item-text="name"
             item-value="code"
             v-model="bank_code"
@@ -44,23 +44,71 @@
             item-color="success"
             outlined
           ></v-select> -->
-        </v-col>
-        <v-col class="d-flex pa-5 pt-0 pb-0 mb-2">
-          <v-text-field
-            label="Account number"
-            outlined
-            type="number"
-            name="acc_no"
-            maxLength="10"
-            v-model.trim="acc_no"
-            :hint="acc_name"
-            persistent-hint
+          </v-col>
+          <v-col class="d-flex pa-5 pt-0 pb-0 mb-2">
+            <v-text-field
+              label="Account number"
+              outlined
+              type="number"
+              name="acc_no"
+              maxLength="10"
+              v-model.trim="acc_no"
+              :hint="acc_name"
+              persistent-hint
+            >
+            </v-text-field>
+          </v-col>
+        </div>
+        <setupFooter @saveSetUp="save()" :disabled="!acc_name" />
+      </v-card>
+    </div>
+     <v-card v-else class="elevation-0 overflow-hidden">
+        <v-card-text>
+          <v-card-title
+            class=" justify-center"
+            style="font-weight:600; font-size:1.3rem"
           >
-          </v-text-field>
-        </v-col>
-      </div>
-      <setupFooter @saveSetUp="save()" :disabled="!acc_name" />
-    </v-card>
+            Settlement Account
+          </v-card-title>
+          Provide your bank account details so you can receive payments.
+        </v-card-text>
+        <div>
+          <v-col class="d-flex pa-5 pt-0 pb-0">
+            <v-autocomplete
+              v-model="bank_code"
+              :items="banks"
+              label="Select bank"
+              item-text="name"
+              item-value="code"
+              item-color="success"
+              outlined
+            ></v-autocomplete>
+            <!-- <v-select
+            item-text="name"
+            item-value="code"
+            v-model="bank_code"
+            :items="banks"
+            label="Select bank"
+            item-color="success"
+            outlined
+          ></v-select> -->
+          </v-col>
+          <v-col class="d-flex pa-5 pt-0 pb-0 mb-2">
+            <v-text-field
+              label="Account number"
+              outlined
+              type="number"
+              name="acc_no"
+              maxLength="10"
+              v-model.trim="acc_no"
+              :hint="acc_name"
+              persistent-hint
+            >
+            </v-text-field>
+          </v-col>
+        </div>
+        <setupFooter @saveSetUp="save()" :disabled="!acc_name" />
+      </v-card>
   </div>
 </template>
 
@@ -105,7 +153,7 @@ export default {
         description:
           "Creating merchant settlement account as sub account for Leyyow",
       };
-      createSubAcc(trans_data, this.settlement.keys.paystack_secret_key)
+      createSubAcc(trans_data, this.settlement.paystack_secret_key || this.settlement.keys.paystack_secret_key)
         .then((response) => {
           let save_data = {
             acc_name: this.acc_name,
@@ -122,25 +170,23 @@ export default {
             EventBus.$emit("open_alert", "success", "Bank details added");
             EventBus.$emit("dialog", "open", "success");
 
-
             let verified = this.store.verified;
             let split = verified.split("");
 
             split[1] = "1";
             split = split.join("");
-            
 
             updateStore({ verified: split }, this.store.id)
               .then((res) => {
                 let store = res.data;
                 this.$store.commit(mutationTypes.SAVE_STORE, store);
 
-                // this.$router.go(0);
+                this.$router.go(0);
 
-                //     let verified = this.store.verified
-                //     verified[3] = 1
+                    let verified = this.store.verified
+                    verified[3] = 1
 
-                // this.$store.commit(mutationTypes.SAVE_STORE, {...this.store, verified})
+                this.$store.commit(mutationTypes.SAVE_STORE, {...this.store, verified})
               })
               .catch(() => {
                 // console.log(err);
@@ -178,7 +224,8 @@ export default {
         resolveAcc(
           this.bank_code,
           this.acc_no,
-          this.settlement.paystack_secret_key || this.settlement.keys.paystack_secret_key
+          this.settlement.paystack_secret_key ||
+            this.settlement.keys.paystack_secret_key
         )
           .then((response) => {
             this.acc_name = response.data.data.account_name;
@@ -197,7 +244,7 @@ export default {
     },
   },
   async mounted() {
-      this.$store.commit(mutationTypes.SET_SETTINGS_STATE, true);
+    this.$store.commit(mutationTypes.SET_SETTINGS_STATE, true);
 
     if (this.store.verified[1] == 1) {
       this.acc_set = true;

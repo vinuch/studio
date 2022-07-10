@@ -17,7 +17,7 @@
         @closeDialog="closeDialog()"
       />
 
-      <div class="" style="overflow: hidden; height: 100vh">
+      <div class="" style=" height: 100vh">
         <v-main>
           <router-view />
         </v-main>
@@ -29,6 +29,7 @@
     <div
       class=" justify-center align-center d-none d-sm-flex"
       style="height: 100%"
+      v-if="$route.path !== '/'"
     >
       Please view this site on a mobile device to continue.
     </div>
