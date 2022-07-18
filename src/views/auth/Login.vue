@@ -164,12 +164,12 @@
                 @onClick="login()"
               />
 
-              <p class="text-body-2 mt-5">
+              <!-- <p class="text-body-2 mt-5">
                 Don't have a store?
                 <router-link to="/"
                   ><span class="primary_link">Create one</span></router-link
                 >
-              </p>
+              </p> -->
             </v-form>
           </div>
         </v-col>

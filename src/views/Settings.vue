@@ -61,7 +61,7 @@ export default {
         { name: "Payment", icon: "mdi-bank-outline" },
         { name: "Store Details", icon: "mdi-store-outline" },
         { name: "Business Hours", icon: "mdi-clock-outline" },
-        { name: "Shipping", icon: "mdi-moped-outline" },
+        { name: "Delivery fees", icon: "mdi-moped-outline" },
       ],
       tabs: null,
     };

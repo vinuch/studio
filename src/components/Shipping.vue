@@ -3,7 +3,7 @@
     <v-card class="elevation-0 overflow-hidden">
       <div style="padding: 16px;">
         <v-card-title class="title justify-center pb-2">
-          Shipping
+          Delivery Fees
         </v-card-title>
         <v-card-text class="pa-0">
           Create your store fulfillment plan.

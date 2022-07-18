@@ -8,7 +8,7 @@
           alt=""
         />
         <p style="margin: 0;">
-          Already have an account?
+          
           <span style="color: #F96167; font-weight: 500" @click="toLogin()"
             >Login</span
           >

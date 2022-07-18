@@ -229,7 +229,7 @@ export default {
       },
       {
         status: 0,
-        title: "Shipping",
+        title: "Delivery fees",
         text: "Delivery & pickup plan",
         btn_title: "Shipping",
         modal: "shipping",
@@ -393,7 +393,7 @@ export default {
             data: Math.round(todaySalesTotal).toLocaleString("en-US"),
             percent: `${(isNaN(Math.abs(changeInSales / (yesterdaySalesTotal || 1)))
               ? 0
-              : Math.abs(changeInSales / (yesterdaySalesTotal || 1))) * 100}%`,
+              : Math.abs(changeInSales / (yesterdaySalesTotal || 1)) * 100)}%`,
             icon: Sale,
             colour: "#FFC35014",
             currency: "",

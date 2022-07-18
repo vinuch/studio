@@ -23,7 +23,10 @@
             style="border-radius: 8px; display: inline-block;position: relative"
           >
             <div
-              @click="product.product_image = '';product.id = null"
+              @click="
+                product.product_image = '';
+                product.id = null;
+              "
               style="background: black;color: white;position:absolute; top:0; right:-10px; z-index: 20; height: 20px; width: 20px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px"
             >
               <v-icon color="#fff" x-small>mdi-close</v-icon>
@@ -40,7 +43,10 @@
             style="border-radius: 8px; display: inline-block;position: relative"
           >
             <div
-              @click="product.product_image = '';product.id = null"
+              @click="
+                product.product_image = '';
+                product.id = null;
+              "
               style="background: black;color: white;position:absolute; top:0; right:-10px; z-index: 20; height: 20px; width: 20px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px"
             >
               <v-icon color="#fff" x-small>mdi-close</v-icon>
@@ -55,13 +61,19 @@
           </div>
         </div>
 
-        <div   v-else-if="image_preview" class="d-flex justify-content-start mb-4">
+        <div
+          v-else-if="image_preview"
+          class="d-flex justify-content-start mb-4"
+        >
           <div
             style="border-radius: 8px; display: inline-block;position: relative;"
-          
           >
             <div
-              @click="$refs.newImageInput.value = null ; image_preview = ''; product.id = null"
+              @click="
+                $refs.newImageInput.value = null;
+                image_preview = '';
+                product.id = null;
+              "
               style="background: black;color: white;position:absolute; top:0; right:-10px; z-index: 20; height: 20px; width: 20px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px"
             >
               <v-icon color="#fff" x-small>mdi-close</v-icon>
@@ -76,7 +88,7 @@
         </div>
 
         <input
-        ref="newImageInput"
+          ref="newImageInput"
           v-if="!currentProduct"
           type="file"
           accept="image/*"
@@ -335,7 +347,7 @@ border-radius: 8px;padding: .5rem"
               </span>
             </p>
             <p class="describe ">
-              {{product.display}}
+              {{ product.display }}
               Products displayed in your gallery are available for purchase. Set
               display to "off" to make them unavailable.
             </p>
@@ -400,7 +412,6 @@ export default {
   data: () => {
     return {
       product: {
-
         first_variant: [],
         second_variant: [],
         third_variant: [],
@@ -519,7 +530,7 @@ export default {
           second_variant: this.variants_with_options.variant_2_options,
           variant_options: this.variants_with_options.variant_options,
           store: this.store.store_name,
-          price: Number(this.product.price+'00'),
+          price: Number(this.product.price + "00"),
           total_stock: this.product.total_stock,
         },
       };
@@ -577,15 +588,21 @@ export default {
       }
       this.get_variants = false;
 
-      // this.loading = true;
+      this.loading = true;
     },
     getVariants(variant_data) {
+      // console.log(variant_data.variant_options.split(';')[0].split(',')[2])
       this.variant_data = variant_data;
       this.variants_with_options = variant_data;
       if (this.product.has_variant) {
         this.product.total_stock = variant_data.total_stock;
       }
-      
+      if (this.product.price == 0) {
+        this.product.price = Number(
+          variant_data.variant_options.split(";")[0].split(",")[2]
+        );
+      }
+
       // this.price = variant_data.price;
 
       // this.$nextTick(function(){

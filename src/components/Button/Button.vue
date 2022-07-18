@@ -1,8 +1,10 @@
 <template>
   <!-- <button type="button" :class="classes" @click="onClick" :style="style"></button> -->
   <div :style="containerStyle">
+
     <v-btn
       depressed
+      
       :block="block"
       v-bind="getSize"
       :class="classes"
@@ -10,12 +12,14 @@
       :disabled="disabled"
     >
       {{ label }}
+
       <slot name="child"></slot>
     </v-btn>
   </div>
 </template>
 
 <script>
+
 import "./button.css";
 
 export default {
@@ -76,3 +80,11 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+#btn{
+   /* background: transparent url('../../assets/loading.gif')  no-repeat center center; */
+   /* height: 5rem; */
+  
+}
+</style>
