@@ -246,14 +246,14 @@
 </template>
 
 <script>
-// import axios from "axios";
-// import {
-//   fethcStoreInventory,
-//   fetchOrders,
-//   signUp,
-//   createStore,
-// } from "@/services/apiServices";
-// import * as mutationTypes from "@/store/mutationTypes";
+import axios from "axios";
+import {
+  fethcStoreInventory,
+  fetchOrders,
+  signUp,
+  createStore,
+} from "@/services/apiServices";
+import * as mutationTypes from "@/store/mutationTypes";
 
 import { EventBus } from "@/services/eventBus";
 import useVuelidate from "@vuelidate/core";
@@ -338,81 +338,81 @@ export default {
               email: this.email.trim().toLowerCase(),
               password: this.password,
             };
-            console.log(data)
-            // signUp(data)
-            //   .then((res) => {
-            //     window.sessionStorage.setItem("leyyow_token", res.data.token);
-            //     axios.defaults.headers.common[
-            //       "Authorization"
-            //     ] = `Token ${res.data.token}`;
+            // console.log(data)
+            signUp(data)
+              .then((res) => {
+                window.sessionStorage.setItem("leyyow_token", res.data.token);
+                axios.defaults.headers.common[
+                  "Authorization"
+                ] = `Token ${res.data.token}`;
 
-            //     let data = {
-            //       store_name: this.store_name,
-            //       slug: this.store_slug,
-            //       business_type: this.store_type,
-            //     };
+                let data = {
+                  store_name: this.store_name,
+                  slug: this.store_slug,
+                  business_type: this.store_type,
+                };
 
-            //     if (res.status == 200 || res.status == 201) {
-            //       try {
-            //         createStore(data)
-            //           .then((createRes) => {
-            //             let store = createRes?.data.store;
-            //             let settlement = createRes?.data.settlement;
-            //             let acct_id = createRes?.data.store.id;
+                if (res.status == 200 || res.status == 201) {
+                  try {
+                    createStore(data)
+                      .then((createRes) => {
+                        let store = createRes?.data.store;
+                        let settlement = createRes?.data.settlement;
+                        let acct_id = createRes?.data.store.id;
 
-            //             fethcStoreInventory(store?.slug);
-            //             fetchOrders();
-            //             this.$store.commit(
-            //               mutationTypes.SAVE_STORE_SLUG,
-            //               data.slug
-            //             );
+                        fethcStoreInventory(store?.slug);
+                        fetchOrders();
+                        this.$store.commit(
+                          mutationTypes.SAVE_STORE_SLUG,
+                          data.slug
+                        );
 
-            //             this.$store.commit(mutationTypes.LOGGED_IN, true);
-            //             this.$store.commit(mutationTypes.SAVE_STORE, store);
-            //             this.$store.commit(
-            //               mutationTypes.SAVE_SETTLEMENT,
-            //               settlement
-            //             );
-            //             this.$store.commit(
-            //               mutationTypes.SAVE_ACCOUNT_ID,
-            //               acct_id
-            //             );
-            //             this.$store.commit(mutationTypes.EMAIL_VERIFIED, false);
-            //             this.$router.push("/dash");
-            //             this.loading = false;
-            //           })
-            //           .catch((error) => {
-            //             this.loading = false;
+                        this.$store.commit(mutationTypes.LOGGED_IN, true);
+                        this.$store.commit(mutationTypes.SAVE_STORE, store);
+                        this.$store.commit(
+                          mutationTypes.SAVE_SETTLEMENT,
+                          settlement
+                        );
+                        this.$store.commit(
+                          mutationTypes.SAVE_ACCOUNT_ID,
+                          acct_id
+                        );
+                        this.$store.commit(mutationTypes.EMAIL_VERIFIED, false);
+                        this.$router.push("/dash");
+                        this.loading = false;
+                      })
+                      .catch((error) => {
+                        this.loading = false;
 
-            //             if (error.response.status == 500) {
-            //               this.previousStep()
-            //               EventBus.$emit(
-            //                 "open_alert",
-            //                 "error",
-            //                 "that store link or store name is already in use"
-            //               );
-            //             }
-            //           });
-            //       } catch (error) {
-            //         this.loading = false;
+                        if (error.response.status == 500) {
+                          this.previousStep()
+                          EventBus.$emit(
+                            "open_alert",
+                            "error",
+                            "that store link or store name is already in use"
+                          );
+                        }
+                      });
+                  } catch (error) {
+                    this.loading = false;
 
-            //         // EventBus.$emit("open_alert", "error", "Signup error");
-            //       }
-            //     }
+                    // EventBus.$emit("open_alert", "error", "Signup error");
+                  }
+                }
 
-            //     // EventBus.$emit(
-            //     //   "open_alert",
-            //     //   "success",
-            //     //   "Sign up successful. please login"
-            //     // );
-            //   })
-            //   .catch((err) => {
-            //     EventBus.$emit(
-            //       "open_alert",
-            //       "error",
-            //       Object.values(err.response.data)[0][0]
-            //     );
-            //   });
+                // EventBus.$emit(
+                //   "open_alert",
+                //   "success",
+                //   "Sign up successful. please login"
+                // );
+              })
+              .catch((err) => {
+                EventBus.$emit(
+                  "open_alert",
+                  "error",
+                  Object.values(err.response.data)[0][0]
+                );
+              });
           } else {
             EventBus.$emit("open_alert", "error", "Sign up form incomplete");
           }
